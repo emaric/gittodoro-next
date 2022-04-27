@@ -1,0 +1,157 @@
+.clock {
+  --face-color: rgba(255, 255, 255, 0.2);
+  --case-color: rgba(255, 255, 254, 1);
+
+  --pomodoro-color: rgba(255, 99, 71, 1);
+  --short-break-color: rgb(85, 194, 135);
+  --long-break-color: rgb(71, 189, 255);
+  --seconds-color: rgb(249, 188, 96);
+
+  --clock-button-label-color: rgb(0, 70, 67);
+  --clock-button-background: rgba(255, 255, 254, 0.5);
+  --clock-button-background-hover: var(--face-color);
+}
+
+.disabled {
+  pointer-events: none;
+}
+
+.clock circle {
+  transform: rotate(-90deg);
+}
+
+.container {
+  display: flex;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.container svg {
+  width: 100%;
+  height: 100%;
+}
+
+.face {
+  fill: var(--face-color);
+}
+
+.case {
+  stroke: var(--case-color);
+}
+
+.record {
+  stroke: rgb(0, 30, 29);
+}
+
+.record[state="pomodoro"] {
+  stroke: var(--pomodoro-color);
+}
+
+.record[state="short"] {
+  stroke: var(--short-break-color);
+}
+
+.record[state="long"] {
+  stroke: var(--long-break-color);
+}
+
+.seconds {
+  stroke: var(--seconds-color);
+
+  --elapsed-seconds: 0;
+  --clock-duration-seconds: calc(24 * 60 * 60);
+}
+
+.seconds[animation="1"] {
+  animation: animate-seconds-ring calc(var(--clock-duration-seconds) * 1s)
+    linear calc(var(--elapsed-seconds) * -1s);
+}
+
+@keyframes animate-seconds-ring {
+  from {
+    stroke-dasharray: 0 100;
+  }
+  to {
+    stroke-dasharray: 100 0;
+  }
+}
+
+.active_timer {
+  --ending-dasharray: "0 100";
+  --duration: 5;
+}
+
+.active_timer[state="pomodoro"] {
+  stroke: var(--pomodoro-color);
+}
+
+.active_timer[state="short"] {
+  stroke: var(--short-break-color);
+}
+
+.active_timer[state="long"] {
+  stroke: var(--long-break-color);
+}
+
+.active_timer[animation="1"] {
+  animation: animate-active-ring calc(var(--duration) * 1s) linear;
+  stroke-dasharray: 0 100;
+}
+
+@keyframes animate-active-ring {
+  from {
+    stroke-dasharray: 0 100;
+  }
+  to {
+    stroke-dasharray: var(--ending-dasharray);
+  }
+}
+
+.clock_button_label {
+  fill: var(--clock-button-label-color);
+  text-transform: uppercase;
+  font-weight: 1;
+  font-size: 0.55rem;
+}
+
+.clock_button_label[state="pomodoro"] {
+  fill: var(--pomodoro-color);
+}
+
+.clock_button_label[state="short"] {
+  fill: var(--short-break-color);
+}
+
+.clock_button_label[state="long"] {
+  fill: var(--long-break-color);
+}
+
+.clock_button {
+  cursor: pointer;
+  pointer-events: all;
+}
+
+.clock_button_background {
+  fill: var(--clock-button-background);
+}
+
+.clock_button:hover .clock_button_background {
+  fill: var(--clock-button-background-hover);
+}
+
+@media screen and (prefers-color-scheme: dark) {
+  .clock {
+    --face-color: rgba(0, 30, 29, 0.2);
+    --case-color: rgb(0, 30, 29);
+
+    --clock-button-label-color: rgb(171, 209, 198);
+    --clock-button-background: rgba(0, 30, 29, 0.5);
+    --clock-button-background-hover: rgba(0, 70, 67, 0.3);
+  }
+
+  .record {
+    stroke: rgba(255, 255, 254, 1);
+  }
+}

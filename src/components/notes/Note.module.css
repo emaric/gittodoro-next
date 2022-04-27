@@ -1,0 +1,123 @@
+.container {
+  display: inline-flex;
+  flex-wrap: wrap;
+  flex-direction: column-reverse;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.note_container {
+  background-color: rgba(255, 255, 254, 1);
+  /* min-height: 6rem; */
+  padding: 0.2rem;
+  width: 100%;
+}
+
+.note_container a {
+  color: #f9bc60;
+}
+
+.note_container .header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom-width: 1px;
+  border-bottom-style: dotted;
+  border-color: #abd1c6;
+  visibility: hidden;
+}
+
+.note_container .header > label {
+  font-size: 0.7rem;
+  width: 15rem;
+  visibility: visible !important;
+}
+
+.note_container:hover  .header {
+  visibility: visible;
+}
+
+.note_container .footer {
+  display: flex;
+  justify-content: right;
+  align-items: center;
+  border-top-width: 1px;
+  border-top-style: dotted;
+  border-color: #abd1c6; 
+  margin-top: 3px;
+  padding: 2px;
+}
+
+.note_container .footer > label {
+  font-size: 0.7rem;
+}
+
+.note_container .content {
+  padding: 1px 2px 1px 22px;
+}
+
+.note_container button {
+  padding: 2px 5px;
+  margin: 2px;
+  border-width: 1px;
+  font-size: 0.8rem;
+  /* border-width: 1px; */
+}
+
+.buttons_container {
+  display: flex;
+  justify-content: right;
+  align-items: center;
+  width: 100%;
+}
+
+.secondary_button {
+  background-color: transparent;
+  /* border-width: 1px; */
+  border-color: #abd1c6;
+  color: rgb(249, 188, 96);
+}
+
+.add_button {
+  padding: 2px 6px 0 6px;
+  /* border-width: 0; */
+  /* font-size: 1.5rem; */
+  font-size: 0.8rem;
+}
+
+.note_container textarea {
+  width: 100%;
+  border: 1px solid transparent; 
+  resize: vertical;
+  min-height: 8rem;
+  font-size: 1rem;
+  height: calc(1rem * 17);
+  font-family: 'Courier New', Courier, monospace;
+}
+
+.note_container textarea:focus-visible {
+  outline: transparent;
+}
+
+@media screen and (prefers-color-scheme: dark) {
+  .note_container {
+    background-color: rgb(0, 30, 29);
+  }
+
+  .secondary_button {
+    border-color:  #004643;
+  }
+
+  .note_container textarea {
+    background-color: rgb(0, 30, 29);
+    color: rgb(171, 209, 198);
+  }
+
+  .note_container .header {
+    border-color: #004643;
+  }
+
+  .note_container .footer {
+    border-color: #004643;
+  }
+}

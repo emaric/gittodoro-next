@@ -1,0 +1,42 @@
+{
+  "name": "gittodoro-next",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "export": "next export",
+    "test": "jest --maxWorkers=1"
+  },
+  "dependencies": {
+    "@emaric/gittodoro-ts": "^0.2.6",
+    "@fortawesome/fontawesome-svg-core": "^6.1.1",
+    "@fortawesome/free-brands-svg-icons": "^6.1.1",
+    "@fortawesome/free-regular-svg-icons": "^6.1.1",
+    "@fortawesome/free-solid-svg-icons": "^6.1.1",
+    "@fortawesome/react-fontawesome": "^0.1.18",
+    "@js-temporal/polyfill": "^0.4.1",
+    "copy-to-clipboard": "^3.3.1",
+    "core-js": "^3.22.0",
+    "next": "12.1.4",
+    "notiflix": "^3.2.5",
+    "react": "18.0.0",
+    "react-dom": "18.0.0",
+    "react-markdown": "^8.0.1",
+    "remark-gfm": "^3.0.1"
+  },
+  "devDependencies": {
+    "@types/jest": "^27.4.1",
+    "@types/react": "^18.0.1",
+    "@typescript-eslint/eslint-plugin": "^5.19.0",
+    "eslint": "8.13.0",
+    "eslint-config-next": "12.1.4",
+    "eslint-config-prettier": "^8.5.0",
+    "jest": "^27.5.1",
+    "prettier": "^2.6.2",
+    "ts-jest": "^27.1.4",
+    "typescript": "^4.6.3"
+  }
+}

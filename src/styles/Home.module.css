@@ -1,0 +1,61 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 1rem;
+}
+
+.container main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* height: 100vh; */
+}
+
+.main_clock_container {
+  width: 100%;
+  max-width: 30rem;
+  min-width: 100px;
+}
+
+.main_notes_container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 30rem;
+  min-width: 100px;
+}
+
+.container footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 100;
+  font-size: 0.5rem;
+}
+
+.container footer span {
+  margin: 5px
+}
+
+.title {
+  color: white;
+  font-size: 0.8rem;
+  /* font-weight: 400; */
+  letter-spacing: 2px;
+  cursor: default;
+  text-transform: uppercase;
+  padding: 0.4rem 0 0 0;
+}
+
+.title span {
+  margin: 4px;
+  /* font-size: 2rem; */
+  /* vertical-align: sub; */
+}
+
+@media screen and (prefers-color-scheme: dark) {
+  .title {
+    color: rgb(0, 30, 29);
+  }
+}
