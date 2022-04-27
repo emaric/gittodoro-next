@@ -1,5 +1,5 @@
 import { NotePresenterInterface } from '@emaric/gittodoro-ts/lib/interactor/responses/NotePresenterInterface'
-import { NoteResponse } from '@emaric/gittodoro-ts/lib/interactor/responses/NoteResponse'
+import { NoteBaseResponse } from '@emaric/gittodoro-ts/lib/interactor/responses/NoteResponse'
 
 import { Note } from '@/modules/gittodoro/models/Note'
 import { mapNote, mapNotes } from './mappers'
@@ -19,8 +19,8 @@ export class NotePresenter implements NotePresenterInterface {
     this.noteView = noteView
   }
 
-  present(response: NoteResponse): void {
-    this.noteView.updateView(mapNote(response))
+  present(response: NoteBaseResponse): void {
+    response.note && this.noteView.updateView(mapNote(response.note))
   }
 }
 
@@ -31,7 +31,7 @@ export class NotesPresenter implements NotePresenterInterface {
     this.notesView = notesView
   }
 
-  present(response: NoteResponse): void {
-    this.notesView.updateView(mapNotes(response))
+  present(response: NoteBaseResponse): void {
+    response.notes && this.notesView.updateView(mapNotes(response.notes))
   }
 }

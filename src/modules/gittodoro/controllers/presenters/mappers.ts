@@ -37,9 +37,6 @@ export const mapNote = (noteResponse: NoteResponse): Note => {
   return note
 }
 
-export const mapNotes = (noteResponse: NoteResponse): Note[] => {
-  if (noteResponse.notes) {
-    return noteResponse.notes.map((note) => mapNote(note))
-  }
-  return []
+export const mapNotes = (notes: NoteResponse[]): Note[] => {
+  return notes.map((note) => mapNote(note))
 }
