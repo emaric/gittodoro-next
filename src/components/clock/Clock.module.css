@@ -112,7 +112,7 @@
 .clock_button_label {
   fill: var(--clock-button-label-color);
   text-transform: uppercase;
-  font-weight: 1;
+  font-weight: 100;
   font-size: 0.55rem;
 }
 
