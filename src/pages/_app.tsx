@@ -1,7 +1,5 @@
 import { AppProps } from 'next/app'
 
-import "core-js/actual"
-
 import '../styles/globals.css'
 
 import { MainClockProvider } from '@/context/MainClockContextProvider'

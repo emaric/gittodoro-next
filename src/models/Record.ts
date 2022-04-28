@@ -44,7 +44,7 @@ export const generateRecords = (session: Session, end: DateTimeType) => {
   ]
 
   let timerIndex = 1
-  let lastRecord = records.at(-1)
+  let lastRecord = records[records.length - 1]
   while (lastRecord && difference(end, lastRecord.end) > 0) {
     const timer = session.timerSequence[timerIndex]
     const start = lastRecord.end.add({ seconds: 1 })
@@ -60,7 +60,7 @@ export const generateRecords = (session: Session, end: DateTimeType) => {
     if (timerIndex == session.timerSequence.length) {
       timerIndex = 0
     }
-    lastRecord = records.at(-1)
+    lastRecord = records[records.length - 1]
   }
 
   if (lastRecord) {

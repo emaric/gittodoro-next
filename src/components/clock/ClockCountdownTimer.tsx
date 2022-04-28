@@ -61,8 +61,8 @@ const ClockCountdownTimer = ({ state, initialDuration, running = false }: Props)
       {remainingMinutes >= 100 &&
         <Text value={Math.floor(remainingMinutes / 100)} x={"16%"} state={state} />
       }
-      <Text value={displayMinutes.at(-2)} x={"27%"} state={state} />
-      <Text value={displayMinutes.at(-1)} x={"40%"} state={state} />
+      <Text value={displayMinutes[displayMinutes.length - 2]} x={"27%"} state={state} />
+      <Text value={displayMinutes[displayMinutes.length - 1]} x={"40%"} state={state} />
       <Text value=":" x={"50%"} y="48%" state={state} />
       <Text value={displaySeconds[0]} x={"60%"} state={state} />
       <Text value={displaySeconds[1]} x={"73%"} state={state} />

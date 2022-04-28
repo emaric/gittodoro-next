@@ -86,7 +86,7 @@ export class SessionLocalStorageGateway implements SessionDataGatewayInterface {
   }
 
   endSession(end: Date): Session {
-    const last = this.sessions.at(-1)
+    const last = this.sessions[this.sessions.length - 1]
     if (last) {
       if (last.end) {
         throw new Error('No active session.')
