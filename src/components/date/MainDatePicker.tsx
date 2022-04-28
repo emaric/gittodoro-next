@@ -8,7 +8,7 @@ import * as Button from './buttons'
 import { useMainClock } from "@/context/MainClockContextProvider"
 import { Clock } from "@/models/Clock"
 
-export const MainDatePicker = () => {
+const MainDatePicker = () => {
   const { setMainClock } = useMainClock()
 
   const [mainDate, setMainDate] = useState(DateTime.today())
@@ -35,3 +35,5 @@ export const MainDatePicker = () => {
     </div>
   )
 }
+
+export default MainDatePicker

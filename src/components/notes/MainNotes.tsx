@@ -8,7 +8,7 @@ import styles from './Note.module.css'
 import * as Button from './buttons'
 import { MainNote } from './MainNote'
 
-export const MainNotes = () => {
+const MainNotes = () => {
   const { mainNotes: notes, newNote, createNote, updateNote, deleteNote } = useMainNotes()
   const [openNote, setOpenNote] = useState<Note | undefined>(undefined)
 
@@ -58,3 +58,5 @@ export const MainNotes = () => {
     </>
   )
 }
+
+export default MainNotes

@@ -15,7 +15,7 @@ import ClockRecordsRing from './ClockRecordsRing'
 import { useMainRecords } from '@/context/MainRecordsContextProvider'
 import { MainRecordAudioPlayer } from './MainRecordAudioPlayer'
 
-export const MainClock = () => {
+const MainClock = () => {
   const { mainClock } = useMainClock()
   const { session, start, stop, mainSessions } = useMainSessions()
   const { mainRecords, record, setRecord } = useMainRecords()
@@ -107,3 +107,5 @@ export const MainClock = () => {
     </>
   )
 }
+
+export default MainClock

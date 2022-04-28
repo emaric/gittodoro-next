@@ -3,9 +3,9 @@ import { NextPage } from 'next/types'
 
 import styles from '../styles/Home.module.css'
 
-import { MainClock } from '@/components/clock/MainClock'
-import { MainNotes } from '@/components/notes/MainNotes'
-import { MainDatePicker } from '@/components/date/MainDatePicker'
+import MainClock from '@/components/clock/MainClock'
+import MainNotes from '@/components/notes/MainNotes'
+import MainDatePicker from '@/components/date/MainDatePicker'
 
 const Home: NextPage = () => {
   return (
