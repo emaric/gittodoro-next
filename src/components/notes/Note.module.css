@@ -127,4 +127,8 @@
   .note_container .footer {
     border-color: #004643;
   }
+
+  .add_button {
+    color: #abd1c6;
+  }
 }
