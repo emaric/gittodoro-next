@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useState } from "react"
 
 import { useMainSessions } from "@/context/MainSessionsContextProvider"
-
-import { AudioEnd, AudioStart, AudioTick } from "./audios"
 import { useMainRecords } from "@/context/MainRecordsContextProvider"
 import { Session } from "@/models/Session"
 
-export const MainRecordAudioPlayer = () => {
+import { AudioEnd, AudioStart, AudioTick } from "./audios"
+
+const MainRecordAudioPlayer = () => {
   const [playStart, setPlayStart] = useState(false)
   const [playTick, setPlayTick] = useState(false)
   const [playEnd, setPlayEnd] = useState(false)
@@ -60,3 +60,5 @@ export const MainRecordAudioPlayer = () => {
     </>
   )
 }
+
+export default MainRecordAudioPlayer

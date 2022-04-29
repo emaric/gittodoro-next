@@ -1,14 +1,14 @@
 import { useCallback, useEffect, useState } from "react"
 
+import { Copy } from "@/modules/copytoclipboard"
 import { Note } from "@/models/Note"
 
 import styles from './Note.module.css'
+
 import * as Button from "./buttons"
 import { NoteContent } from "./NoteContent"
 import { NoteContentEditor } from "./NoteContentEditor"
 import { confirmDeleteNote, notifyCopied } from "./notifications"
-import { Copy } from "@/modules/copytoclipboard"
-import { notifySuccess } from "@/modules/notiflix"
 
 interface Props {
   note: Note
@@ -41,7 +41,7 @@ export const MainNote = ({ note, editing, onChange, onClickEdit, onClickDelete }
   const handleCopy = useCallback(() => {
     if (note) {
       Copy(note.content)
-      notifySuccess('Copied!')
+      notifyCopied()
     }
   }, [note])
 

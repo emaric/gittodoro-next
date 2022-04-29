@@ -3,8 +3,9 @@ import Head from 'next/head'
 
 import { useMainClock } from '@/context/MainClockContextProvider'
 import { useMainSessions } from '@/context/MainSessionsContextProvider'
+import { useMainRecords } from '@/context/MainRecordsContextProvider'
 import { Session } from '@/models/Session'
-import { Record, createRecord, filterRecords } from '@/models/Record'
+import { Record, createRecord } from '@/models/Record'
 
 import ClockBase from "./ClockBase"
 import ClockButton from "./ClockButton"
@@ -12,8 +13,7 @@ import ClockSecondsRing from "./ClockSecondsRing"
 import ClockCountdownTimer from './ClockCountdownTimer'
 import ClockActiveRing from './ClockActiveRing'
 import ClockRecordsRing from './ClockRecordsRing'
-import { useMainRecords } from '@/context/MainRecordsContextProvider'
-import { MainRecordAudioPlayer } from './MainRecordAudioPlayer'
+import MainRecordAudioPlayer from './MainRecordAudioPlayer'
 
 const MainClock = () => {
   const { mainClock } = useMainClock()

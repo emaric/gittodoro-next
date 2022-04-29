@@ -1,7 +1,6 @@
 import { useRef, useState, useEffect, FC } from 'react'
 
 import * as DateTime from '@/modules/temporal/DateTime'
-
 import { Clock } from '@/models/Clock'
 
 import styles from './Clock.module.css'
