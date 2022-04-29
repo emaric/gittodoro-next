@@ -1,8 +1,13 @@
+import { ReactNode } from 'react'
 import Head from 'next/head'
 import { NextPage } from 'next/types'
 
-import styles from '../styles/Home.module.css'
+import { MainClockProvider } from '@/context/MainClockContextProvider'
+import { MainSessionsProvider } from '@/context/MainSessionsContextProvider'
+import { MainRecordsProvider } from '@/context/MainRecordsContextProvider'
+import { MainNotesProvider } from "@/context/MainNotesContextProvider"
 
+import styles from '../styles/Home.module.css'
 import MainClock from '@/components/clock/MainClock'
 import MainNotes from '@/components/notes/MainNotes'
 import MainDatePicker from '@/components/date/MainDatePicker'
@@ -15,15 +20,18 @@ const Home: NextPage = () => {
       </Head>
 
       <div className={styles.container}>
+        <header>
+        </header>
         <main>
-          {/* <h1 className={styles.title}>git<span>todo</span>ro</h1> */}
-          <MainDatePicker />
-          <section className={styles.main_clock_container}>
-            <MainClock />
-          </section>
-          <section className={styles.main_notes_container}>
-            <MainNotes />
-          </section>
+          <MainContextProviders>
+            <MainDatePicker />
+            <section className={styles.main_clock_container}>
+              <MainClock />
+            </section>
+            <section className={styles.main_notes_container}>
+              <MainNotes />
+            </section>
+          </MainContextProviders>
         </main>
         <footer>
           <p>“Sounds by <a href="https://quicksounds.com">https://quicksounds.com</a>“</p>
@@ -34,6 +42,21 @@ const Home: NextPage = () => {
       </div>
     </>
   )
+}
+
+const MainContextProviders = (props: { children: ReactNode }) => {
+  return (
+    <MainClockProvider>
+      <MainSessionsProvider>
+        <MainRecordsProvider>
+          <MainNotesProvider>
+            {props.children}
+          </MainNotesProvider>
+        </MainRecordsProvider>
+      </MainSessionsProvider>
+    </MainClockProvider>
+  )
+
 }
 
 export default Home
