@@ -1,5 +1,6 @@
 import { faPenToSquare, faCopy, faTrashCan } from '@fortawesome/free-regular-svg-icons'
 import { faAngleDown, faAngleUp, faMinus, faXmark, faAngleRight, faAngleLeft, faPlus } from '@fortawesome/free-solid-svg-icons'
+import { faGithub } from '@fortawesome/free-brands-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 import '@fortawesome/fontawesome-svg-core/styles.css';
@@ -42,4 +43,8 @@ export const AngleLeftIcon = () => {
 
 export const PlusIcon = () => {
   return <FontAwesomeIcon icon={faPlus} />
+}
+
+export const GithubIcon = () => {
+  return <FontAwesomeIcon icon={faGithub} />
 }

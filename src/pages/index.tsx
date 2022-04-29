@@ -12,6 +12,7 @@ import MainClock from '@/components/clock/MainClock'
 import MainNotes from '@/components/notes/MainNotes'
 import MainDatePicker from '@/components/date/MainDatePicker'
 import MainAddNewNoteButton from '@/components/notes/MainAddNewNoteButton'
+import { GithubIcon } from '@/modules/fontawesome'
 
 const Home: NextPage = () => {
   return (
@@ -29,7 +30,11 @@ const Home: NextPage = () => {
               <MainClock />
             </section>
             <div className={[styles.dotted_borders, styles.main_nav_container].join(' ')}>
-              <div className={styles.main_user_container}></div>
+              <div className={styles.main_user_container}>
+                <button title='Sign in with Github'>
+                  <GithubIcon />
+                </button>
+              </div>
               <MainDatePicker />
               <MainAddNewNoteButton />
             </div>

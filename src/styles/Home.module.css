@@ -26,7 +26,22 @@
 }
 
 .main_user_container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: var(--user-avatar-width);
+  height: var(--user-avatar-width);
+  border: solid 2px;
+  border-radius: 50%;
+}
+
+.main_user_container > button {
+  background-color: transparent;
+  border: none;
+  color: #0f3433;
+  font-size: 2rem;
+  margin: 0;
+  padding: 0;
 }
 
 .main_notes_container {
@@ -82,5 +97,9 @@
 
   .dotted_borders {
     border-color: rgb(0, 30, 29);
+  }
+
+  .main_user_container > button {
+    color: #abd1c6;
   }
 }
