@@ -1,6 +1,8 @@
 import { useEffect, useState, useMemo, useCallback } from "react";
 import Head from "next/head";
 
+import { State } from "@/modules/gittodoro/models/State";
+
 import styles from './Clock.module.css'
 
 interface Props {
@@ -15,6 +17,17 @@ const MAX_SECONDS = 60
 const ClockCountdownTimer = ({ state, initialDuration, running = false }: Props) => {
   const minutes = useMemo(() => Math.floor(initialDuration / MAX_SECONDS) % (MAX_MINUTES + 1), [initialDuration])
   const seconds = useMemo(() => initialDuration % MAX_SECONDS, [initialDuration])
+  const stateTitle = useMemo(() => {
+    if (state === State[State.pomodoro]) {
+      return 'Focus Time!'
+    } else if (state === State[State.short]) {
+      return 'Take a short break.'
+    } else if (state === State[State.long]) {
+      return 'Enjoy a long break.'
+    } else {
+      return ''
+    }
+  }, [state])
 
   const [remainingSeconds, setRemainingSeconds] = useState<number>(seconds)
   const [remainingMinutes, setRemainingMinutes] = useState<number>(minutes)
@@ -54,7 +67,7 @@ const ClockCountdownTimer = ({ state, initialDuration, running = false }: Props)
       {running &&
         <Head>
           <title>
-            {displayMinutes}:{displaySeconds}
+            {displayMinutes}:{displaySeconds} | {stateTitle}
           </title>
         </Head>
       }
