@@ -18,10 +18,15 @@
   min-width: 100px;
 }
 
-.main_date_nav_container {
+.main_nav_container {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
+  align-items: center;
   max-width: calc(2 * var(--max-clock-width));
+}
+
+.main_user_container {
+  width: var(--user-avatar-width);
 }
 
 .main_notes_container {

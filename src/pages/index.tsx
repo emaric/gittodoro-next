@@ -11,6 +11,7 @@ import styles from '../styles/Home.module.css'
 import MainClock from '@/components/clock/MainClock'
 import MainNotes from '@/components/notes/MainNotes'
 import MainDatePicker from '@/components/date/MainDatePicker'
+import MainAddNewNoteButton from '@/components/notes/MainAddNewNoteButton'
 
 const Home: NextPage = () => {
   return (
@@ -27,8 +28,10 @@ const Home: NextPage = () => {
             <section className={styles.main_clock_container}>
               <MainClock />
             </section>
-            <div className={[styles.dotted_borders, styles.main_date_nav_container].join(' ')}>
+            <div className={[styles.dotted_borders, styles.main_nav_container].join(' ')}>
+              <div className={styles.main_user_container}></div>
               <MainDatePicker />
+              <MainAddNewNoteButton />
             </div>
             <section className={[styles.dotted_borders, styles.main_notes_container].join(' ')}>
               <MainNotes />

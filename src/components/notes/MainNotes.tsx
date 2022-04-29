@@ -5,16 +5,11 @@ import { useMainNotes } from '@/context/MainNotesContextProvider'
 
 import styles from './Note.module.css'
 
-import * as Button from './buttons'
 import { MainNote } from './MainNote'
 
 const MainNotes = () => {
-  const { mainNotes: notes, newNote, allowAdd, createNote, updateNote, deleteNote } = useMainNotes()
+  const { mainNotes: notes, newNote, updateNote, deleteNote } = useMainNotes()
   const [openNote, setOpenNote] = useState<Note | undefined>(undefined)
-
-  const handleAddNote = useCallback(async () => {
-    await Promise.resolve(createNote('', new Date()))
-  }, [createNote])
 
   const handleChange = useCallback((n: Note) => {
     updateNote(n)
@@ -41,11 +36,6 @@ const MainNotes = () => {
 
   return (
     <>
-      {allowAdd &&
-        <div className={styles.buttons_container}>
-          <Button.Add onClick={handleAddNote} />
-        </div>
-      }
       <div className={styles.container}>
         {notes?.map((note, i) =>
           <MainNote

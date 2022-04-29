@@ -1,5 +1,6 @@
-import { PenToSquareIcon, CopyIcon, TrashCanIcon, AngleUpIcon, AngleDownIcon, XMarkIcon } from "@/modules/fontawesome"
+import { PenToSquareIcon, CopyIcon, TrashCanIcon, AngleUpIcon, AngleDownIcon, XMarkIcon, PlusIcon } from "@/modules/fontawesome"
 
+export const Add = PlusIcon
 export const Edit = PenToSquareIcon
 export const Delete = TrashCanIcon
 export const Copy = CopyIcon
