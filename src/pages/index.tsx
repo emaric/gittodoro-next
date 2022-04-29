@@ -27,7 +27,7 @@ const Home: NextPage = () => {
             <section className={styles.main_clock_container}>
               <MainClock />
             </section>
-            <div className={[styles.dotted_borders, styles.date_nav].join(' ')}>
+            <div className={[styles.dotted_borders, styles.main_date_nav_container].join(' ')}>
               <MainDatePicker />
             </div>
             <section className={[styles.dotted_borders, styles.main_notes_container].join(' ')}>

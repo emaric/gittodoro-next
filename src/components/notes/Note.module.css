@@ -1,7 +1,7 @@
 .container {
   display: inline-flex;
-  flex-wrap: wrap;
   justify-content: center;
+  align-items: center;
   flex-direction: column-reverse;
   gap: 0.5rem;
   margin-top: 1rem;

@@ -1,3 +1,7 @@
+:root {
+--max-clock-width: 30rem;
+}
+
 html,
 body {
   background-color: #abd1c6;

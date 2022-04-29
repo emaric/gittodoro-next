@@ -14,14 +14,21 @@
 
 .main_clock_container {
   width: 100%;
-  max-width: 30rem;
+  max-width: var(--max-clock-width);
   min-width: 100px;
+}
+
+.main_date_nav_container {
+  display: flex;
+  justify-content: center;
+  max-width: calc(2 * var(--max-clock-width));
 }
 
 .main_notes_container {
   display: flex;
   flex-direction: column;
   width: 100%;
+  max-width: calc(2 * var(--max-clock-width));
   /* max-width: 30rem; */
   min-width: 100px;
 }
@@ -62,10 +69,6 @@
   margin: 0.2rem;
 }
 
-.date_nav {
-  display: flex;
-  justify-content: center;
-}
 
 @media screen and (prefers-color-scheme: dark) {
   .title {
