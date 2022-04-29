@@ -58,6 +58,7 @@ export class NoteController {
       message: 'Update note by id.',
       id,
       content,
+      updatedAt,
     }
     this.mainController.updateNote(this.updateCommand, request)
   }

@@ -3,6 +3,8 @@ import { createContext, useMemo, ReactNode, useContext, useEffect, useState, use
 import { Note } from "@/models/Note"
 import { NotesController as NotesAppController, NotesViewInterface } from '@/controllers/NotesController'
 
+import * as DateTime from '@/modules/temporal/DateTime'
+
 import { useMainClock } from "./MainClockContextProvider"
 
 
@@ -12,7 +14,8 @@ type MainNotesContextType = {
   updateNote: (note: Note) => void,
   deleteNote: (id: number) => void,
   mainNote?: Note,
-  newNote?: Note
+  newNote?: Note,
+  allowAdd: boolean
 }
 
 const MainNotesContext = createContext<MainNotesContextType | undefined>(undefined)
@@ -21,6 +24,7 @@ export const MainNotesProvider = (props: { children: ReactNode }) => {
   const { mainClock } = useMainClock()
   const [newNote, setNewNote] = useState<Note | undefined>(undefined)
   const [mainNotes, setMainNotes] = useState<Note[]>([])
+  const [allowAdd, setAllowAdd] = useState(true)
 
   const view = useMemo(() => {
     class View implements NotesViewInterface {
@@ -32,7 +36,7 @@ export const MainNotesProvider = (props: { children: ReactNode }) => {
         setNewNote(note)
       }
       updateUpdateView(note: Note) {
-        setNewNote(undefined)
+        setNewNote(note)
       }
       updateDeleteView() {
         setNewNote(undefined)
@@ -80,6 +84,10 @@ export const MainNotesProvider = (props: { children: ReactNode }) => {
 
   useEffect(() => {
     loadNotesFromStorage()
+
+    if (mainClock) {
+      setAllowAdd(0 == DateTime.difference(mainClock?.start, DateTime.today()))
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mainClock])
 
@@ -91,7 +99,7 @@ export const MainNotesProvider = (props: { children: ReactNode }) => {
   }, [loadNotesFromStorage])
 
   return (
-    <MainNotesContext.Provider value={{ mainNotes, newNote, createNote, updateNote, deleteNote }}>
+    <MainNotesContext.Provider value={{ mainNotes, newNote, allowAdd, createNote, updateNote, deleteNote }}>
       {props.children}
     </MainNotesContext.Provider>
   )

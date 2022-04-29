@@ -9,7 +9,7 @@ import * as Button from './buttons'
 import { MainNote } from './MainNote'
 
 const MainNotes = () => {
-  const { mainNotes: notes, newNote, createNote, updateNote, deleteNote } = useMainNotes()
+  const { mainNotes: notes, newNote, allowAdd, createNote, updateNote, deleteNote } = useMainNotes()
   const [openNote, setOpenNote] = useState<Note | undefined>(undefined)
 
   const handleAddNote = useCallback(async () => {
@@ -41,9 +41,11 @@ const MainNotes = () => {
 
   return (
     <>
-      <div className={styles.buttons_container}>
-        <Button.Add onClick={handleAddNote} />
-      </div>
+      {allowAdd &&
+        <div className={styles.buttons_container}>
+          <Button.Add onClick={handleAddNote} />
+        </div>
+      }
       <div className={styles.container}>
         {notes?.map((note, i) =>
           <MainNote
@@ -54,6 +56,9 @@ const MainNotes = () => {
             onClickDelete={handleClickDelete}
             editing={note.id == openNote?.id} />
         )}
+        {notes?.length == 0 &&
+          <label className={styles.notes_container_label}>No notes found on this date.</label>
+        }
       </div>
     </>
   )

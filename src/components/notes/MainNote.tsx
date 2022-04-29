@@ -91,7 +91,7 @@ export const MainNote = ({ note, editing, onChange, onClickEdit, onClickDelete }
         </div>
       }
       <div className={styles.footer}>
-        <label>date last saved</label>
+        <label>Modified: {note?.updatedAt?.toLocaleString()}</label>
       </div>
     </article>
   )

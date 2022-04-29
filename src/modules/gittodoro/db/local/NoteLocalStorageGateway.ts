@@ -7,8 +7,7 @@ const mapToEntity = (notesString: string): Note[] => {
     const note: Note = {
       id: obj.id,
       date: new Date(obj.date),
-      updatedAt:
-        obj.date == undefined ? new Date(obj.date) : new Date(obj.updateAt),
+      updatedAt: obj.updatedAt ? new Date(obj.updatedAt) : new Date(obj.date),
       content: obj.content,
     }
     return note
