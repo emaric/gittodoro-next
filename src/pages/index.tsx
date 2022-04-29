@@ -24,11 +24,13 @@ const Home: NextPage = () => {
         </header>
         <main>
           <MainContextProviders>
-            <MainDatePicker />
             <section className={styles.main_clock_container}>
               <MainClock />
             </section>
-            <section className={styles.main_notes_container}>
+            <div className={[styles.dotted_borders, styles.date_nav].join(' ')}>
+              <MainDatePicker />
+            </div>
+            <section className={[styles.dotted_borders, styles.main_notes_container].join(' ')}>
               <MainNotes />
             </section>
           </MainContextProviders>

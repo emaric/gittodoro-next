@@ -5,13 +5,13 @@ import styles from './Note.module.css'
 import * as Icon from './icons'
 
 interface Props {
-  onClick?: (event: MouseEvent<HTMLAnchorElement | HTMLButtonElement>) => void
+  onClick?: (event: MouseEvent<HTMLLabelElement | HTMLButtonElement>) => void
 }
 
 export const Add = ({ onClick }: Props) => {
   const [isDisabled, setIsDisabled] = useState(false)
 
-  const handleOnClick = useCallback((event: MouseEvent<HTMLAnchorElement>) => {
+  const handleOnClick = useCallback((event: MouseEvent<HTMLLabelElement>) => {
     if (onClick && !isDisabled) {
       setIsDisabled(true)
       onClick && onClick(event)
@@ -28,7 +28,7 @@ export const Add = ({ onClick }: Props) => {
   }, [isDisabled])
 
   return (
-    <a onClick={handleOnClick} className={styles.add_button} href="#AddNewNote">ADD A NOTE</a>
+    <label onClick={handleOnClick} className={styles.add_button}>ADD A NOTE</label>
   )
 }
 
