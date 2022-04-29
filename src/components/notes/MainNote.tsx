@@ -31,12 +31,16 @@ export const MainNote = ({ note, editing, onChange, onClickEdit, onClickDelete }
   }, [isVisible, setIsVisible])
 
   const handleDelete = useCallback(() => {
-    confirmDeleteNote({
-      onDelete: () => {
-        onClickDelete && onClickDelete(note)
-      }
-    })
-  }, [onClickDelete, note])
+    if (isVisible) {
+      confirmDeleteNote({
+        onDelete: () => {
+          onClickDelete && onClickDelete(note)
+        }
+      })
+    } else {
+      setIsVisible(true)
+    }
+  }, [isVisible, onClickDelete, note])
 
   const handleCopy = useCallback(() => {
     if (note) {

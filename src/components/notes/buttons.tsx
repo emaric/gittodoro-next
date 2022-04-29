@@ -66,7 +66,7 @@ export const Hide = ({ onClick }: Props) => {
 
 export const Show = ({ onClick }: Props) => {
   return (
-    <button onClick={onClick} className={styles.secondary_button} title='Hide'>
+    <button onClick={onClick} className={styles.secondary_button} title='Show'>
       <Icon.Show />
     </button>
   )
