@@ -1,19 +1,19 @@
 import {
   getAuth,
   GithubAuthProvider,
-  signInWithPopup,
+  signInWithRedirect,
   signOut as fireSignOut,
 } from 'firebase/auth'
 
 const provider = new GithubAuthProvider()
 provider.addScope('repo')
-provider.setCustomParameters({ prompt: 'select_account' })
+provider.setCustomParameters({ allow_signup: 'true', login: '' })
 
 export const signIn = async () => {
   // Sign in using a popup.
 
   const auth = getAuth()
-  const result = await signInWithPopup(auth, provider)
+  const result = await signInWithRedirect(auth, provider)
     .then((result) => {
       const credential = GithubAuthProvider.credentialFromResult(result)
       const token = credential?.accessToken
