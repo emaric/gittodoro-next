@@ -44,6 +44,10 @@
   padding: 0;
 }
 
+.main_add_button_container {
+  width: var(--user-avatar-width);
+}
+
 .main_notes_container {
   display: flex;
   flex-direction: column;

@@ -36,7 +36,9 @@ const Home: NextPage = () => {
                 </button>
               </div>
               <MainDatePicker />
-              <MainAddNewNoteButton />
+              <div className={styles.main_add_button_container}>
+                <MainAddNewNoteButton />
+              </div>
             </div>
             <section className={[styles.dotted_borders, styles.main_notes_container].join(' ')}>
               <MainNotes />
