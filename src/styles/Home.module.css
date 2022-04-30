@@ -25,27 +25,27 @@
   max-width: calc(2 * var(--max-clock-width));
 }
 
-.main_user_container {
+.main_nav_container > div {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: var(--user-avatar-width);
-  height: var(--user-avatar-width);
-  /* border: solid 2px; */
-  /* border-radius: 50%; */
 }
 
-.main_user_container > button {
+.main_nav_container > div:last-child {
+  width: var(--user-avatar-width);
+}
+
+.main_nav_container:first-child {
+  width: var(--user-avatar-width);
+}
+
+.main_nav_container button {
   background-color: transparent;
   border: none;
   color: #0f3433;
-  font-size: 2.3rem;
+  font-size: 1rem;
   margin: 0;
   padding: 0;
-}
-
-.main_add_button_container {
-  width: var(--user-avatar-width);
 }
 
 .main_notes_container {
@@ -103,7 +103,7 @@
     border-color: rgb(0, 30, 29);
   }
 
-  .main_user_container > button {
+  .main_nav_container button {
     color: #abd1c6;
   }
 }

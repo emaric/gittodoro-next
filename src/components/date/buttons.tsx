@@ -4,16 +4,16 @@ import { AngleLeftIcon, AngleRightIcon } from "@/modules/fontawesome"
 
 export const Left = (props: { onClick: MouseEventHandler }) => {
   return (
-    <label onClick={props.onClick}>
+    <button onClick={props.onClick}>
       <AngleLeftIcon />
-    </label>
+    </button>
   )
 }
 
 export const Right = (props: { onClick: MouseEventHandler }) => {
   return (
-    <label onClick={props.onClick}>
+    <button onClick={props.onClick}>
       <AngleRightIcon />
-    </label>
+    </button>
   )
 }

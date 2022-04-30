@@ -81,12 +81,6 @@
   color: rgb(249, 188, 96);
 }
 
-.add_button {
-  background-color: transparent;
-  border: none;
-  width: var(--user-avatar-width);
-}
-
 .note_container textarea {
   width: 100%;
   border: 1px solid transparent; 
@@ -128,7 +122,4 @@
     border-color: #004643;
   }
 
-  .add_button {
-    color: #abd1c6;
-  }
 }

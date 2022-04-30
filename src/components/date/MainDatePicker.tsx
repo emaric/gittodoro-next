@@ -28,9 +28,9 @@ const MainDatePicker = () => {
   return (
     <div className={styles.container}>
       <Button.Left onClick={handleLeft} />
-      <label>
+      <button>
         {mainDate.toPlainDate().toString()}
-      </label>
+      </button>
       <Button.Right onClick={handleRight} />
     </div>
   )
