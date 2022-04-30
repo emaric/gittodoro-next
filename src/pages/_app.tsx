@@ -1,10 +1,13 @@
+import { GithubAuthProvider } from '@/context/GithubAuthContextProvider'
 import { AppProps } from 'next/app'
 
 import '../styles/globals.css'
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <Component {...pageProps} />
+    <GithubAuthProvider>
+      <Component {...pageProps} />
+    </GithubAuthProvider>
   )
 }
 

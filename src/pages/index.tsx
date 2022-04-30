@@ -12,7 +12,7 @@ import MainClock from '@/components/clock/MainClock'
 import MainNotes from '@/components/notes/MainNotes'
 import MainDatePicker from '@/components/date/MainDatePicker'
 import MainAddNewNoteButton from '@/components/notes/MainAddNewNoteButton'
-import MainSignInButton from '@/components/signin/MainSignInButton'
+import MainAuth from '@/components/auth/MainAuth'
 
 const Home: NextPage = () => {
   return (
@@ -31,7 +31,7 @@ const Home: NextPage = () => {
             </section>
             <div className={[styles.dotted_borders, styles.main_nav_container].join(' ')}>
               <div>
-                <MainSignInButton />
+                <MainAuth />
               </div>
               <MainDatePicker />
               <div>

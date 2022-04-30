@@ -1,17 +1,18 @@
 import { createContext, useContext, useState, useEffect, useCallback } from "react"
 
 import { Clock } from "@/models/Clock"
+import { UserController } from "@/modules/firebase/controller"
 
 
-type MainClockContext = {
+type MainClockContextType = {
   mainClock?: Clock,
   setMainClock: (clock: Clock) => void
 }
 
-const MainClockContext = createContext<MainClockContext | undefined>(undefined)
+const MainClockContext = createContext<MainClockContextType | undefined>(undefined)
 
 export const MainClockProvider = (props: { children: JSX.Element }) => {
-  const [mainClock, setMainClock] = useState<Clock>(new Clock())
+  const [mainClock, setMainClock] = useState<Clock | undefined>(undefined)
 
   const updateMainClock = useCallback(() => {
     setMainClock(new Clock())

@@ -9,6 +9,9 @@ const nextConfig = {
     config.resolve.symlinks = false
     return config
   },
+  images: {
+    domains: ['avatars.githubusercontent.com'],
+  },
 }
 
 module.exports = nextConfig
