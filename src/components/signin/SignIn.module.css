@@ -2,6 +2,6 @@
   font-size: 2rem !important;
   border: solid 2px !important;
   border-radius: 50%;
-  width: 2.8rem;
-  height: 2.8rem;
+  width: var(--user-avatar-width);
+  height: var(--user-avatar-width);
 }

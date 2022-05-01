@@ -10,6 +10,8 @@ const nextConfig = {
     return config
   },
   images: {
+    loader: 'imgix',
+    path: '',
     domains: ['avatars.githubusercontent.com'],
   },
 }

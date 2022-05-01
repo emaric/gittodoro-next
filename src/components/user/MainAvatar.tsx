@@ -7,11 +7,11 @@ import styles from './User.module.css'
 const MainAvatar = () => {
   const { user, signOutFromGithub } = useGithubAuth()
   return (
-    <figure onClick={signOutFromGithub} className={styles.avatar}>
+    <button title="Sign out" onClick={signOutFromGithub} className={styles.avatar}>
       {user &&
         <Image src={user.userData.photoURL} alt={user.userData.displayName} width={30} height={30} />
       }
-    </figure>
+    </button>
   )
 }
 
