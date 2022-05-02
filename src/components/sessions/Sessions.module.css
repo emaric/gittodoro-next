@@ -1,0 +1,16 @@
+
+.week_container {
+	display: grid;
+	grid-template-columns: auto auto auto auto auto auto auto; 
+	column-gap: 1px;
+}
+
+.day_container {
+  background-color: transparent;
+  min-width: 3rem;
+  min-height: 3rem;
+}
+
+.disabled {
+  opacity: 0.5;
+}

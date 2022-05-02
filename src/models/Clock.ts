@@ -31,10 +31,10 @@ export class Clock {
   }
 
   get startDate() {
-    return new Date(this.start.toString())
+    return new Date(this.start.toJSON())
   }
 
   get endDate() {
-    return new Date(this.end.toString())
+    return new Date(this.end.toJSON())
   }
 }

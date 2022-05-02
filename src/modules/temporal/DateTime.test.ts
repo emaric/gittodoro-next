@@ -48,6 +48,12 @@ describe('[DateTime] unit tests', () => {
     expect(Math.round(actual)).toBe(diff)
   })
 
+  it('difference today and tomorrow', () => {
+    expect(DateTime.difference(DateTime.today(), DateTime.tomorrow())).toBe(
+      -24 * 60 * 60
+    )
+  })
+
   it('fromISO', () => {
     // ISO 8601 - International Organization for Standardization (ISO)
     const isoDateTime = '2022-01-01T00:00:30'

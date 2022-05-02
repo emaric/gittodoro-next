@@ -25,13 +25,20 @@ export class NotePresenter implements NotePresenterInterface {
 }
 
 export class NotesPresenter implements NotePresenterInterface {
-  notesView: NotesViewInterface
+  private notesView?: CallableFunction
 
-  constructor(notesView: NotesViewInterface) {
+  constructor(notesView?: CallableFunction) {
     this.notesView = notesView
   }
 
+  setCallback(cb: CallableFunction) {
+    this.notesView = cb
+  }
+
   present(response: NoteBaseResponse): void {
-    response.notes && this.notesView.updateView(mapNotes(response.notes))
+    const note = response.note && mapNote(response.note)
+    const notes = response.notes && mapNotes(response.notes)
+
+    this.notesView && this.notesView({ note, notes })
   }
 }

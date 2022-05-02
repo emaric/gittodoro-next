@@ -26,6 +26,10 @@ export const mapSession = (sessionResponse: SessionResponse): Session => {
   return session
 }
 
+export const mapSessions = (sessionResponses: SessionResponse[]): Session[] => {
+  return sessionResponses.map((session) => mapSession(session))
+}
+
 export const mapNote = (noteResponse: NoteResponse): Note => {
   const note = new Note({
     ...noteResponse,

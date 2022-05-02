@@ -5,7 +5,7 @@ import { RADIUS as R, CX, CY } from "./constants"
 
 interface Props {
   onClick: (event: MouseEvent<SVGCircleElement>) => void;
-  children: ReactNode
+  children?: ReactNode
 }
 
 const ClockButton: FC<Props> = ({ onClick, children }) => {

@@ -7,8 +7,9 @@ import styles from './MainDatePicker.module.css'
 import * as Button from './buttons'
 import { useMainClock } from "@/context/MainClockContextProvider"
 import { Clock } from "@/models/Clock"
+import Link from "next/link"
 
-const MainDatePicker = () => {
+const MainDatePicker = (props: { sessionsLink: string }) => {
   const { setMainClock } = useMainClock()
 
   const [mainDate, setMainDate] = useState(DateTime.today())
@@ -28,9 +29,11 @@ const MainDatePicker = () => {
   return (
     <div className={styles.container}>
       <Button.Left onClick={handleLeft} />
-      <button>
-        {mainDate.toPlainDate().toString()}
-      </button>
+      <Link href={props.sessionsLink} passHref>
+        <button>
+          {mainDate.toPlainDate().toString()}
+        </button>
+      </Link>
       <Button.Right onClick={handleRight} />
     </div>
   )

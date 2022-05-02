@@ -1,9 +1,9 @@
-import { createContext, useMemo, ReactNode, useContext, useEffect, useState, useCallback } from "react"
-
-import { Note } from "@/models/Note"
-import { NotesController as NotesAppController, NotesViewInterface } from '@/controllers/NotesController'
+import { createContext, ReactNode, useContext, useEffect, useState, useCallback } from "react"
 
 import * as DateTime from '@/modules/temporal/DateTime'
+import * as Controller from '@/modules/gittodoro/controllers/NotesController'
+
+import { Note } from "@/models/Note"
 
 import { useMainClock } from "./MainClockContextProvider"
 
@@ -26,61 +26,34 @@ export const MainNotesProvider = (props: { children: ReactNode }) => {
   const [mainNotes, setMainNotes] = useState<Note[]>([])
   const [allowAdd, setAllowAdd] = useState(true)
 
-  const view = useMemo(() => {
-    class View implements NotesViewInterface {
-      updateCreateView(note: Note) {
-        setNewNote(note)
-      }
-
-      updateReadView(note: Note) {
-        setNewNote(note)
-      }
-      updateUpdateView(note: Note) {
-        setNewNote(undefined)
-      }
-      updateDeleteView() {
-        setNewNote(undefined)
-      }
-      updateReadByRangeView(notes: Note[]) {
-        setMainNotes(notes)
-      }
-    }
-    return new View()
-  }, [])
-  const controller = useMemo(() => {
-    return new NotesAppController(view)
-  }, [view])
-
   const loadNotesFromStorage = useCallback(() => {
-    if (mainClock && controller) {
-      controller.readByRange(mainClock.startDate, mainClock.endDate)
+    if (mainClock) {
+      Controller.readNotesByRange(mainClock.startDate, mainClock.endDate).then(({ notes }) => {
+        setMainNotes(notes)
+      })
     }
-  }, [mainClock, controller])
+  }, [mainClock])
 
   const createNote = useCallback((content: string, date = new Date()) => {
-    if (controller) {
-      controller.create(content, date)
+    Controller.createNote(content, date).then(({ note }) => {
+      setNewNote(note)
       loadNotesFromStorage()
-    }
-  }, [loadNotesFromStorage, controller])
+    })
+  }, [loadNotesFromStorage])
 
-  const updateNote = useCallback(async (note: Note) => {
-    if (controller) {
-      await Promise.resolve(controller.update(note.id, note.content, new Date()))
+  const updateNote = useCallback((note: Note) => {
+    Controller.updateNote(note.id, note.content, new Date()).then((_) => {
+      setNewNote(undefined)
       loadNotesFromStorage()
-    } else {
-      throw new Error('noteController is undefined...')
-    }
-  }, [loadNotesFromStorage, controller])
+    })
+  }, [loadNotesFromStorage])
 
-  const deleteNote = useCallback(async (id: number) => {
-    if (controller) {
-      await Promise.resolve(controller.delete(id))
+  const deleteNote = useCallback((id: number) => {
+    Controller.deleteNote(id).then((_) => {
+      setNewNote(undefined)
       loadNotesFromStorage()
-    } else {
-      throw new Error('noteController is undefined...')
-    }
-  }, [loadNotesFromStorage, controller])
+    })
+  }, [loadNotesFromStorage])
 
   useEffect(() => {
     loadNotesFromStorage()

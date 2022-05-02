@@ -25,23 +25,21 @@ const Home: NextPage = () => {
         <header>
         </header>
         <main>
-          <MainContextProviders>
-            <section className={styles.main_clock_container}>
-              <MainClock />
-            </section>
-            <div className={[styles.dotted_borders, styles.main_nav_container].join(' ')}>
-              <div>
-                <MainAuth />
-              </div>
-              <MainDatePicker />
-              <div>
-                <MainAddNewNoteButton />
-              </div>
+          <section className={styles.main_clock_container}>
+            <MainClock />
+          </section>
+          <div className={[styles.dotted_borders, styles.main_nav_container].join(' ')}>
+            <div>
+              <MainAuth />
             </div>
-            <section className={[styles.dotted_borders, styles.main_notes_container].join(' ')}>
-              <MainNotes />
-            </section>
-          </MainContextProviders>
+            <MainDatePicker sessionsLink='/sessions' />
+            <div>
+              <MainAddNewNoteButton />
+            </div>
+          </div>
+          <section className={[styles.dotted_borders, styles.main_notes_container].join(' ')}>
+            <MainNotes />
+          </section>
         </main>
         <footer>
           <p>“Sounds by <a href="https://quicksounds.com">https://quicksounds.com</a>“</p>
@@ -53,20 +51,4 @@ const Home: NextPage = () => {
     </>
   )
 }
-
-const MainContextProviders = (props: { children: ReactNode }) => {
-  return (
-    <MainClockProvider>
-      <MainSessionsProvider>
-        <MainRecordsProvider>
-          <MainNotesProvider>
-            {props.children}
-          </MainNotesProvider>
-        </MainRecordsProvider>
-      </MainSessionsProvider>
-    </MainClockProvider>
-  )
-
-}
-
 export default Home
