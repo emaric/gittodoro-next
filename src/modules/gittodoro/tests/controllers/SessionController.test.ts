@@ -23,6 +23,10 @@ describe('[SessionController] unit tests', () => {
   const log = jest.fn()
   console.log = log
 
+  const lastLineFromOutput = (log: jest.Mock<any, any>): string => {
+    return log.mock.calls.at(-1).at(-1)
+  }
+
   const testView = new TestSessionView()
   const controller = new SessionController(testView)
 
@@ -54,7 +58,7 @@ describe('[SessionController] unit tests', () => {
   describe('when trying to start session', () => {
     it('should display started session details', () => {
       controller.start(sampleDuration, expected.start)
-      expect(log.mock.calls.at(-1).at(-1)).toBe(JSON.stringify(expected))
+      expect(lastLineFromOutput(log)).toBe(JSON.stringify(expected))
     })
   })
 
@@ -63,7 +67,7 @@ describe('[SessionController] unit tests', () => {
       const end = new Date()
       controller.stop(end)
       const expectedString = JSON.stringify(new Session({ ...expected, end }))
-      expect(log.mock.calls.at(-1).at(-1)).toBe(expectedString)
+      expect(lastLineFromOutput(log)).toBe(expectedString)
     })
   })
 
@@ -94,15 +98,36 @@ describe('[SessionController] unit tests', () => {
       controller.viewByRange(start, end)
 
       const expectedString = JSON.stringify([sample1Output, sample2Output])
-      expect(log.mock.calls.at(-1).at(-1)).toBe(expectedString)
+      expect(lastLineFromOutput(log)).toBe(expectedString)
     })
-    it('should display the sesions that ended before the given end datetime', () => {
+    it('should display the sessions that ended before the given end datetime', () => {
       const start = new Date('2022-04-18T00:00:00Z')
       const end = new Date('2022-04-19T00:00:00Z')
       controller.viewByRange(start, end)
 
       const expectedString = JSON.stringify([sample2Output])
-      expect(log.mock.calls.at(-1).at(-1)).toBe(expectedString)
+      expect(lastLineFromOutput(log)).toBe(expectedString)
+    })
+
+    it('should display the first and last sessions', () => {
+      const duration = {
+        pomodoro: 25,
+        short: 5,
+        long: 15,
+        longInterval: 4,
+      }
+
+      const firstStartDate = new Date(`2020-04-01T09:00:00.000Z`)
+      controller.start(duration, firstStartDate)
+      controller.stop(new Date(`2020-04-01T17:00:00.000Z`))
+
+      controller.viewFirstAndLast()
+
+      const sessions = JSON.parse(lastLineFromOutput(log))
+
+      expect(sessions.length).toBe(2)
+      expect(sessions[0].start).toBe(firstStartDate.toJSON())
+      expect(sessions[1].start).toBe(expected.start.toJSON())
     })
   })
 })

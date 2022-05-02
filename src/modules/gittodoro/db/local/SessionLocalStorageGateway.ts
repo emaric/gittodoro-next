@@ -142,4 +142,18 @@ export class SessionLocalStorageGateway implements SessionDataGatewayInterface {
     })
     return sessions
   }
+
+  first() {
+    const sorted = this.sessions.sort(
+      (a, b) => a.start.getTime() - b.start.getTime()
+    )
+    return sorted[0]
+  }
+
+  last() {
+    const sorted = this.sessions.sort(
+      (a, b) => a.start.getTime() - b.start.getTime()
+    )
+    return sorted[sorted.length - 1]
+  }
 }

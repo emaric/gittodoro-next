@@ -37,5 +37,15 @@ describe('[SessionLocalStorageGateway] unit tests', () => {
       )
       expect(sessionResponse).toEqual([expectedSession])
     })
+
+    it('should be able to load the first session', () => {
+      const first = gateway.first()
+      expect(first).toEqual(gateway.sessions[0])
+    })
+
+    it('should be able to load the last session', () => {
+      const last = gateway.last()
+      expect(last).toEqual(gateway.sessions[gateway.sessions.length - 1])
+    })
   })
 })
