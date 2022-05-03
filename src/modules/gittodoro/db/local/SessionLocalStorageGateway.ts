@@ -55,7 +55,7 @@ export class SessionLocalStorageGateway implements SessionDataGatewayInterface {
     short: number
     long: number
     longInterval: number
-  }): Session {
+  }): Promise<Session> {
     const id = this.lastID + 1
     const session = new Session({
       ...args,
@@ -73,19 +73,19 @@ export class SessionLocalStorageGateway implements SessionDataGatewayInterface {
     return this.readSession(session.start)
   }
 
-  readSession(start: Date): Session {
+  readSession(start: Date): Promise<Session> {
     const session = this.sessions.find(
       (session) => session.start.getTime() == start.getTime()
     )
 
     if (session) {
-      return session
+      return Promise.resolve(session)
     }
 
     throw new Error('Session not found')
   }
 
-  endSession(end: Date): Session {
+  endSession(end: Date): Promise<Session> {
     const last = this.sessions[this.sessions.length - 1]
     if (last) {
       if (last.end) {
@@ -100,7 +100,7 @@ export class SessionLocalStorageGateway implements SessionDataGatewayInterface {
           return s
         })
       )
-      return last
+      return Promise.resolve(last)
     }
     throw new Error('Sessions storage is empty.')
   }
@@ -119,7 +119,7 @@ export class SessionLocalStorageGateway implements SessionDataGatewayInterface {
     return []
   }
 
-  viewSessionsByRange(start: Date, end: Date): Session[] {
+  viewSessionsByRange(start: Date, end: Date): Promise<Session[]> {
     const sessions = this.sessions.filter((session: Session) => {
       if (
         session.start.getTime() >= start.getTime() &&
@@ -140,20 +140,20 @@ export class SessionLocalStorageGateway implements SessionDataGatewayInterface {
 
       return false
     })
-    return sessions
+    return Promise.resolve(sessions)
   }
 
   first() {
     const sorted = this.sessions.sort(
       (a, b) => a.start.getTime() - b.start.getTime()
     )
-    return sorted[0]
+    return Promise.resolve(sorted[0])
   }
 
   last() {
     const sorted = this.sessions.sort(
       (a, b) => a.start.getTime() - b.start.getTime()
     )
-    return sorted[sorted.length - 1]
+    return Promise.resolve(sorted[sorted.length - 1])
   }
 }

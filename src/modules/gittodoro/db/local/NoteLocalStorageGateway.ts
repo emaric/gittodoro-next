@@ -49,7 +49,7 @@ export class NoteLocalStorageGateway implements NoteDataGatewayInterface {
     return []
   }
 
-  create(note: Note): Note {
+  create(note: Note) {
     const id = this.lastID + 1
     const newNote: Note = {
       ...note,
@@ -60,18 +60,18 @@ export class NoteLocalStorageGateway implements NoteDataGatewayInterface {
     return this.read(id)
   }
 
-  read(id: number): Note {
+  read(id: number) {
     const found = this.notes.find((note) => {
       return note.id == id
     })
     if (found) {
-      return found
+      return Promise.resolve(found)
     } else {
       throw new Error('Note not found. ID: ' + id)
     }
   }
 
-  update(note: Note): Note {
+  update(note: Note) {
     this.updateNotes(
       this.notes.map((savedNote) => {
         if (savedNote.id == note.id) {
@@ -87,16 +87,17 @@ export class NoteLocalStorageGateway implements NoteDataGatewayInterface {
     return this.read(note.id)
   }
 
-  delete(id: number): void {
+  delete(id: number) {
     this.updateNotes(this.notes.filter((note) => note.id != id))
+    return Promise.resolve(undefined)
   }
 
-  readByRange(start: Date, end: Date): Note[] {
+  readByRange(start: Date, end: Date) {
     const notesInRange = this.notes.filter(
       (note) =>
         note.date.getTime() >= start.getTime() &&
         note.date.getTime() < end.getTime()
     )
-    return notesInRange
+    return Promise.resolve(notesInRange)
   }
 }

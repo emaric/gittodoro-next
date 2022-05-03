@@ -1,19 +1,20 @@
-import { SessionController } from '@/modules/gittodoro/controllers/SessionController'
-import { SessionViewInterface } from '@/modules/gittodoro/controllers/presenters/sessions'
 import { Session } from '@/modules/gittodoro/models/Session'
+import { SessionsAPI } from '../../api/SessionsAPI'
+import { SessionLocalStorageGateway } from '../../db/local/SessionLocalStorageGateway'
 
 import '../MockLocalStorage'
 
-class TestSessionView implements SessionViewInterface {
-  updateView(session: Session): void {
-    console.log(JSON.stringify(session))
-  }
-  updateViewSessions(sessions: Session[]): void {
-    console.log(JSON.stringify(sessions))
-  }
-}
+describe('[SessionsAPI] unit tests', () => {
+  const api = new SessionsAPI(
+    {
+      updateView: (value) => {
+        value.session && console.log(JSON.stringify(value.session))
+        value.sessions && console.log(JSON.stringify(value.sessions))
+      },
+    },
+    new SessionLocalStorageGateway()
+  )
 
-describe('[SessionController] unit tests', () => {
   const sampleDuration = {
     pomodoro: 10,
     short: 2,
@@ -26,9 +27,6 @@ describe('[SessionController] unit tests', () => {
   const lastLineFromOutput = (log: jest.Mock<any, any>): string => {
     return log.mock.calls.at(-1).at(-1)
   }
-
-  const testView = new TestSessionView()
-  const controller = new SessionController(testView)
 
   const expected = {
     id: 0,
@@ -56,16 +54,16 @@ describe('[SessionController] unit tests', () => {
   }
 
   describe('when trying to start session', () => {
-    it('should display started session details', () => {
-      controller.start(sampleDuration, expected.start)
+    it('should display started session details', async () => {
+      await api.start(sampleDuration, expected.start)
       expect(lastLineFromOutput(log)).toBe(JSON.stringify(expected))
     })
   })
 
   describe('when trying to end session', () => {
-    it('should display stopped session details', () => {
+    it('should display stopped session details', async () => {
       const end = new Date()
-      controller.stop(end)
+      await api.stop(end)
       const expectedString = JSON.stringify(new Session({ ...expected, end }))
       expect(lastLineFromOutput(log)).toBe(expectedString)
     })
@@ -86,30 +84,30 @@ describe('[SessionController] unit tests', () => {
     const sample1Output = new Session({ ...expected, ...sample1 })
     const sample2Output = new Session({ ...expected, ...sample2 })
 
-    it('should display the sessions that started on and after the given start datetime but before the end datetime', () => {
-      controller.start(sampleDuration, sample1.start)
-      controller.stop(sample1.end)
+    it('should display the sessions that started on and after the given start datetime but before the end datetime', async () => {
+      api.start(sampleDuration, sample1.start)
+      api.stop(sample1.end)
 
-      controller.start(sampleDuration, sample2.start)
-      controller.stop(sample2.end)
+      api.start(sampleDuration, sample2.start)
+      api.stop(sample2.end)
 
       const start = new Date('2022-04-17T00:00:00Z')
       const end = new Date('2022-04-18T00:00:00Z')
-      controller.viewByRange(start, end)
+      await api.viewByRange(start, end)
 
       const expectedString = JSON.stringify([sample1Output, sample2Output])
       expect(lastLineFromOutput(log)).toBe(expectedString)
     })
-    it('should display the sessions that ended before the given end datetime', () => {
+    it('should display the sessions that ended before the given end datetime', async () => {
       const start = new Date('2022-04-18T00:00:00Z')
       const end = new Date('2022-04-19T00:00:00Z')
-      controller.viewByRange(start, end)
+      await api.viewByRange(start, end)
 
       const expectedString = JSON.stringify([sample2Output])
       expect(lastLineFromOutput(log)).toBe(expectedString)
     })
 
-    it('should display the first and last sessions', () => {
+    it('should display the first and last sessions', async () => {
       const duration = {
         pomodoro: 25,
         short: 5,
@@ -118,10 +116,10 @@ describe('[SessionController] unit tests', () => {
       }
 
       const firstStartDate = new Date(`2020-04-01T09:00:00.000Z`)
-      controller.start(duration, firstStartDate)
-      controller.stop(new Date(`2020-04-01T17:00:00.000Z`))
+      api.start(duration, firstStartDate)
+      api.stop(new Date(`2020-04-01T17:00:00.000Z`))
 
-      controller.viewFirstAndLast()
+      await api.viewFirstAndLast()
 
       const sessions = JSON.parse(lastLineFromOutput(log))
 

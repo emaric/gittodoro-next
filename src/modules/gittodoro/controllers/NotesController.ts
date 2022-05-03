@@ -25,14 +25,7 @@ const updateInteractor = updateNoteCommand(source, presenter)
 const deleteInteractor = deleteNoteCommand(source, presenter)
 const readByRangeInteractor = readNoteByRangeCommand(source, presenter)
 
-const createPromise = <T>(cf: CallableFunction) => {
-  return new Promise<T>((resolve) => {
-    presenter.setCallback(resolve)
-    cf()
-  })
-}
-
-export const createNote = (content: string, date = new Date()) => {
+export const createNote = async (content: string, date = new Date()) => {
   const request: NoteRequest = {
     timestamp: new Date(),
     message: 'Create a new note.',
@@ -40,9 +33,7 @@ export const createNote = (content: string, date = new Date()) => {
     date,
   }
 
-  return createPromise<{ note: Note }>(() =>
-    controller.createNote(createInteractor, request)
-  )
+  await controller.createNote(createInteractor, request)
 }
 
 export const readNote = (id: number) => {
@@ -52,9 +43,7 @@ export const readNote = (id: number) => {
     id,
   }
 
-  return createPromise<{ note: Note }>(() =>
-    controller.readNote(readInteractor, request)
-  )
+  controller.readNote(readInteractor, request)
 }
 
 export const updateNote = (
@@ -69,9 +58,7 @@ export const updateNote = (
     content,
     updatedAt,
   }
-  return createPromise<{ note: Note }>(() =>
-    controller.updateNote(updateInteractor, request)
-  )
+  return controller.updateNote(updateInteractor, request)
 }
 
 export const deleteNote = (id: number) => {
@@ -80,7 +67,7 @@ export const deleteNote = (id: number) => {
     message: 'Delete note by id.',
     id,
   }
-  return createPromise(() => controller.deleteNote(deleteInteractor, request))
+  return controller.deleteNote(deleteInteractor, request)
 }
 
 export const readNotesByRange = (start: Date, end: Date) => {
@@ -91,7 +78,10 @@ export const readNotesByRange = (start: Date, end: Date) => {
     end,
   }
 
-  return createPromise<{ notes: Note[] }>(() =>
-    controller.readNoteByRange(readByRangeInteractor, request)
-  )
+  return controller.readNoteByRange(readByRangeInteractor, request)
+}
+
+export const readFirstNote = async () => {
+  const result = await readNotesByRange(new Date('2022-01-01'), new Date())
+  console.log(result)
 }

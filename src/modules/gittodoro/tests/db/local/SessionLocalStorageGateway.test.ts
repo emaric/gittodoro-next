@@ -7,8 +7,8 @@ describe('[SessionLocalStorageGateway] unit tests', () => {
     const gateway = new SessionLocalStorageGateway()
     const date = new Date('2022-04-15T00:01:00.000Z')
     let expectedSession: any
-    it('should save to the localstorage as a json string list', () => {
-      expectedSession = gateway.createSession({
+    it('should save to the localstorage as a json string list', async () => {
+      expectedSession = await gateway.createSession({
         start: date,
         pomodoro: 50,
         short: 5,
@@ -25,26 +25,26 @@ describe('[SessionLocalStorageGateway] unit tests', () => {
       expect(actual).toBe(expected)
     })
 
-    it('should be able to load the previously saved session', () => {
-      const session = gateway.readSession(date)
+    it('should be able to load the previously saved session', async () => {
+      const session = await gateway.readSession(date)
       expect(session).toEqual(expectedSession)
     })
 
-    it('should be able to load the sessions in range', () => {
-      const sessionResponse = gateway.viewSessionsByRange(
+    it('should be able to load the sessions in range', async () => {
+      const sessionResponse = await gateway.viewSessionsByRange(
         new Date('2022-04-15T00:01:00.000Z'),
         new Date('2022-04-15T00:01:00.005Z')
       )
       expect(sessionResponse).toEqual([expectedSession])
     })
 
-    it('should be able to load the first session', () => {
-      const first = gateway.first()
+    it('should be able to load the first session', async () => {
+      const first = await gateway.first()
       expect(first).toEqual(gateway.sessions[0])
     })
 
-    it('should be able to load the last session', () => {
-      const last = gateway.last()
+    it('should be able to load the last session', async () => {
+      const last = await gateway.last()
       expect(last).toEqual(gateway.sessions[gateway.sessions.length - 1])
     })
   })

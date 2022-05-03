@@ -1,21 +1,29 @@
 import { SessionPresenterInterface } from '@emaric/gittodoro-ts/lib/interactor/responses/SessionPresenterInterface'
 import { SessionBaseResponse } from '@emaric/gittodoro-ts/lib/interactor/responses/SessionResponse'
+
+import { Session } from '@/modules/gittodoro/models/Session'
 import { mapSession, mapSessions } from './mappers'
 
+export type SessionViewType = {
+  session?: Session
+  sessions?: Session[]
+}
+
+export interface SessionsViewInterface {
+  updateView: (value: SessionViewType) => void
+}
+
 export class SessionsPresenter implements SessionPresenterInterface {
-  private updateView?: CallableFunction
+  private view: SessionsViewInterface
 
-  constructor(updateView?: CallableFunction) {
-    this.updateView = updateView
+  constructor(view: SessionsViewInterface) {
+    this.view = view
   }
 
-  setCallback(cb: CallableFunction) {
-    this.updateView = cb
-  }
-
-  present(response: SessionBaseResponse): void {
+  present(response: SessionBaseResponse): Promise<SessionViewType> {
     const session = response.session && mapSession(response.session)
     const sessions = response.sessions && mapSessions(response.sessions)
-    this.updateView && this.updateView({ session, sessions })
+    this.view.updateView({ session, sessions })
+    return Promise.resolve({ session, sessions })
   }
 }
