@@ -1,13 +1,23 @@
 import { NotePresenterInterface } from '@emaric/gittodoro-ts/lib/interactor/responses/NotePresenterInterface'
 import { NoteBaseResponse } from '@emaric/gittodoro-ts/lib/interactor/responses/NoteResponse'
+import { Note } from '../../models/Note'
 
 import { mapNote, mapNotes } from './mappers'
 
-export class NotesPresenter implements NotePresenterInterface {
-  private notesView?: CallableFunction
+export type NotesViewType = {
+  note?: Note
+  notes?: Note[]
+}
 
-  constructor(notesView?: CallableFunction) {
-    this.notesView = notesView
+export interface NotesViewInterface {
+  updateView: (value: NotesViewType) => void
+}
+
+export class NotesPresenter implements NotePresenterInterface {
+  private view?: NotesViewInterface
+
+  constructor(view?: NotesViewInterface) {
+    this.view = view
   }
 
   present(response: NoteBaseResponse) {
@@ -16,8 +26,7 @@ export class NotesPresenter implements NotePresenterInterface {
 
     const viewResponse = { note, notes }
 
-    this.notesView && this.notesView(viewResponse)
-
+    this.view && this.view.updateView(viewResponse)
     return Promise.resolve(viewResponse)
   }
 }

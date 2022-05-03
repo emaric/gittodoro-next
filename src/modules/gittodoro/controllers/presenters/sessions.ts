@@ -4,13 +4,13 @@ import { SessionBaseResponse } from '@emaric/gittodoro-ts/lib/interactor/respons
 import { Session } from '@/modules/gittodoro/models/Session'
 import { mapSession, mapSessions } from './mappers'
 
-export type SessionViewType = {
+export type SessionsViewType = {
   session?: Session
   sessions?: Session[]
 }
 
 export interface SessionsViewInterface {
-  updateView: (value: SessionViewType) => void
+  updateView: (value: SessionsViewType) => void
 }
 
 export class SessionsPresenter implements SessionPresenterInterface {
@@ -20,7 +20,7 @@ export class SessionsPresenter implements SessionPresenterInterface {
     this.view = view
   }
 
-  present(response: SessionBaseResponse): Promise<SessionViewType> {
+  present(response: SessionBaseResponse): Promise<SessionsViewType> {
     const session = response.session && mapSession(response.session)
     const sessions = response.sessions && mapSessions(response.sessions)
     this.view.updateView({ session, sessions })

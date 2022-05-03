@@ -1,20 +1,7 @@
-import { useMemo, createContext, ReactNode, useCallback, useContext, useState, useEffect } from "react"
+import { createContext, ReactNode, useCallback, useContext, useState, useEffect } from "react"
 
 import { User } from "@/modules/firebase/models/User"
-import { listenOnAuthStateChanged, UserController, UserPresenterInterface } from "@/modules/firebase/controller"
-
-class UserPresenter implements UserPresenterInterface {
-  onUserChanged: (user?: User) => void
-
-  constructor(onUserChanged: (user?: User) => void) {
-    this.onUserChanged = onUserChanged
-  }
-
-  present(user?: User): void {
-    this.onUserChanged(user)
-  }
-
-}
+import { listenOnAuthStateChanged, signInWithGithub as signIn, signOutFromGithub as signOut } from "@/modules/firebase/controller"
 
 type GithubAuthContextType = {
   signInWithGithub: () => void
@@ -29,41 +16,23 @@ interface Props {
 
 export const GithubAuthProvider = ({ children }: Props) => {
   const [githubUser, setGithubUser] = useState<User | undefined>(undefined)
+
   const handleUserChanged = useCallback((user?: User) => {
     setGithubUser(user)
   }, [])
 
-  const presenter = useMemo(() => {
-    if (handleUserChanged) {
-      return new UserPresenter(handleUserChanged)
-    }
-  }, [handleUserChanged])
-
-  const controller = useMemo(() => {
-    if (presenter) {
-      return new UserController(presenter)
-    }
-  }, [presenter])
-
-
   const signInWithGithub = useCallback(() => {
-    controller?.signInWithGithub()
-  }, [controller])
+    signIn()
+  }, [])
 
   const signOutFromGithub = useCallback(() => {
-    controller?.signOutFromGithub()
-  }, [controller])
+    signOut()
+  }, [])
 
   useEffect(() => {
     listenOnAuthStateChanged(handleUserChanged)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-
-  useEffect(() => {
-    if (!githubUser) {
-      console.log('anonymous user')
-    }
-  }, [githubUser])
 
   return (
     <GithubAuthContext.Provider value={{ signInWithGithub, signOutFromGithub, user: githubUser }}>

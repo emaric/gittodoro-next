@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import * as DateTime from '@/modules/temporal/DateTime'
-import { viewByRange } from '@/modules/gittodoro/controllers/SessionsController'
 
 import { Clock } from '@/models/Clock'
 import { Session } from '@/models/Session'
@@ -13,6 +12,9 @@ import ClockRecordsRing from '@/components/clock/ClockRecordsRing'
 
 import styles from './Sessions.module.css'
 import { generateRecords, Record } from '@/models/Record'
+import { readNotesByRange } from '@/modules/gittodoro/controllers/NotesController'
+import { useMainSessions } from '@/context/MainSessionsContextProvider'
+import { useMainNotes } from '@/context/MainNotesContextProvider'
 
 interface Props {
   date: DateTime.DateTimeType
@@ -28,18 +30,30 @@ const DaySession = ({ date, disabled }: Props) => {
 
   const [sessions, setSessions] = useState<Session[]>([])
   const [records, setRecords] = useState<Record[]>([])
+  const [notesCount, setNotesCount] = useState(0)
+
+  const { viewByRange } = useMainSessions()
+  const { readNotesByRange } = useMainNotes()
 
   const viewSessions = useCallback(() => {
-    viewByRange(clock.startDate, clock.endDate).then(({ sessions }) => {
+    viewByRange(clock.startDate, clock.endDate).then((sessions) => {
       setSessions(sessions.map(session => new Session(session)))
     })
-  }, [clock])
+  }, [clock, viewByRange])
+
+  const updateNotesCount = useCallback(() => {
+    readNotesByRange(clock.startDate, clock.endDate).then((notes) => {
+      setNotesCount(notes.length)
+    })
+  }, [clock, readNotesByRange])
 
   useEffect(() => {
     if (clock) {
       viewSessions()
+      updateNotesCount()
     }
-  }, [clock, viewSessions])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [clock])
 
   useEffect(() => {
     if (sessions) {
@@ -62,6 +76,18 @@ const DaySession = ({ date, disabled }: Props) => {
         <ClockRecordsRing clock={clock} records={records} />
         {!disabled && <ClockButton onClick={handleClick} />}
         <ClockLabel value={date.day.toString()} />
+        {notesCount &&
+          <text
+            className={styles.notes_count_text}
+            dominantBaseline="central"
+            x="50%"
+            y="77%"
+            fontSize=".3rem"
+            textAnchor="middle"
+            pointerEvents="none"
+          >
+            {notesCount + " NOTE" + (notesCount == 1 ? '' : 'S')}
+          </text>}
       </ClockBase>
     </div>
   )

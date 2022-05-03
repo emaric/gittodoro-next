@@ -5,15 +5,12 @@ import { SessionLocalStorageGateway } from '../../db/local/SessionLocalStorageGa
 import '../MockLocalStorage'
 
 describe('[SessionsAPI] unit tests', () => {
-  const api = new SessionsAPI(
-    {
-      updateView: (value) => {
-        value.session && console.log(JSON.stringify(value.session))
-        value.sessions && console.log(JSON.stringify(value.sessions))
-      },
+  const api = new SessionsAPI(new SessionLocalStorageGateway(), {
+    updateView: (value) => {
+      value.session && console.log(JSON.stringify(value.session))
+      value.sessions && console.log(JSON.stringify(value.sessions))
     },
-    new SessionLocalStorageGateway()
-  )
+  })
 
   const sampleDuration = {
     pomodoro: 10,

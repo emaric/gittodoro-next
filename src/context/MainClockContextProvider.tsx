@@ -1,8 +1,6 @@
 import { createContext, useContext, useState, useEffect, useCallback } from "react"
 
 import { Clock } from "@/models/Clock"
-import { UserController } from "@/modules/firebase/controller"
-
 
 type MainClockContextType = {
   mainClock?: Clock,

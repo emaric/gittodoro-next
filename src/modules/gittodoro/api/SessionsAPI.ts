@@ -14,16 +14,16 @@ import { ViewFirstAndLastSessionsCommand } from '@emaric/gittodoro-ts/lib/intera
 import {
   SessionsPresenter,
   SessionsViewInterface,
-  SessionViewType,
+  SessionsViewType,
 } from '../controllers/presenters/sessions'
 import { Duration } from '../models/Duration'
 
 export class SessionsAPI {
-  controller: SessionController
-  view: SessionsViewInterface
-  db: SessionDataGatewayInterface
+  private controller: SessionController
+  private view?: SessionsViewInterface
+  private db: SessionDataGatewayInterface
 
-  constructor(view: SessionsViewInterface, db: SessionDataGatewayInterface) {
+  constructor(db: SessionDataGatewayInterface, view?: SessionsViewInterface) {
     this.view = view
     this.db = db
     this.controller = new SessionController()
@@ -31,8 +31,8 @@ export class SessionsAPI {
 
   private createView(resolve: CallableFunction) {
     return {
-      updateView: (value: SessionViewType) => {
-        this.view.updateView(value)
+      updateView: (value: SessionsViewType) => {
+        this.view?.updateView(value)
         resolve(value)
       },
     }
@@ -42,7 +42,7 @@ export class SessionsAPI {
     return new SessionsPresenter(this.createView(resolve))
   }
 
-  start(duration: Duration, start: Date) {
+  start(duration: Duration, start: Date): Promise<SessionsViewType> {
     const request: StartSessionRequest = {
       timestamp: new Date(),
       message: 'Start a new Session',
@@ -58,7 +58,7 @@ export class SessionsAPI {
     })
   }
 
-  stop(end: Date) {
+  stop(end: Date): Promise<SessionsViewType> {
     const request: EndSessionRequest = {
       timestamp: new Date(),
       message: 'End latest Session',
@@ -73,7 +73,7 @@ export class SessionsAPI {
     })
   }
 
-  viewByRange(start: Date, end: Date) {
+  viewByRange(start: Date, end: Date): Promise<SessionsViewType> {
     const request: ViewSessionsByRangeRequest = {
       timestamp: new Date(),
       message: 'View Sessions by Range',
@@ -89,7 +89,7 @@ export class SessionsAPI {
     })
   }
 
-  viewFirstAndLast() {
+  viewFirstAndLast(): Promise<SessionsViewType> {
     const request: ViewFirstAndLastSessionsRequest = {
       timestamp: new Date(),
       message: 'View First and Last Sessions',

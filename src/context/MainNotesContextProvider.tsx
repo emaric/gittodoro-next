@@ -1,11 +1,12 @@
 import { createContext, ReactNode, useContext, useEffect, useState, useCallback } from "react"
 
 import * as DateTime from '@/modules/temporal/DateTime'
-import * as Controller from '@/modules/gittodoro/controllers/NotesController'
 
 import { Note } from "@/models/Note"
 
 import { useMainClock } from "./MainClockContextProvider"
+import { NotesAPI } from "@/modules/gittodoro/api/NotesAPI"
+import { NoteLocalStorageGateway } from "@/modules/gittodoro/db/local/NoteLocalStorageGateway"
 
 
 type MainNotesContextType = {
@@ -13,9 +14,11 @@ type MainNotesContextType = {
   createNote: (content: string, date?: Date) => void,
   updateNote: (note: Note) => void,
   deleteNote: (id: number) => void,
+  readNotesByRange: (start: Date, end: Date) => Promise<Note[]>,
+  readFirstNote: () => Promise<Note | undefined>
   mainNote?: Note,
   newNote?: Note,
-  allowAdd: boolean
+  allowAdd: boolean,
 }
 
 const MainNotesContext = createContext<MainNotesContextType | undefined>(undefined)
@@ -26,34 +29,65 @@ export const MainNotesProvider = (props: { children: ReactNode }) => {
   const [mainNotes, setMainNotes] = useState<Note[]>([])
   const [allowAdd, setAllowAdd] = useState(true)
 
+  const [localNotesAPI, setLocalNotesAPI] = useState<NotesAPI | undefined>(undefined)
+
+  const createLocalNotesAPI = useCallback(() => {
+    if (!localNotesAPI) {
+      const db = new NoteLocalStorageGateway()
+      setLocalNotesAPI(new NotesAPI(db))
+    }
+  }, [localNotesAPI])
+
+  useEffect(() => createLocalNotesAPI(), [createLocalNotesAPI])
+
   const loadNotesFromStorage = useCallback(() => {
-    if (mainClock) {
-      Controller.readNotesByRange(mainClock.startDate, mainClock.endDate).then(({ notes }) => {
+    if (mainClock && localNotesAPI) {
+      localNotesAPI.readByRange(mainClock.startDate, mainClock.endDate).then(({ notes }) => {
         setMainNotes(notes)
       })
     }
-  }, [mainClock])
+  }, [mainClock, localNotesAPI])
 
   const createNote = useCallback((content: string, date = new Date()) => {
-    Controller.createNote(content, date).then(({ note }) => {
+    localNotesAPI && localNotesAPI.create(content, date).then(({ note }) => {
       setNewNote(note)
       loadNotesFromStorage()
     })
-  }, [loadNotesFromStorage])
+  }, [loadNotesFromStorage, localNotesAPI])
 
   const updateNote = useCallback((note: Note) => {
-    Controller.updateNote(note.id, note.content, new Date()).then((_) => {
+    localNotesAPI && localNotesAPI.update(note.id, note.content, new Date()).then((_) => {
       setNewNote(undefined)
       loadNotesFromStorage()
     })
-  }, [loadNotesFromStorage])
+  }, [loadNotesFromStorage, localNotesAPI])
 
   const deleteNote = useCallback((id: number) => {
-    Controller.deleteNote(id).then((_) => {
+    localNotesAPI && localNotesAPI.delete(id).then((_) => {
       setNewNote(undefined)
       loadNotesFromStorage()
     })
-  }, [loadNotesFromStorage])
+  }, [loadNotesFromStorage, localNotesAPI])
+
+  const readNotesByRange = useCallback(async (start: Date, end: Date) => {
+    if (localNotesAPI) {
+      const result = await localNotesAPI.readByRange(start, end)
+      const notes = result.notes
+      return notes ? notes.map(note => new Note(note)) : []
+    }
+    return []
+  }, [localNotesAPI])
+
+  const readFirstNote = useCallback(async (): Promise<Note | undefined> => {
+    if (localNotesAPI) {
+      const result = await localNotesAPI.readFirst()
+      const note = result.note
+      if (note) {
+        return new Note(note)
+      }
+    }
+    return undefined
+  }, [localNotesAPI])
 
   useEffect(() => {
     loadNotesFromStorage()
@@ -72,7 +106,7 @@ export const MainNotesProvider = (props: { children: ReactNode }) => {
   }, [loadNotesFromStorage])
 
   return (
-    <MainNotesContext.Provider value={{ mainNotes, newNote, allowAdd, createNote, updateNote, deleteNote }}>
+    <MainNotesContext.Provider value={{ mainNotes, newNote, allowAdd, createNote, updateNote, deleteNote, readNotesByRange, readFirstNote }}>
       {props.children}
     </MainNotesContext.Provider>
   )

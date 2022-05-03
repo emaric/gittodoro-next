@@ -3,27 +3,9 @@ import { signIn, signOut } from './authGithub'
 import { onAuthStateChanged } from 'firebase/auth'
 import { auth } from '.'
 
-export interface UserPresenterInterface {
-  present(user?: User): void
-}
+export const signInWithGithub = signIn
 
-export class UserController {
-  id: number
-  presenter: UserPresenterInterface
-
-  constructor(presenter: UserPresenterInterface) {
-    this.id = Date.now()
-    this.presenter = presenter
-  }
-
-  signInWithGithub() {
-    signIn()
-  }
-
-  signOutFromGithub() {
-    signOut()
-  }
-}
+export const signOutFromGithub = signOut
 
 export const listenOnAuthStateChanged = (cb: (user?: User) => void) => {
   onAuthStateChanged(auth, (user) => {

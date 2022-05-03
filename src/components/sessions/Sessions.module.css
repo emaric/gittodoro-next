@@ -14,3 +14,17 @@
 .disabled {
   opacity: 0.5;
 }
+
+.notes_count_text {
+  opacity: 0.1;
+}
+
+.day_container:hover .notes_count_text {
+  opacity: 1;
+}
+
+@media screen and (prefers-color-scheme: dark) {
+  .notes_count_text {
+    fill: rgba(255, 255, 254, 1);
+  }
+}
