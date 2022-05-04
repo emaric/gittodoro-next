@@ -1,18 +1,18 @@
 .button {
-  font-size: 2rem !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   border: solid 2px !important;
   border-radius: 50%;
   width: var(--user-avatar-width);
   height: var(--user-avatar-width);
   min-width: var(--user-avatar-width);
   min-height: var(--user-avatar-width);
-}
-
-.button > svg {
-  width: 100%;
-  height: 100%;
+  font-size: 2.4rem !important;
+  color: #d1f9ed;
 }
 
 .button:hover {
   color: #d1f9ed;
+  border-color: #d1f9ed;
 }
