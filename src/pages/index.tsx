@@ -1,20 +1,14 @@
-import { ReactNode } from 'react'
 import Head from 'next/head'
-import { NextPage } from 'next/types'
-
-import { MainClockProvider } from '@/context/MainClockContextProvider'
-import { MainSessionsProvider } from '@/context/MainSessionsContextProvider'
-import { MainRecordsProvider } from '@/context/MainRecordsContextProvider'
-import { MainNotesProvider } from "@/context/MainNotesContextProvider"
 
 import styles from '../styles/Home.module.css'
+
 import MainClock from '@/components/clock/MainClock'
 import MainNotes from '@/components/notes/MainNotes'
 import MainDatePicker from '@/components/date/MainDatePicker'
 import MainAddNewNoteButton from '@/components/notes/MainAddNewNoteButton'
 import MainAuth from '@/components/auth/MainAuth'
 
-const Home: NextPage = () => {
+const Home = () => {
   return (
     <>
       <Head>

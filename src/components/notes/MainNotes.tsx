@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 
 import { Note } from '@/models/Note'
-import { useMainNotes } from '@/context/MainNotesContextProvider'
+import { useMainNotes } from '@/context/gittodoro/MainNotesContextProvider'
 
 import styles from './Note.module.css'
 

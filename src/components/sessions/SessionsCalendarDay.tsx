@@ -12,10 +12,10 @@ import ClockRecordsRing from '@/components/clock/ClockRecordsRing'
 
 import styles from './Sessions.module.css'
 import { generateRecords, Record } from '@/models/Record'
-import { useMainSessions } from '@/context/MainSessionsContextProvider'
-import { useMainNotes } from '@/context/MainNotesContextProvider'
+import { useMainSessions } from '@/context/gittodoro/MainSessionsContextProvider'
+import { useMainNotes } from '@/context/gittodoro/MainNotesContextProvider'
 import { useRouter } from 'next/router'
-import { useMainClock } from '@/context/MainClockContextProvider'
+import { useMainClock } from '@/context/gittodoro/MainClockContextProvider'
 
 interface Props {
   date: DateTime.DateTimeType

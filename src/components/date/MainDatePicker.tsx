@@ -5,7 +5,7 @@ import * as DateTime from '@/modules/temporal/DateTime'
 import styles from './MainDatePicker.module.css'
 
 import * as Button from './buttons'
-import { useMainClock } from "@/context/MainClockContextProvider"
+import { useMainClock } from "@/context/gittodoro/MainClockContextProvider"
 import { Clock } from "@/models/Clock"
 import Link from "next/link"
 

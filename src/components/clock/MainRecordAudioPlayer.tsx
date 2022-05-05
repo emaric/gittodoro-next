@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react"
 
-import { useMainSessions } from "@/context/MainSessionsContextProvider"
-import { useMainRecords } from "@/context/MainRecordsContextProvider"
+import { useMainSessions } from "@/context/gittodoro/MainSessionsContextProvider"
+import { useMainRecords } from "@/context/gittodoro/MainRecordsContextProvider"
 import { Session } from "@/models/Session"
 
 import { AudioEnd, AudioStart, AudioTick } from "./audios"

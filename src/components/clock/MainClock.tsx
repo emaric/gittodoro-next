@@ -1,9 +1,9 @@
 import { useState, MouseEvent, useEffect, useCallback, useMemo } from 'react'
 import Head from 'next/head'
 
-import { useMainClock } from '@/context/MainClockContextProvider'
-import { useMainSessions } from '@/context/MainSessionsContextProvider'
-import { useMainRecords } from '@/context/MainRecordsContextProvider'
+import { useMainClock } from '@/context/gittodoro/MainClockContextProvider'
+import { useMainSessions } from '@/context/gittodoro/MainSessionsContextProvider'
+import { useMainRecords } from '@/context/gittodoro/MainRecordsContextProvider'
 import { Session } from '@/models/Session'
 import { Record, createRecord, generateRecords } from '@/models/Record'
 
@@ -14,7 +14,6 @@ import ClockCountdownTimer from './ClockCountdownTimer'
 import ClockActiveRing from './ClockActiveRing'
 import ClockRecordsRing from './ClockRecordsRing'
 import MainRecordAudioPlayer from './MainRecordAudioPlayer'
-import { now } from '@/modules/temporal/DateTime'
 
 const MainClock = () => {
   const { mainClock } = useMainClock()

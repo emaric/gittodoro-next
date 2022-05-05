@@ -4,7 +4,7 @@ import { DateTimeType } from "@/modules/temporal/DateTime"
 
 import { Clock } from "@/models/Clock"
 import { generateRecords, Record } from "@/models/Record"
-import { useMainSessions } from "@/context/MainSessionsContextProvider"
+import { useMainSessions } from "@/context/gittodoro/MainSessionsContextProvider"
 
 import ClockBase from "@/components/clock/ClockBase"
 import ClockRecordsRing from "@/components/clock/ClockRecordsRing"
