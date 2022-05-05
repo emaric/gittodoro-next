@@ -55,7 +55,7 @@ const MainRecordAudioPlayer = () => {
   return (
     <>
       <AudioStart play={playStart} />
-      <AudioTick playOnLoop={playTick} />
+      {/* <AudioTick playOnLoop={playTick} /> */}
       <AudioEnd play={playEnd} />
     </>
   )
