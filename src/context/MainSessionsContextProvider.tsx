@@ -1,10 +1,9 @@
-import { FC, ReactNode, createContext, useContext, useState, useMemo, useCallback, useEffect } from "react"
+import { FC, ReactNode, createContext, useContext, useState, useCallback, useEffect } from "react"
 
 import { Session } from "@/models/Session"
 
 import { useMainClock } from "./MainClockContextProvider"
-import { SessionsAPI } from "@/modules/gittodoro/api/SessionsAPI"
-import { SessionLocalStorageGateway } from "@/modules/gittodoro/db/local/SessionLocalStorageGateway"
+import { localSessionsAPI } from "@/modules/gittodoro"
 
 type SessionContextType = {
   session?: Session,
@@ -26,17 +25,6 @@ export const MainSessionsProvider: FC<Props> = ({ children }) => {
 
   const [session, setSession] = useState<Session | undefined>(undefined)
   const [mainSessions, setMainSessions] = useState<Session[]>([])
-  const [localSessionsAPI, setLocalSessionsAPI] = useState<SessionsAPI | undefined>(undefined)
-
-  const createLocalSessionsAPI = useCallback(() => {
-    if (!localSessionsAPI) {
-      const db = new SessionLocalStorageGateway()
-      setLocalSessionsAPI(new SessionsAPI(db))
-    }
-  }, [localSessionsAPI])
-
-  useEffect(() => { createLocalSessionsAPI() }, [createLocalSessionsAPI])
-
 
   const loadMainSessions = useCallback(() => {
     if (mainClock && localSessionsAPI) {
@@ -46,14 +34,12 @@ export const MainSessionsProvider: FC<Props> = ({ children }) => {
         sessions && setMainSessions(sessions.map(session => new Session(session)))
       })
     }
-  }, [mainClock, localSessionsAPI])
+  }, [mainClock])
 
   const start = useCallback(() => {
-    if (!localSessionsAPI)
-      throw new Error('Initialize the SessionsAPI')
-
     const now = new Date()
 
+    // TODO: get default duration from db
     const defaultDuration = {
       pomodoro: 25 * 60,
       short: 5 * 60,
@@ -64,12 +50,9 @@ export const MainSessionsProvider: FC<Props> = ({ children }) => {
     localSessionsAPI.start(defaultDuration, now).then(({ session }) => {
       session && setSession(new Session(session))
     })
-  }, [localSessionsAPI])
+  }, [])
 
   const stop = useCallback(() => {
-    if (!localSessionsAPI)
-      throw new Error('Initialize the SessionsAPI')
-
     const now = new Date()
     localSessionsAPI.stop(now).then(({ session }) => {
       if (session) {
@@ -78,25 +61,19 @@ export const MainSessionsProvider: FC<Props> = ({ children }) => {
         setMainSessions(mainSessions.concat(completed))
       }
     })
-  }, [mainSessions, localSessionsAPI])
+  }, [mainSessions])
 
   const viewByRange = useCallback(async (start: Date, end: Date) => {
-    if (localSessionsAPI) {
-      const result = await localSessionsAPI.viewByRange(start, end)
-      const sessions = result.sessions
-      return sessions ? sessions.map(session => new Session(session)) : []
-    }
-    return []
-  }, [localSessionsAPI])
+    const result = await localSessionsAPI.viewByRange(start, end)
+    const sessions = result.sessions
+    return sessions ? sessions.map(session => new Session(session)) : []
+  }, [])
 
   const viewFirstAndLast = useCallback(async () => {
-    if (localSessionsAPI) {
-      const result = await localSessionsAPI.viewFirstAndLast()
-      const sessions = result.sessions
-      return sessions ? sessions.map(session => new Session(session)) : []
-    }
-    return []
-  }, [localSessionsAPI])
+    const result = await localSessionsAPI.viewFirstAndLast()
+    const sessions = result.sessions
+    return sessions ? sessions.map(session => new Session(session)) : []
+  }, [])
 
   useEffect(() => {
     loadMainSessions()

@@ -1,8 +1,8 @@
-import { useMemo, useState } from 'react'
+import { memo, StrictMode, useMemo } from 'react'
 
 import * as DateTime from '@/modules/temporal/DateTime'
 
-import WeekSessions from './WeekSessions'
+import SessionsCalendarWeek from './SessionsCalendarWeek'
 
 interface Props {
   selectedDate: DateTime.DateTimeType
@@ -15,13 +15,15 @@ const SessionsCalendar = ({ selectedDate, minDate, maxDate }: Props) => {
 
   return (
     <>
-      <WeekSessions start={mainStart.subtract({ days: 14 })} min={minDate} max={maxDate} />
-      <WeekSessions start={mainStart.subtract({ days: 7 })} min={minDate} max={maxDate} />
-      <WeekSessions start={mainStart} min={minDate} max={maxDate} />
-      <WeekSessions start={mainStart.add({ days: 7 })} min={minDate} max={maxDate} />
-      <WeekSessions start={mainStart.add({ days: 14 })} min={minDate} max={maxDate} />
+      <StrictMode>
+        <SessionsCalendarWeek start={mainStart.subtract({ days: 14 })} min={minDate} max={maxDate} />
+        <SessionsCalendarWeek start={mainStart.subtract({ days: 7 })} min={minDate} max={maxDate} />
+        <SessionsCalendarWeek start={mainStart} min={minDate} max={maxDate} />
+        <SessionsCalendarWeek start={mainStart.add({ days: 7 })} min={minDate} max={maxDate} />
+        <SessionsCalendarWeek start={mainStart.add({ days: 14 })} min={minDate} max={maxDate} />
+      </StrictMode>
     </>
   )
 }
 
-export default SessionsCalendar
+export default memo(SessionsCalendar)

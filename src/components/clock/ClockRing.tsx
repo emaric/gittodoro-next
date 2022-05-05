@@ -1,4 +1,4 @@
-import { FC } from "react"
+import { FC, memo, useMemo } from "react"
 
 import * as DateTime from "@/modules/temporal/DateTime"
 import { Clock } from "@/models/Clock"
@@ -14,12 +14,13 @@ interface Props {
 }
 
 const ClockRing: FC<Props> = ({ clock, state, start, end }) => {
-  const dashoffset = -1 * calcElapsedTime(clock, start)
-  const dasharray = calcElapsedTime(clock, end) + dashoffset
+  const dashoffset = useMemo(() => -1 * calcElapsedTime(clock, start), [clock, start])
+  const dasharray = useMemo(() => calcElapsedTime(clock, end) + dashoffset, [clock, end, dashoffset])
 
   const circleProps = {
     state: state
   }
+
   return (
     <circle
       className={styles.record}
@@ -42,4 +43,4 @@ const calcElapsedTime = (clock: Clock, dateTime: DateTime.DateTimeType) => {
 }
 
 
-export default ClockRing
+export default memo(ClockRing)

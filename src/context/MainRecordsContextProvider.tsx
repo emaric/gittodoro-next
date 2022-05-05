@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useState, useContext, useEffect } from "react";
+import { createContext, ReactNode, useState, useContext, useEffect, useCallback, useMemo } from "react";
 
 import { generateRecords, Record } from "@/models/Record";
 
@@ -19,7 +19,7 @@ export const MainRecordsProvider = (props: { children: ReactNode }) => {
   const [record, setRecord] = useState<Record | undefined>(undefined)
   const [mainRecords, setMainRecords] = useState<Record[]>([])
 
-  useEffect(() => {
+  const generatedRecords = useMemo(() => {
     let records: Record[] = []
     mainSessions.forEach((session) => {
       if (session.endPlainDateTime) {
@@ -27,10 +27,12 @@ export const MainRecordsProvider = (props: { children: ReactNode }) => {
         records = [...records, ...generateRecords(session, end)]
       }
     })
-
-    setMainRecords(records)
-
+    return records
   }, [mainSessions])
+
+  useEffect(() => {
+    setMainRecords(generatedRecords)
+  }, [generatedRecords])
 
   return (
     <MainRecordsContext.Provider value={{ mainRecords, record, setRecord }}>

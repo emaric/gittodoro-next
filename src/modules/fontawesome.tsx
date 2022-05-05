@@ -1,5 +1,5 @@
 import { faPenToSquare, faCopy, faTrashCan, faNoteSticky } from '@fortawesome/free-regular-svg-icons'
-import { faAngleDown, faAngleUp, faMinus, faXmark, faAngleRight, faAngleLeft, faPlus } from '@fortawesome/free-solid-svg-icons'
+import { faAngleDown, faAngleUp, faMinus, faXmark, faAngleRight, faAngleLeft, faPlus, faRefresh } from '@fortawesome/free-solid-svg-icons'
 import { faGithub } from '@fortawesome/free-brands-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
@@ -51,4 +51,8 @@ export const GithubIcon = () => {
 
 export const NoteStickyIcon = () => {
   return <FontAwesomeIcon icon={faNoteSticky} />
+}
+
+export const RefreshIcon = () => {
+  return <FontAwesomeIcon icon={faRefresh} />
 }

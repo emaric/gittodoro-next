@@ -5,7 +5,7 @@ import styles from './SignIn.module.css'
 
 const MainSignInButton = () => {
 
-  const { signInWithGithub, signOutFromGithub } = useGithubAuth()
+  const { signInWithGithub } = useGithubAuth()
 
   return (
     <button onClick={signInWithGithub} className={styles.button} title='Sign in with Github'>

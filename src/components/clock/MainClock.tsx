@@ -79,12 +79,13 @@ const MainClock = () => {
 
   useEffect(() => {
     if (mainClock) {
+      // console.log(mainClock.start.toPlainDate().toString(), mainRecords)
       setRecords(mainRecords)
     } else {
       setRecords([])
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mainClock, mainRecords])
+  }, [mainRecords])
 
   return (
     <>

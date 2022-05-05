@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { memo, useCallback, useEffect, useMemo, useState } from 'react'
 
 import * as DateTime from '@/modules/temporal/DateTime'
 
@@ -12,28 +12,34 @@ import ClockRecordsRing from '@/components/clock/ClockRecordsRing'
 
 import styles from './Sessions.module.css'
 import { generateRecords, Record } from '@/models/Record'
-import { readNotesByRange } from '@/modules/gittodoro/controllers/NotesController'
 import { useMainSessions } from '@/context/MainSessionsContextProvider'
 import { useMainNotes } from '@/context/MainNotesContextProvider'
+import { useRouter } from 'next/router'
+import { useMainClock } from '@/context/MainClockContextProvider'
 
 interface Props {
   date: DateTime.DateTimeType
   disabled: boolean
 }
 
-const DaySession = ({ date, disabled }: Props) => {
-  const handleClick = useCallback(() => {
-    console.log('click', date.toJSON())
-  }, [date])
-
+const SessionsCalendarDay = ({ date, disabled }: Props) => {
+  const dateString = date.toPlainDate().toString()
+  const router = useRouter()
   const clock = useMemo(() => new Clock(date, date.add({ days: 1 })), [date])
 
   const [sessions, setSessions] = useState<Session[]>([])
-  const [records, setRecords] = useState<Record[]>([])
   const [notesCount, setNotesCount] = useState(0)
 
   const { viewByRange } = useMainSessions()
   const { readNotesByRange } = useMainNotes()
+
+  const { setMainClock } = useMainClock()
+
+  const handleClick = useCallback(() => {
+    router.push('/')
+    setMainClock(clock)
+  }, [router, clock, setMainClock])
+
 
   const viewSessions = useCallback(() => {
     viewByRange(clock.startDate, clock.endDate).then((sessions) => {
@@ -55,7 +61,7 @@ const DaySession = ({ date, disabled }: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [clock])
 
-  useEffect(() => {
+  const records = useMemo(() => {
     if (sessions) {
       let sessionRecords: Record[] = []
       sessions.forEach(session => {
@@ -64,14 +70,13 @@ const DaySession = ({ date, disabled }: Props) => {
           sessionRecords = [...sessionRecords, ...generateRecords(session, end)]
         }
       })
-      setRecords(sessionRecords)
+      return sessionRecords
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    return []
   }, [sessions])
 
-
   return (
-    <div className={[styles.day_container, disabled && styles.disabled].join(' ')}>
+    <button title={dateString} className={[styles.day_container, disabled && styles.disabled].join(' ')}>
       <ClockBase>
         <ClockRecordsRing clock={clock} records={records} />
         {!disabled && <ClockButton onClick={handleClick} />}
@@ -89,8 +94,8 @@ const DaySession = ({ date, disabled }: Props) => {
             {notesCount + " NOTE" + (notesCount == 1 ? '' : 'S')}
           </text>}
       </ClockBase>
-    </div>
+    </button>
   )
 }
 
-export default DaySession
+export default memo(SessionsCalendarDay)

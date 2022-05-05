@@ -1,4 +1,4 @@
-import { FC, ReactNode } from 'react'
+import { ReactNode } from 'react'
 
 import styles from './Clock.module.css'
 import { RADIUS as R, CX, CY } from './constants'
@@ -7,7 +7,7 @@ interface Props {
   children: ReactNode
 }
 
-const ClockBase: FC<Props> = ({ children }) => {
+const ClockBase = ({ children }: Props) => {
   return (
     <figure className={styles.container}>
       <svg

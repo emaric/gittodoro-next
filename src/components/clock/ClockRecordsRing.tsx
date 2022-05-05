@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react"
+import { memo, useMemo } from "react"
 
 import * as DateTime from "@/modules/temporal/DateTime"
 import { Clock } from "@/models/Clock"
@@ -13,35 +13,30 @@ interface Props {
 }
 
 const ClockRecordsRing = ({ clock, records }: Props) => {
-  const [filteredRecords, setFilteredRecords] = useState<Record[]>([])
-
-  const filterRecords = useCallback(() => {
-    setFilteredRecords(filterRecordsUtil(clock, records))
+  const filteredRecords = useMemo(() => {
+    const filteredRecords = filterRecordsUtil(clock, records)
+    return filteredRecords.map((record) => {
+      record.start = DateTime.difference(clock.start, record.start) > 0
+        ? clock.start
+        : record.start
+      record.end = DateTime.difference(record.end, DateTime.now()) > 0
+        ? DateTime.now()
+        : record.end
+      return record
+    })
   }, [clock, records])
-
-  useEffect(() => {
-    filterRecords()
-  }, [filterRecords])
 
   return (
     <>
       {filteredRecords.map((record, i) => (
         <ClockRing key={i}
           state={record.state}
-          start={
-            DateTime.difference(clock.start, record.start) > 0
-              ? clock.start
-              : record.start
-          }
-          end={
-            DateTime.difference(record.end, DateTime.now()) > 0
-              ? DateTime.now()
-              : record.end
-          }
+          start={record.start}
+          end={record.end}
           clock={clock} />
       ))}
     </>
   )
 }
 
-export default ClockRecordsRing
+export default memo(ClockRecordsRing)

@@ -4,10 +4,10 @@ import { NextPage } from "next"
 import * as DateTime from '@/modules/temporal/DateTime'
 
 import SessionsCalendar from "@/components/sessions/SessionsCalendar"
-
-import styles from '@/styles/Sessions.module.css'
 import { useMainSessions } from "@/context/MainSessionsContextProvider"
 import { useMainNotes } from "@/context/MainNotesContextProvider"
+
+import styles from '@/styles/Sessions.module.css'
 
 const SesssionsPage: NextPage = () => {
   const [minDate, setMinDate] = useState(DateTime.today())

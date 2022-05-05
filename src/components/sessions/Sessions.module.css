@@ -6,6 +6,10 @@
 }
 
 .day_container {
+  border: 0px;
+  margin: 0;
+  padding: 0;
+  cursor: default;
   background-color: transparent;
   min-width: 3rem;
   min-height: 3rem;

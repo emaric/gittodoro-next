@@ -10,28 +10,35 @@ import { Clock } from "@/models/Clock"
 import Link from "next/link"
 
 const MainDatePicker = (props: { sessionsLink: string }) => {
-  const { setMainClock } = useMainClock()
+  const { mainClock, setMainClock } = useMainClock()
 
-  const [mainDate, setMainDate] = useState(DateTime.today())
+  const [mainDate, setMainDate] = useState<DateTime.DateTimeType | undefined>()
 
   const handleLeft = useCallback(() => {
-    setMainDate(mainDate.subtract({ days: 1 }))
+    setMainDate(mainDate?.subtract({ days: 1 }))
   }, [mainDate])
 
   const handleRight = useCallback(() => {
-    setMainDate(mainDate.add({ days: 1 }))
+    setMainDate(mainDate?.add({ days: 1 }))
   }, [mainDate])
 
   useEffect(() => {
-    setMainClock(new Clock(mainDate, mainDate.add({ days: 1 })))
-  }, [mainDate, setMainClock])
+    setMainDate(mainClock?.start)
+  }, [mainClock])
+
+  useEffect(() => {
+    if (mainClock && mainDate && DateTime.difference(mainDate, mainClock?.start) != 0) {
+      setMainClock(new Clock(mainDate, mainDate.add({ days: 1 })))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mainDate])
 
   return (
     <div className={styles.container}>
       <Button.Left onClick={handleLeft} />
       <Link href={props.sessionsLink} passHref>
         <button>
-          {mainDate.toPlainDate().toString()}
+          {mainDate?.toPlainDate().toString()}
         </button>
       </Link>
       <Button.Right onClick={handleRight} />
