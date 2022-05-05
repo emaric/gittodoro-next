@@ -1,4 +1,4 @@
-import { FC, ReactNode, createContext, useContext, useState, useCallback, useEffect } from "react"
+import { FC, ReactNode, createContext, useContext, useState, useCallback, useEffect, useMemo } from "react"
 
 import { Session } from "@/models/Session"
 
@@ -26,15 +26,20 @@ export const MainSessionsProvider: FC<Props> = ({ children }) => {
   const [session, setSession] = useState<Session | undefined>(undefined)
   const [mainSessions, setMainSessions] = useState<Session[]>([])
 
-  const loadMainSessions = useCallback(() => {
-    if (mainClock && localSessionsAPI) {
-      const start = new Date(mainClock.start.toString())
-      const end = new Date(mainClock.end.toString())
-      localSessionsAPI.viewByRange(start, end).then(({ sessions }) => {
-        sessions && setMainSessions(sessions.map(session => new Session(session)))
-      })
+  const promisedMainSessions = useMemo(async () => {
+    if (mainClock) {
+      const response = await localSessionsAPI.viewByRange(mainClock.startDate, mainClock.endDate)
+      const sessions = response.sessions?.map(session => new Session(session))
+      return sessions || []
     }
+    return []
   }, [mainClock])
+
+  const loadMainSessions = useCallback(() => {
+    promisedMainSessions.then(sessions => {
+      setMainSessions(sessions)
+    })
+  }, [promisedMainSessions])
 
   const start = useCallback(() => {
     const now = new Date()
