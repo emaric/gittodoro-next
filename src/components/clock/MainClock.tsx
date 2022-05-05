@@ -1,11 +1,11 @@
-import { useState, MouseEvent, useEffect, useCallback } from 'react'
+import { useState, MouseEvent, useEffect, useCallback, useMemo } from 'react'
 import Head from 'next/head'
 
 import { useMainClock } from '@/context/MainClockContextProvider'
 import { useMainSessions } from '@/context/MainSessionsContextProvider'
 import { useMainRecords } from '@/context/MainRecordsContextProvider'
 import { Session } from '@/models/Session'
-import { Record, createRecord } from '@/models/Record'
+import { Record, createRecord, generateRecords } from '@/models/Record'
 
 import ClockBase from "./ClockBase"
 import ClockButton from "./ClockButton"
@@ -14,11 +14,13 @@ import ClockCountdownTimer from './ClockCountdownTimer'
 import ClockActiveRing from './ClockActiveRing'
 import ClockRecordsRing from './ClockRecordsRing'
 import MainRecordAudioPlayer from './MainRecordAudioPlayer'
+import { now } from '@/modules/temporal/DateTime'
 
 const MainClock = () => {
   const { mainClock } = useMainClock()
-  const { session, start, stop, mainSessions } = useMainSessions()
+  const { session, start, stop } = useMainSessions()
   const { mainRecords, record, setRecord } = useMainRecords()
+  const [newSessions, setNewSessions] = useState<Session[]>([])
 
   const defaultPomodoro = 25 * 60
 
@@ -58,8 +60,18 @@ const MainClock = () => {
     } else {
       setRecord(undefined)
     }
+
+    if (session && session.end) {
+      setNewSessions(newSessions.concat(session))
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session])
+
+  useEffect(() => {
+    newSessions.forEach(session =>
+      session.endPlainDateTime && setRecords(generateRecords(session, session.endPlainDateTime))
+    )
+  }, [newSessions])
 
   useEffect(() => {
     updateCountdownTimer()
@@ -77,16 +89,6 @@ const MainClock = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [record])
 
-  useEffect(() => {
-    if (mainClock) {
-      // console.log(mainClock.start.toPlainDate().toString(), mainRecords)
-      setRecords(mainRecords)
-    } else {
-      setRecords([])
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mainRecords])
-
   return (
     <>
       {(!session || session.end) ? (
@@ -100,6 +102,7 @@ const MainClock = () => {
       <ClockBase>
         {mainClock && <ClockSecondsRing clock={mainClock} />}
         {mainClock && <ClockRecordsRing clock={mainClock} records={mainRecords} />}
+        {mainClock && <ClockRecordsRing clock={mainClock} records={records} />}
         {mainClock && <ClockActiveRing clock={mainClock} record={record} />}
         <ClockButton onClick={handleClick}>
           <ClockCountdownTimer initialDuration={remainingTime} state={state} running={countdown} />

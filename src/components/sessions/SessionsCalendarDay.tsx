@@ -36,8 +36,8 @@ const SessionsCalendarDay = ({ date, disabled }: Props) => {
   const { setMainClock } = useMainClock()
 
   const handleClick = useCallback(() => {
-    router.push('/')
     setMainClock(clock)
+    router.push('/')
   }, [router, clock, setMainClock])
 
 
