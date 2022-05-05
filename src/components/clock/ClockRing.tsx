@@ -14,8 +14,20 @@ interface Props {
 }
 
 const ClockRing: FC<Props> = ({ clock, state, start, end }) => {
-  const dashoffset = useMemo(() => -1 * calcElapsedTime(clock, start), [clock, start])
-  const dasharray = useMemo(() => calcElapsedTime(clock, end) + dashoffset, [clock, end, dashoffset])
+  const dashoffset = useMemo(() => {
+    const calculatedStart = DateTime.difference(clock.start, start) > 0
+      ? clock.start
+      : start
+    return -1 * calcElapsedTime(clock, calculatedStart)
+  }, [clock, start])
+
+  const dasharray = useMemo(() => {
+    const calculatedEnd = DateTime.difference(end, clock.end) > 0
+      ? clock.end
+      : end
+    const startDashArray = calcElapsedTime(clock, calculatedEnd) + dashoffset
+    return startDashArray > 0 ? startDashArray : 0
+  }, [clock, end, dashoffset])
 
   const circleProps = {
     state: state
@@ -43,4 +55,6 @@ const calcElapsedTime = (clock: Clock, dateTime: DateTime.DateTimeType) => {
 }
 
 
-export default memo(ClockRing)
+export default memo(ClockRing, (prev, next) => {
+  return JSON.stringify(prev) == JSON.stringify(next)
+})
