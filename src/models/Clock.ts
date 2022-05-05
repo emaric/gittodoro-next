@@ -37,4 +37,8 @@ export class Clock {
   get endDate() {
     return new Date(this.end.toJSON())
   }
+
+  toString() {
+    return JSON.stringify(this)
+  }
 }

@@ -1,6 +1,6 @@
-import { createContext, useContext, useState, useEffect, useCallback } from "react"
+import { createContext, useContext, useState, useEffect, useCallback, useMemo } from "react"
 
-import { now } from '@/modules/temporal/DateTime'
+import { fromISO, now } from '@/modules/temporal/DateTime'
 
 import { Clock } from "@/models/Clock"
 
@@ -12,13 +12,25 @@ type MainClockContextType = {
 const MainClockContext = createContext<MainClockContextType | undefined>(undefined)
 
 export const MainClockProvider = (props: { children: JSX.Element }) => {
-  const [mainClock, setMainClock] = useState<Clock | undefined>(undefined)
+  // Work around for memoizing the mainClock. 
+  const [mainClockString, setMainClockString] = useState("")
+
+  const mainClock = useMemo(() => {
+    if (mainClockString) {
+      const { start, end } = JSON.parse(mainClockString)
+      return new Clock(fromISO(start), fromISO(end))
+    }
+  }, [mainClockString])
+
+  const setMainClock = useCallback((clock: Clock) => {
+    setMainClockString(JSON.stringify(clock))
+  }, [])
 
   const updateMainClock = useCallback(() => {
     const start = now()
     const end = start.add({ minutes: 2 })
-    const newClock = new Clock(start, end)
-    setMainClock(newClock)
+    setMainClock(new Clock(start, end))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
@@ -35,7 +47,8 @@ export const MainClockProvider = (props: { children: JSX.Element }) => {
     } else {
       updateMainClock()
     }
-  }, [mainClock, updateMainClock])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mainClock])
 
   return (
     <MainClockContext.Provider value={{ mainClock, setMainClock }}>
