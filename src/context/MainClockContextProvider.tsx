@@ -27,9 +27,7 @@ export const MainClockProvider = (props: { children: JSX.Element }) => {
   }, [])
 
   const updateMainClock = useCallback(() => {
-    const start = now()
-    const end = start.add({ minutes: 2 })
-    setMainClock(new Clock(start, end))
+    setMainClock(new Clock())
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
