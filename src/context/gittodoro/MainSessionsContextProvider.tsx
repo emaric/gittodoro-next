@@ -96,7 +96,7 @@ export const useMainSessions = () => {
   const context = useContext(SessionContext)
 
   if (!context) {
-    throw new Error("useSession must be used inside a `SessionProvider`")
+    throw new Error("useSession must be used inside a `MainSessionsProvider`")
   }
 
   return context
