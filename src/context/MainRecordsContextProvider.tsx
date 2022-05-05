@@ -3,6 +3,7 @@ import { createContext, ReactNode, useState, useContext, useEffect, useCallback,
 import { generateRecords, Record } from "@/models/Record";
 
 import { useMainSessions } from "./MainSessionsContextProvider";
+import { useMainClock } from "./MainClockContextProvider";
 
 
 type MainRecordsContextType = {
@@ -14,25 +15,30 @@ type MainRecordsContextType = {
 const MainRecordsContext = createContext<MainRecordsContextType>({ mainRecords: [], setRecord: () => { } })
 
 export const MainRecordsProvider = (props: { children: ReactNode }) => {
-  const { mainSessions } = useMainSessions()
+  const { mainClock } = useMainClock()
+  const { promisedMainSessions } = useMainSessions()
 
   const [record, setRecord] = useState<Record | undefined>(undefined)
   const [mainRecords, setMainRecords] = useState<Record[]>([])
 
-  const generatedRecords = useMemo(() => {
+  const promisedMainRecords = useMemo(async () => {
     let records: Record[] = []
-    mainSessions.forEach((session) => {
+    const sessions = await promisedMainSessions
+    sessions.forEach((session) => {
       if (session.endPlainDateTime) {
         const end = session.endPlainDateTime
         records = [...records, ...generateRecords(session, end)]
       }
     })
     return records
-  }, [mainSessions])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [promisedMainSessions])
 
   useEffect(() => {
-    setMainRecords(generatedRecords)
-  }, [generatedRecords])
+    promisedMainRecords.then(records => {
+      setMainRecords(records)
+    })
+  }, [promisedMainRecords])
 
   return (
     <MainRecordsContext.Provider value={{ mainRecords, record, setRecord }}>

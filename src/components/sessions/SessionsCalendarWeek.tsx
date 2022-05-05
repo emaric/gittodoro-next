@@ -20,11 +20,13 @@ const SessionsCalendarWeek = ({ start, min, max }: Props) => {
 
   return (
     <div className={styles.week_container}>
-      {days.map((day, i) => <SessionsCalendarDay key={i} date={day} disabled={
+      {days.map((day) => <SessionsCalendarDay key={day.toJSON()} date={day} disabled={
         DateTime.difference(day, max) > 0 || DateTime.difference(min, day) > 0
       } />)}
     </div>
   )
 }
 
-export default memo(SessionsCalendarWeek)
+export default memo(SessionsCalendarWeek, (prev, next) => {
+  return JSON.stringify(prev) == JSON.stringify(next)
+})

@@ -29,25 +29,33 @@ const ClockRing: FC<Props> = ({ clock, state, start, end }) => {
     return startDashArray > 0 ? startDashArray : 0
   }, [clock, end, dashoffset])
 
-  const circleProps = {
-    state: state
-  }
+  return (
+    <MemoCircle state={state} strokeDashoffset={dashoffset} strokeDasharray={`${dasharray} ${C}`} />
+  )
 
+}
+
+type CircleType = {
+  state: string,
+  strokeDashoffset: number,
+  strokeDasharray: string
+}
+
+const Circle = (props: CircleType) => {
   return (
     <circle
       className={styles.record}
-      {...circleProps}
+      {...props}
       cx={CX}
       cy={CY}
       r={R}
       fill="transparent"
       strokeWidth="1.5"
-      strokeDashoffset={dashoffset}
-      strokeDasharray={`${dasharray} ${C}`}
     />
   )
-
 }
+
+const MemoCircle = memo(Circle)
 
 const calcElapsedTime = (clock: Clock, dateTime: DateTime.DateTimeType) => {
   const diff = DateTime.difference(dateTime, clock.start)

@@ -12,6 +12,7 @@ type SessionContextType = {
   mainSessions: Session[],
   viewByRange: (start: Date, end: Date) => Promise<Session[]>,
   viewFirstAndLast: () => Promise<Session[]>,
+  promisedMainSessions: Promise<Session[]>
 }
 
 const SessionContext = createContext<SessionContextType | undefined>(undefined)
@@ -85,7 +86,7 @@ export const MainSessionsProvider: FC<Props> = ({ children }) => {
   }, [loadMainSessions])
 
   return (
-    <SessionContext.Provider value={{ session, start, stop, mainSessions, viewByRange, viewFirstAndLast }}>
+    <SessionContext.Provider value={{ session, start, stop, mainSessions, viewByRange, viewFirstAndLast, promisedMainSessions }}>
       {children}
     </SessionContext.Provider>
   )

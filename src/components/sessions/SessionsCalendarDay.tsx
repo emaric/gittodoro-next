@@ -98,4 +98,6 @@ const SessionsCalendarDay = ({ date, disabled }: Props) => {
   )
 }
 
-export default memo(SessionsCalendarDay)
+export default memo(SessionsCalendarDay, (prev, next) => {
+  return JSON.stringify(prev) == JSON.stringify(next)
+})

@@ -99,7 +99,7 @@ const MainClock = () => {
 
       <ClockBase>
         {mainClock && <ClockSecondsRing clock={mainClock} />}
-        {mainClock && <ClockRecordsRing clock={mainClock} records={records} />}
+        {mainClock && <ClockRecordsRing clock={mainClock} records={mainRecords} />}
         {mainClock && <ClockActiveRing clock={mainClock} record={record} />}
         <ClockButton onClick={handleClick}>
           <ClockCountdownTimer initialDuration={remainingTime} state={state} running={countdown} />
