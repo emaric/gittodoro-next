@@ -76,3 +76,16 @@ export const filterRecords = (clock: Clock, records: Record[]) => {
     .filter((record) => difference(record.end, clock.start) > 0)
     .filter((record) => difference(clock.end, record.start) > 0)
 }
+
+export const generateRecordsFromSessions = (sessions: Session[]) => {
+  let records: Record[] = []
+  sessions.forEach((session) => {
+    if (session.endPlainDateTime) {
+      records = [
+        ...records,
+        ...generateRecords(session, session.endPlainDateTime),
+      ]
+    }
+  })
+  return records
+}

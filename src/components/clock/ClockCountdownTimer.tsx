@@ -44,13 +44,13 @@ const ClockCountdownTimer = ({ state, initialDuration, running = false }: Props)
   }, [remainingSeconds, remainingMinutes])
 
   useEffect(() => {
+    console.log(running, remainingMinutes, remainingSeconds)
     if (running) {
       const to = setTimeout(() => {
         decrementRemainingTime()
       }, 1000)
       return () => clearTimeout(to)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [running, decrementRemainingTime])
 
   useEffect(() => {
