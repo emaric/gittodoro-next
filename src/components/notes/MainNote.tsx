@@ -95,6 +95,7 @@ export const MainNote = ({ note, editing, onChange, onClickEdit, onClickDelete }
         </div>
       }
       <div className={styles.footer}>
+        <label>{!isVisible && "Hidden"}</label>
         <label>Modified: {note?.updatedAt?.toLocaleString()}</label>
       </div>
     </article>
