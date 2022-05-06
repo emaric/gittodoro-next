@@ -35,7 +35,7 @@
   visibility: visible !important;
 }
 
-.note_container:hover  .header {
+.note_container:hover .header {
   visibility: visible;
 }
 
@@ -45,7 +45,7 @@
   align-items: center;
   border-top-width: 1px;
   border-top-style: dotted;
-  border-color: #abd1c6; 
+  border-color: #abd1c6;
   margin-top: 3px;
   padding: 2px;
 }
@@ -83,7 +83,7 @@
 
 .note_container textarea {
   width: 100%;
-  border: 1px solid transparent; 
+  border: 1px solid transparent;
   resize: vertical;
   min-height: 8rem;
   font-size: 1rem;
@@ -106,7 +106,7 @@
   }
 
   .secondary_button {
-    border-color:  #004643;
+    border-color: #004643;
   }
 
   .note_container textarea {
@@ -121,5 +121,4 @@
   .note_container .footer {
     border-color: #004643;
   }
-
 }
