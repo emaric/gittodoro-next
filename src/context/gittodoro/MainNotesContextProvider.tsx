@@ -1,11 +1,11 @@
 import { createContext, ReactNode, useContext, useEffect, useState, useCallback } from "react"
 
 import * as DateTime from '@/modules/temporal/DateTime'
-import { localNotesAPI } from "@/modules/gittodoro"
 
 import { Note } from "@/models/Note"
 
 import { useClock } from "../clock/ClockContextProvider"
+import { useLocalStorageAPI } from "./LocalStorageAPIContextProvider"
 
 type MainNotesContextType = {
   mainNotes?: Note[],
@@ -22,6 +22,7 @@ type MainNotesContextType = {
 const MainNotesContext = createContext<MainNotesContextType | undefined>(undefined)
 
 export const MainNotesProvider = (props: { children: ReactNode }) => {
+  const { localNotesAPI } = useLocalStorageAPI()
   const { clock: mainClock } = useClock()
   const [newNote, setNewNote] = useState<Note | undefined>(undefined)
   const [mainNotes, setMainNotes] = useState<Note[]>([])
@@ -33,34 +34,34 @@ export const MainNotesProvider = (props: { children: ReactNode }) => {
         setMainNotes(notes)
       })
     }
-  }, [mainClock])
+  }, [mainClock, localNotesAPI])
 
   const createNote = useCallback((content: string, date = new Date()) => {
     localNotesAPI.create(content, date).then(({ note }) => {
       setNewNote(note)
       loadNotesFromStorage()
     })
-  }, [loadNotesFromStorage])
+  }, [loadNotesFromStorage, localNotesAPI])
 
   const updateNote = useCallback((note: Note) => {
     localNotesAPI.update(note.id, note.content, new Date()).then((_) => {
       setNewNote(undefined)
       loadNotesFromStorage()
     })
-  }, [loadNotesFromStorage])
+  }, [loadNotesFromStorage, localNotesAPI])
 
   const deleteNote = useCallback((id: number) => {
     localNotesAPI.delete(id).then((_) => {
       setNewNote(undefined)
       loadNotesFromStorage()
     })
-  }, [loadNotesFromStorage])
+  }, [loadNotesFromStorage, localNotesAPI])
 
   const readNotesByRange = useCallback(async (start: Date, end: Date) => {
     const result = await localNotesAPI.readByRange(start, end)
     const notes = result.notes
     return notes ? notes.map(note => new Note(note)) : []
-  }, [])
+  }, [localNotesAPI])
 
   const readFirstNote = useCallback(async (): Promise<Note | undefined> => {
     const result = await localNotesAPI.readFirst()
@@ -69,7 +70,7 @@ export const MainNotesProvider = (props: { children: ReactNode }) => {
       return new Note(note)
     }
     return undefined
-  }, [])
+  }, [localNotesAPI])
 
   useEffect(() => {
     loadNotesFromStorage()

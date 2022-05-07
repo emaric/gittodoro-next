@@ -1,9 +1,9 @@
 import { FC, ReactNode, createContext, useContext, useState, useCallback, useEffect, useMemo } from "react"
 
-import { localSessionsAPI } from "@/modules/gittodoro"
 import { Session } from "@/models/Session"
 
 import { useClock } from "../clock/ClockContextProvider"
+import { useLocalStorageAPI } from "../gittodoro/LocalStorageAPIContextProvider"
 
 type SessionContextType = {
   session?: Session,
@@ -22,6 +22,7 @@ interface Props {
 }
 
 export const MainSessionsProvider: FC<Props> = ({ children }) => {
+  const { localSessionsAPI } = useLocalStorageAPI()
   const { clock: mainClock } = useClock()
 
   const [session, setSession] = useState<Session | undefined>(undefined)
@@ -34,7 +35,7 @@ export const MainSessionsProvider: FC<Props> = ({ children }) => {
       return sessions || []
     }
     return []
-  }, [mainClock])
+  }, [mainClock, localSessionsAPI])
 
   const loadMainSessions = useCallback(() => {
     promisedMainSessions.then(sessions => {
@@ -56,7 +57,7 @@ export const MainSessionsProvider: FC<Props> = ({ children }) => {
     localSessionsAPI.start(defaultDuration, now).then(({ session }) => {
       session && setSession(new Session(session))
     })
-  }, [])
+  }, [localSessionsAPI])
 
   const stop = useCallback(() => {
     const now = new Date()
@@ -67,19 +68,19 @@ export const MainSessionsProvider: FC<Props> = ({ children }) => {
         setMainSessions(mainSessions.concat(completed))
       }
     })
-  }, [mainSessions])
+  }, [mainSessions, localSessionsAPI])
 
   const viewByRange = useCallback(async (start: Date, end: Date) => {
     const result = await localSessionsAPI.viewByRange(start, end)
     const sessions = result.sessions
     return sessions ? sessions.map(session => new Session(session)) : []
-  }, [])
+  }, [localSessionsAPI])
 
   const viewFirstAndLast = useCallback(async () => {
     const result = await localSessionsAPI.viewFirstAndLast()
     const sessions = result.sessions
     return sessions ? sessions.map(session => new Session(session)) : []
-  }, [])
+  }, [localSessionsAPI])
 
   useEffect(() => {
     loadMainSessions()

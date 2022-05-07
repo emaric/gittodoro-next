@@ -1,10 +1,8 @@
 import { createContext, ReactNode, useCallback, useContext, useEffect, useState } from "react";
 
-import { localSessionsAPI } from "@/modules/gittodoro";
-
 import { createRecord, Record } from "@/models/Record";
 import { Session } from "@/models/Session";
-import { now } from "@/modules/temporal/DateTime";
+import { useLocalStorageAPI } from "../gittodoro/LocalStorageAPIContextProvider";
 
 type SessionsManagerContextType = {
   session?: Session,
@@ -18,6 +16,7 @@ type SessionsManagerContextType = {
 const SessionsManagerContext = createContext<SessionsManagerContextType>({})
 
 export const SessionsManagerProvider = (props: { children: ReactNode }) => {
+  const { localSessionsAPI } = useLocalStorageAPI()
   const [session, setSession] = useState<Session | undefined>()
   const [record, setRecord] = useState<Record | undefined>()
 
@@ -68,7 +67,7 @@ export const SessionsManagerProvider = (props: { children: ReactNode }) => {
     if (result.session) {
       setSession(new Session(result.session))
     }
-  }, [])
+  }, [localSessionsAPI])
 
   const stopSession = useCallback(async () => {
     const result = await localSessionsAPI.stop(new Date())
@@ -76,7 +75,7 @@ export const SessionsManagerProvider = (props: { children: ReactNode }) => {
       setSessions(sessions.concat(new Session(result.session)))
     }
     setSession(undefined)
-  }, [sessions])
+  }, [sessions, localSessionsAPI])
 
   return (
     <SessionsManagerContext.Provider value={{ session, record, startSession, stopSession, sessions, records }}>

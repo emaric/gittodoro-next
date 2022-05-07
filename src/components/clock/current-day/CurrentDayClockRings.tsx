@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from "react"
 
-import { localSessionsAPI } from "@/modules/gittodoro"
 import { Session } from "@/models/Session"
 import { generateRecordsFromSessions, Record } from "@/models/Record"
 
@@ -10,8 +9,10 @@ import { useSessionsManager } from "@/context/gittodoro-sessions/SesssionsManage
 import ClockSecondsRing from "@/components/clock/ClockSecondsRing"
 import ClockRecordsRing from "@/components/clock/ClockRecordsRing"
 import ClockActiveRing from "@/components/clock/ClockActiveRing"
+import { useLocalStorageAPI } from "@/context/gittodoro/LocalStorageAPIContextProvider"
 
 const CurrentDayClockRings = () => {
+  const { localSessionsAPI } = useLocalStorageAPI()
   const { currentDayClock: clock } = useCurrentDayClock()
   const { record, records, sessions } = useSessionsManager()
 
@@ -24,7 +25,8 @@ const CurrentDayClockRings = () => {
     }
     return []
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [clock, sessions])
+  }, [clock, sessions, localSessionsAPI])
+
   const [localRecords, setLocalRecords] = useState<Record[]>([])
 
   useEffect(() => {
