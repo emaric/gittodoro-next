@@ -1,114 +1,34 @@
-import { useCallback, useEffect, useMemo, useState } from "react"
+import { useCallback } from "react"
 
-import { localSessionsAPI } from "@/modules/gittodoro"
-import { now } from "@/modules/temporal/DateTime"
+import { useSessionsManager } from "@/context/gittodoro-sessions/SesssionsManagerContextProvider"
 
-import { Clock } from "@/models/Clock"
-import { Session } from "@/models/Session"
-import { createRecord, Record } from "@/models/Record"
-
-import ClockActiveRing from "../ClockActiveRing"
-import ClockRecordsRing from "../ClockRecordsRing"
-import ClockButton from "../ClockButton"
+import ClockButton from "@/components/clock/ClockButton"
 import { CurrentRecordTimer } from '@/components/clock/current-day/CurrentRecordTimer'
-import CurrentRecordAudioPlayer from "./CurrentRecordAudioPlayer"
-import CurrentDayClock from "./CurrentDayClock"
-import { useCurrentDayClock } from "@/context/clock/CurrentDayClockContextProvider"
-import CurrentRecordRing from "./CurrentRecordRing"
+import CurrentRecordRing from "@/components/clock/current-day/CurrentRecordRing"
 
 const SessionsManagerRing = () => {
-  const { currentDayClock: clock } = useCurrentDayClock()
-  const [records, setRecords] = useState<Record[]>([])
-  const [session, setSession] = useState<Session | undefined>()
-  const [state, setState] = useState("")
-  const [record, setRecord] = useState<Record | undefined>()
+  const { session, record, startSession, stopSession } = useSessionsManager()
 
-  const startSession = useCallback(async () => {
-    // TODO: get default duration from other source
-    const duration = {
-      id: -1,
-      pomodoro: 25 * 60,
-      short: 5 * 60,
-      long: 15 * 60,
-      longInterval: 4
-    }
-    const testDuration = {
-      id: -2,
-      pomodoro: 25,
-      short: 5,
-      long: 15,
-      longInterval: 4
-    }
-    const result = await localSessionsAPI.start(testDuration, new Date())
-    if (result.session) {
-      setSession(new Session(result.session))
-    }
-  }, [])
-
-  const stopSession = useCallback(async () => {
-    const result = await localSessionsAPI.stop(new Date())
-    if (result.session) {
-      setSession(undefined)
-    }
-  }, [])
-
-  const handleClick = useCallback(async () => {
+  const handleClick = useCallback(() => {
     // TODO: show loading
-    if (session) {
-      await stopSession()
+    if (stopSession && startSession) {
+      if (session) {
+        stopSession()
+      } else {
+        startSession()
+      }
     } else {
-      await startSession()
+      throw new Error('Must be inside `SessionsMangerProvider`')
     }
     // TODO: stop loading
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [session])
-
-  useEffect(() => {
-    if (session) {
-      setState(session.stateString)
-      setRecord(createRecord(session))
-    } else {
-      setState("")
-    }
-  }, [session])
-
-  useEffect(() => {
-    if (state && record && session) {
-      const tilNextState = 1000 * record.remainingTime
-      const waitForNextState = setTimeout(() => {
-        record && setRecords(records.concat(record))
-        session.switchTimer()
-        setState(session.stateString)
-        setRecord(createRecord(session))
-      }, tilNextState)
-
-      return () => clearTimeout(waitForNextState)
-    } else {
-      if (record) {
-        record.end = now()
-        setRecords(records.concat(record))
-      }
-      setRecord(undefined)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state])
+  }, [session, startSession, stopSession])
 
   return (
     <>
-      <CurrentRecordAudioPlayer session={session} record={record} />
-
-      <CurrentDayClock>
-        {clock &&
-          <>
-            <ClockRecordsRing clock={clock} records={records} />
-            <ClockActiveRing clock={clock} record={record} />
-          </>
-        }
-        <ClockButton onClick={handleClick}>
-          <CurrentRecordTimer record={record} />
-        </ClockButton>
-        <CurrentRecordRing record={record} />
-      </CurrentDayClock>
+      <CurrentRecordRing record={record} />
+      <ClockButton onClick={handleClick}>
+        <CurrentRecordTimer record={record} />
+      </ClockButton>
     </>
   )
 }

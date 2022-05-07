@@ -1,21 +1,20 @@
-import { ReactNode, useEffect, useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 
 import { localSessionsAPI } from "@/modules/gittodoro"
 import { Session } from "@/models/Session"
 import { generateRecordsFromSessions, Record } from "@/models/Record"
 
 import { useCurrentDayClock } from "@/context/clock/CurrentDayClockContextProvider"
+import { useSessionsManager } from "@/context/gittodoro-sessions/SesssionsManagerContextProvider"
 
-import ClockBase from "@/components/clock/ClockBase"
 import ClockSecondsRing from "@/components/clock/ClockSecondsRing"
 import ClockRecordsRing from "@/components/clock/ClockRecordsRing"
+import ClockActiveRing from "@/components/clock/ClockActiveRing"
 
-interface CurrentDayClockProps {
-  children: ReactNode
-}
-
-const CurrentDayClock = ({ children }: CurrentDayClockProps) => {
+const CurrentDayClockRings = () => {
   const { currentDayClock: clock } = useCurrentDayClock()
+  const { record, records } = useSessionsManager()
+
   const promisedRecordsFromLocalStorage = useMemo(async () => {
     if (clock) {
       const result = await localSessionsAPI.viewByRange(clock.startDate, clock.endDate)
@@ -38,12 +37,17 @@ const CurrentDayClock = ({ children }: CurrentDayClockProps) => {
   }, [clock])
 
   return (
-    <ClockBase>
-      {clock && <ClockSecondsRing clock={clock} />}
-      {clock && <ClockRecordsRing clock={clock} records={localRecords} />}
-      {children}
-    </ClockBase>
+    <>
+      {clock &&
+        <>
+          <ClockSecondsRing clock={clock} />
+          <ClockRecordsRing clock={clock} records={localRecords} />
+          {records && <ClockRecordsRing clock={clock} records={records} />}
+          {record && <ClockActiveRing clock={clock} record={record} />}
+        </>
+      }
+    </>
   )
 }
 
-export default CurrentDayClock
+export default CurrentDayClockRings

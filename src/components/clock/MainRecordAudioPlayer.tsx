@@ -1,61 +1,12 @@
-import { useCallback, useEffect, useState } from "react"
+import { useSessionsManager } from "@/context/gittodoro-sessions/SesssionsManagerContextProvider"
 
-import { useMainSessions } from "@/context/gittodoro/MainSessionsContextProvider"
-import { useMainRecords } from "@/context/gittodoro/MainRecordsContextProvider"
-
-import { AudioEnd, AudioStart } from "./audios"
+import CurrentRecordAudioPlayer from "./current-day/CurrentRecordAudioPlayer"
 
 const MainRecordAudioPlayer = () => {
-  const [playStart, setPlayStart] = useState(false)
-  const [playTick, setPlayTick] = useState(false)
-  const [playEnd, setPlayEnd] = useState(false)
-  const [state, setState] = useState("")
-
-  const { session } = useMainSessions()
-  const { record } = useMainRecords()
-
-  const turnOffAll = useCallback(() => {
-    setPlayStart(false)
-    setPlayEnd(false)
-    setPlayTick(false)
-  }, [])
-
-  useEffect(() => {
-    if (record && state) {
-      turnOffAll()
-      setPlayStart(true)
-      setPlayTick(true)
-      const ms = (record?.remainingTime) * 1000
-      const to = setTimeout(() => {
-        if (session && !session.end) {
-          turnOffAll()
-          setPlayEnd(true)
-        }
-      }, ms)
-      return () => clearTimeout(to)
-    } else {
-      turnOffAll()
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state])
-
-  useEffect(() => {
-    if (session && !session.end && record) {
-      setState(record.state)
-    } else {
-      turnOffAll()
-      setState("")
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [record])
-
+  const { session, record } = useSessionsManager()
 
   return (
-    <>
-      <AudioStart play={playStart} />
-      <AudioEnd play={playEnd} />
-    </>
+    <CurrentRecordAudioPlayer session={session} record={record} />
   )
 }
 
