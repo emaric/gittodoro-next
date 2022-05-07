@@ -3,7 +3,6 @@ import { createContext, ReactNode, useState, useContext, useEffect, useCallback,
 import { generateRecords, Record } from "@/models/Record";
 
 import { useMainSessions } from "./MainSessionsContextProvider";
-import { useMainClock } from "./MainClockContextProvider";
 
 
 type MainRecordsContextType = {
@@ -15,7 +14,6 @@ type MainRecordsContextType = {
 const MainRecordsContext = createContext<MainRecordsContextType>({ mainRecords: [], setRecord: () => { } })
 
 export const MainRecordsProvider = (props: { children: ReactNode }) => {
-  const { mainClock } = useMainClock()
   const { promisedMainSessions } = useMainSessions()
 
   const [record, setRecord] = useState<Record | undefined>(undefined)

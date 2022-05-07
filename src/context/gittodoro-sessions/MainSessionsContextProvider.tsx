@@ -1,9 +1,9 @@
 import { FC, ReactNode, createContext, useContext, useState, useCallback, useEffect, useMemo } from "react"
 
+import { localSessionsAPI } from "@/modules/gittodoro"
 import { Session } from "@/models/Session"
 
-import { useMainClock } from "./MainClockContextProvider"
-import { localSessionsAPI } from "@/modules/gittodoro"
+import { useClock } from "../clock/ClockContextProvider"
 
 type SessionContextType = {
   session?: Session,
@@ -22,7 +22,7 @@ interface Props {
 }
 
 export const MainSessionsProvider: FC<Props> = ({ children }) => {
-  const { mainClock } = useMainClock()
+  const { clock: mainClock } = useClock()
 
   const [session, setSession] = useState<Session | undefined>(undefined)
   const [mainSessions, setMainSessions] = useState<Session[]>([])

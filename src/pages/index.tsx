@@ -1,17 +1,14 @@
 import Head from "next/head"
 
-import { useClock } from "@/context/clock/ClockContextProvider"
-
+import MainClock from "@/components/clock/MainClock"
 import MainAuth from "@/components/auth/MainAuth"
 import MainDatePicker from "@/components/date/MainDatePicker"
 import MainAddNewNoteButton from "@/components/notes/MainAddNewNoteButton"
 import MainNotes from "@/components/notes/MainNotes"
 
 import styles from '@/styles/Home.module.css'
-import MainClock from "@/components/clock/MainClock"
 
 const HomePage = () => {
-  const { clock, setClock } = useClock()
   return (
     <>
       <Head>

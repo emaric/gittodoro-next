@@ -11,7 +11,7 @@ type ClockContextType = {
 const ClockContext = createContext<ClockContextType>({})
 
 export const ClockProvider = (props: { children: ReactNode }) => {
-  const [clockString, setClockString] = useState("")
+  const [clockString, setClockString] = useState(new Clock().toString())
 
   const fromClockString = useCallback((clockJsonString: string) => {
     const clockJson = JSON.parse(clockJsonString)
@@ -30,11 +30,6 @@ export const ClockProvider = (props: { children: ReactNode }) => {
 
   const setClock = useCallback((clock: Clock) => {
     setClockString(clock.toString())
-  }, [])
-
-  useEffect(() => {
-    setClock(new Clock())
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (

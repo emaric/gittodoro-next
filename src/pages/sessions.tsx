@@ -4,7 +4,7 @@ import { NextPage } from "next"
 import * as DateTime from '@/modules/temporal/DateTime'
 
 import SessionsCalendar from "@/components/sessions/SessionsCalendar"
-import { useMainSessions } from "@/context/gittodoro/MainSessionsContextProvider"
+import { useMainSessions } from "@/context/gittodoro-sessions/MainSessionsContextProvider"
 import { useMainNotes } from "@/context/gittodoro/MainNotesContextProvider"
 
 import styles from '@/styles/Sessions.module.css'

@@ -1,9 +1,14 @@
 import { memo, useCallback, useEffect, useMemo, useState } from 'react'
+import { useRouter } from 'next/router'
 
 import * as DateTime from '@/modules/temporal/DateTime'
 
 import { Clock } from '@/models/Clock'
 import { Session } from '@/models/Session'
+import { generateRecords, Record } from '@/models/Record'
+import { useMainSessions } from '@/context/gittodoro-sessions/MainSessionsContextProvider'
+import { useMainNotes } from '@/context/gittodoro/MainNotesContextProvider'
+import { useClock } from '@/context/clock/ClockContextProvider'
 
 import ClockBase from '@/components/clock/ClockBase'
 import ClockButton from '@/components/clock/ClockButton'
@@ -11,12 +16,6 @@ import ClockLabel from '@/components/clock/ClockLabel'
 import ClockRecordsRing from '@/components/clock/ClockRecordsRing'
 
 import styles from './Sessions.module.css'
-import { generateRecords, Record } from '@/models/Record'
-import { useMainSessions } from '@/context/gittodoro/MainSessionsContextProvider'
-import { useMainNotes } from '@/context/gittodoro/MainNotesContextProvider'
-import { useRouter } from 'next/router'
-import { useMainClock } from '@/context/gittodoro/MainClockContextProvider'
-
 interface Props {
   date: DateTime.DateTimeType
   disabled: boolean
@@ -33,10 +32,10 @@ const SessionsCalendarDay = ({ date, disabled }: Props) => {
   const { viewByRange } = useMainSessions()
   const { readNotesByRange } = useMainNotes()
 
-  const { setMainClock } = useMainClock()
+  const { setClock: setMainClock } = useClock()
 
   const handleClick = useCallback(() => {
-    setMainClock(clock)
+    setMainClock && setMainClock(clock)
     router.push('/')
   }, [router, clock, setMainClock])
 
