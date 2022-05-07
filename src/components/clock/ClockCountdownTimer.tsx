@@ -9,21 +9,22 @@ interface Props {
   state: string
   initialDuration: number
   running?: boolean
+  speed?: number
 }
 
 const MAX_MINUTES = 300
 const MAX_SECONDS = 60
 
-const ClockCountdownTimer = ({ state, initialDuration, running = false }: Props) => {
+const ClockCountdownTimer = ({ state, initialDuration, running = false, speed = 1000 }: Props) => {
   const minutes = useMemo(() => Math.floor(initialDuration / MAX_SECONDS) % (MAX_MINUTES + 1), [initialDuration])
   const seconds = useMemo(() => initialDuration % MAX_SECONDS, [initialDuration])
   const stateTitle = useMemo(() => {
     if (state === State[State.pomodoro]) {
-      return 'Focus Time!'
+      return '🍅 Focus Time!'
     } else if (state === State[State.short]) {
-      return 'Take a short break.'
+      return '🟢 Stand up and strech! Take a short break.'
     } else if (state === State[State.long]) {
-      return 'Enjoy a long break.'
+      return '🔵 Enjoy a long break.'
     } else {
       return ''
     }
@@ -44,14 +45,13 @@ const ClockCountdownTimer = ({ state, initialDuration, running = false }: Props)
   }, [remainingSeconds, remainingMinutes])
 
   useEffect(() => {
-    console.log(running, remainingMinutes, remainingSeconds)
     if (running) {
       const to = setTimeout(() => {
         decrementRemainingTime()
-      }, 1000)
+      }, speed)
       return () => clearTimeout(to)
     }
-  }, [running, decrementRemainingTime])
+  }, [running, speed, decrementRemainingTime])
 
   useEffect(() => {
     setRemainingMinutes(minutes)

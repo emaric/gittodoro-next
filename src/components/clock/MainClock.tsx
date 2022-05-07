@@ -75,7 +75,7 @@ const MainClock = () => {
   useEffect(() => {
     updateCountdownTimer()
     if (record && session) {
-      const ms = (session.timer.duration + Session.TIMER_DELAY) * 1000
+      const ms = (session.timer.duration) * 1000
       const timeout = setTimeout(() => {
         if (!session.end) {
           setRecords(records.concat(record))

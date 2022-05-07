@@ -1,18 +1,20 @@
 import { useCallback, useEffect, useState } from "react"
 
-import { useMainSessions } from "@/context/gittodoro/MainSessionsContextProvider"
-import { useMainRecords } from "@/context/gittodoro/MainRecordsContextProvider"
+import { Session } from "@/models/Session"
+import { Record } from "@/models/Record"
 
-import { AudioEnd, AudioStart } from "./audios"
+import { AudioEnd, AudioStart } from "@/components/clock/audios"
 
-const MainRecordAudioPlayer = () => {
+interface CurrentRecordAudioPlayerProps {
+  session?: Session,
+  record?: Record
+}
+
+const CurrentRecordAudioPlayer = ({ session, record }: CurrentRecordAudioPlayerProps) => {
   const [playStart, setPlayStart] = useState(false)
   const [playTick, setPlayTick] = useState(false)
   const [playEnd, setPlayEnd] = useState(false)
   const [state, setState] = useState("")
-
-  const { session } = useMainSessions()
-  const { record } = useMainRecords()
 
   const turnOffAll = useCallback(() => {
     setPlayStart(false)
@@ -25,7 +27,7 @@ const MainRecordAudioPlayer = () => {
       turnOffAll()
       setPlayStart(true)
       setPlayTick(true)
-      const ms = (record?.remainingTime) * 1000
+      const ms = (record?.remainingTime - 4) * 1000
       const to = setTimeout(() => {
         if (session && !session.end) {
           turnOffAll()
@@ -59,4 +61,4 @@ const MainRecordAudioPlayer = () => {
   )
 }
 
-export default MainRecordAudioPlayer
+export default CurrentRecordAudioPlayer

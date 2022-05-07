@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react"
 
 import { localSessionsAPI } from "@/modules/gittodoro"
+import { now } from "@/modules/temporal/DateTime"
 
 import { Clock } from "@/models/Clock"
 import { Session } from "@/models/Session"
@@ -9,14 +10,13 @@ import { createRecord, Record } from "@/models/Record"
 import ClockActiveRing from "../ClockActiveRing"
 import ClockRecordsRing from "../ClockRecordsRing"
 import ClockButton from "../ClockButton"
-import ClockCountdownTimer from "../ClockCountdownTimer"
-import { now } from "@/modules/temporal/DateTime"
+import { CurrentRecordTimer } from '@/components/clock/current-day/CurrentRecordTimer'
+import CurrentRecordAudioPlayer from "./CurrentRecordAudioPlayer"
+import CurrentDayClock from "./CurrentDayClock"
+import { useCurrentDayClock } from "@/context/clock/CurrentDayClockContextProvider"
 
-interface SessionsRingProps {
-  clock: Clock
-}
-
-const SessionsManagerRing = ({ clock }: SessionsRingProps) => {
+const SessionsManagerRing = () => {
+  const { currentDayClock: clock } = useCurrentDayClock()
   const [records, setRecords] = useState<Record[]>([])
   const [session, setSession] = useState<Session | undefined>()
   const [state, setState] = useState("")
@@ -31,7 +31,14 @@ const SessionsManagerRing = ({ clock }: SessionsRingProps) => {
       long: 15 * 60,
       longInterval: 4
     }
-    const result = await localSessionsAPI.start(duration, new Date())
+    const testDuration = {
+      id: -2,
+      pomodoro: 25,
+      short: 5,
+      long: 15,
+      longInterval: 4
+    }
+    const result = await localSessionsAPI.start(testDuration, new Date())
     if (result.session) {
       setSession(new Session(result.session))
     }
@@ -45,11 +52,13 @@ const SessionsManagerRing = ({ clock }: SessionsRingProps) => {
   }, [])
 
   const handleClick = useCallback(async () => {
+    // TODO: show loading
     if (session) {
       await stopSession()
     } else {
       await startSession()
     }
+    // TODO: stop loading
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session])
 
@@ -63,8 +72,8 @@ const SessionsManagerRing = ({ clock }: SessionsRingProps) => {
   }, [session])
 
   useEffect(() => {
-    if (state && session) {
-      const tilNextState = 1000 * session.timer.duration
+    if (state && record && session) {
+      const tilNextState = 1000 * record.remainingTime
       const waitForNextState = setTimeout(() => {
         record && setRecords(records.concat(record))
         session.switchTimer()
@@ -85,36 +94,23 @@ const SessionsManagerRing = ({ clock }: SessionsRingProps) => {
 
   return (
     <>
-      <ClockRecordsRing clock={clock} records={records} />
-      <ClockActiveRing clock={clock} record={record} />
-      <ClockButton onClick={handleClick}>
-        <RecordTimer record={record} />
-      </ClockButton>
+      <CurrentRecordAudioPlayer session={session} record={record} />
+
+      <CurrentDayClock>
+        {clock &&
+          <>
+            <ClockRecordsRing clock={clock} records={records} />
+            <ClockActiveRing clock={clock} record={record} />
+          </>
+        }
+        <ClockButton onClick={handleClick}>
+          <CurrentRecordTimer record={record} />
+        </ClockButton>
+      </CurrentDayClock>
     </>
   )
 }
 
-interface RecordTimerProps {
-  record?: Record,
-  defaultDuration?: number
-}
 
-const RecordTimer = ({ record, defaultDuration = 25 * 60 }: RecordTimerProps) => {
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const initialDuration = useMemo(() => record ? Math.round(record.remainingTime) : defaultDuration, [record])
-  const state = useMemo(() => record ? record.state : '', [record])
-  const [running, setRunning] = useState(false)
-
-  useEffect(() => {
-    setRunning(false)
-    if (record) {
-      setRunning(true)
-    }
-  }, [record])
-
-  return (
-    <ClockCountdownTimer running={running} state={state} initialDuration={initialDuration} />
-  )
-}
 
 export default SessionsManagerRing

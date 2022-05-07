@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react"
+import { ReactNode, useEffect, useMemo, useState } from "react"
 
 import { localSessionsAPI } from "@/modules/gittodoro"
 import { Session } from "@/models/Session"
@@ -9,9 +9,12 @@ import { useCurrentDayClock } from "@/context/clock/CurrentDayClockContextProvid
 import ClockBase from "@/components/clock/ClockBase"
 import ClockSecondsRing from "@/components/clock/ClockSecondsRing"
 import ClockRecordsRing from "@/components/clock/ClockRecordsRing"
-import SessionsManagerRing from "@/components/clock/current-day/SessionsManagerRing"
 
-const CurrentDayClock = () => {
+interface CurrentDayClockProps {
+  children: ReactNode
+}
+
+const CurrentDayClock = ({ children }: CurrentDayClockProps) => {
   const { currentDayClock: clock } = useCurrentDayClock()
   const promisedRecordsFromLocalStorage = useMemo(async () => {
     if (clock) {
@@ -38,7 +41,7 @@ const CurrentDayClock = () => {
     <ClockBase>
       {clock && <ClockSecondsRing clock={clock} />}
       {clock && <ClockRecordsRing clock={clock} records={localRecords} />}
-      {clock && <SessionsManagerRing clock={clock} />}
+      {children}
     </ClockBase>
   )
 }
