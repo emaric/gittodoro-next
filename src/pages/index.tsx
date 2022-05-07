@@ -29,13 +29,13 @@ const HomePage = () => {
             <div>
               <MainAuth />
             </div>
-            {/* <MainDatePicker sessionsLink='/sessions' /> */}
+            <MainDatePicker sessionsLink='/sessions' />
             <div>
-              {/* <MainAddNewNoteButton /> */}
+              <MainAddNewNoteButton />
             </div>
           </div>
           <section className={[styles.dotted_borders, styles.main_notes_container].join(' ')}>
-            {/* <MainNotes /> */}
+            <MainNotes />
           </section>
         </main>
         <footer>

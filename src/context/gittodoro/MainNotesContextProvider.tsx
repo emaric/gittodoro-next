@@ -1,13 +1,11 @@
 import { createContext, ReactNode, useContext, useEffect, useState, useCallback } from "react"
 
 import * as DateTime from '@/modules/temporal/DateTime'
+import { localNotesAPI } from "@/modules/gittodoro"
 
 import { Note } from "@/models/Note"
 
-import { useMainClock } from "./MainClockContextProvider"
-import { NotesAPI } from "@/modules/gittodoro/api/NotesAPI"
-import { NoteLocalStorageGateway } from "@/modules/gittodoro/db/local/NoteLocalStorageGateway"
-
+import { useClock } from "../clock/ClockContextProvider"
 
 type MainNotesContextType = {
   mainNotes?: Note[],
@@ -24,70 +22,54 @@ type MainNotesContextType = {
 const MainNotesContext = createContext<MainNotesContextType | undefined>(undefined)
 
 export const MainNotesProvider = (props: { children: ReactNode }) => {
-  const { mainClock } = useMainClock()
+  const { clock: mainClock } = useClock()
   const [newNote, setNewNote] = useState<Note | undefined>(undefined)
   const [mainNotes, setMainNotes] = useState<Note[]>([])
   const [allowAdd, setAllowAdd] = useState(true)
 
-  const [localNotesAPI, setLocalNotesAPI] = useState<NotesAPI | undefined>(undefined)
-
-  const createLocalNotesAPI = useCallback(() => {
-    if (!localNotesAPI) {
-      const db = new NoteLocalStorageGateway()
-      setLocalNotesAPI(new NotesAPI(db))
-    }
-  }, [localNotesAPI])
-
-  useEffect(() => createLocalNotesAPI(), [createLocalNotesAPI])
-
   const loadNotesFromStorage = useCallback(() => {
-    if (mainClock && localNotesAPI) {
+    if (mainClock) {
       localNotesAPI.readByRange(mainClock.startDate, mainClock.endDate).then(({ notes }) => {
         setMainNotes(notes)
       })
     }
-  }, [mainClock, localNotesAPI])
+  }, [mainClock])
 
   const createNote = useCallback((content: string, date = new Date()) => {
-    localNotesAPI && localNotesAPI.create(content, date).then(({ note }) => {
+    localNotesAPI.create(content, date).then(({ note }) => {
       setNewNote(note)
       loadNotesFromStorage()
     })
-  }, [loadNotesFromStorage, localNotesAPI])
+  }, [loadNotesFromStorage])
 
   const updateNote = useCallback((note: Note) => {
-    localNotesAPI && localNotesAPI.update(note.id, note.content, new Date()).then((_) => {
+    localNotesAPI.update(note.id, note.content, new Date()).then((_) => {
       setNewNote(undefined)
       loadNotesFromStorage()
     })
-  }, [loadNotesFromStorage, localNotesAPI])
+  }, [loadNotesFromStorage])
 
   const deleteNote = useCallback((id: number) => {
-    localNotesAPI && localNotesAPI.delete(id).then((_) => {
+    localNotesAPI.delete(id).then((_) => {
       setNewNote(undefined)
       loadNotesFromStorage()
     })
-  }, [loadNotesFromStorage, localNotesAPI])
+  }, [loadNotesFromStorage])
 
   const readNotesByRange = useCallback(async (start: Date, end: Date) => {
-    if (localNotesAPI) {
-      const result = await localNotesAPI.readByRange(start, end)
-      const notes = result.notes
-      return notes ? notes.map(note => new Note(note)) : []
-    }
-    return []
-  }, [localNotesAPI])
+    const result = await localNotesAPI.readByRange(start, end)
+    const notes = result.notes
+    return notes ? notes.map(note => new Note(note)) : []
+  }, [])
 
   const readFirstNote = useCallback(async (): Promise<Note | undefined> => {
-    if (localNotesAPI) {
-      const result = await localNotesAPI.readFirst()
-      const note = result.note
-      if (note) {
-        return new Note(note)
-      }
+    const result = await localNotesAPI.readFirst()
+    const note = result.note
+    if (note) {
+      return new Note(note)
     }
     return undefined
-  }, [localNotesAPI])
+  }, [])
 
   useEffect(() => {
     loadNotesFromStorage()
@@ -106,7 +88,16 @@ export const MainNotesProvider = (props: { children: ReactNode }) => {
   }, [loadNotesFromStorage])
 
   return (
-    <MainNotesContext.Provider value={{ mainNotes, newNote, allowAdd, createNote, updateNote, deleteNote, readNotesByRange, readFirstNote }}>
+    <MainNotesContext.Provider value={{
+      mainNotes,
+      newNote,
+      allowAdd,
+      createNote,
+      updateNote,
+      deleteNote,
+      readNotesByRange,
+      readFirstNote
+    }}>
       {props.children}
     </MainNotesContext.Provider>
   )

@@ -1,16 +1,17 @@
 import { useCallback, useEffect, useState } from "react"
+import Link from "next/link"
 
 import * as DateTime from '@/modules/temporal/DateTime'
+
+import { Clock } from "@/models/Clock"
+import { useClock } from "@/context/clock/ClockContextProvider"
 
 import styles from './MainDatePicker.module.css'
 
 import * as Button from './buttons'
-import { useMainClock } from "@/context/gittodoro/MainClockContextProvider"
-import { Clock } from "@/models/Clock"
-import Link from "next/link"
 
 const MainDatePicker = (props: { sessionsLink: string }) => {
-  const { mainClock, setMainClock } = useMainClock()
+  const { clock: mainClock, setClock: setMainClock } = useClock()
 
   const [mainDate, setMainDate] = useState<DateTime.DateTimeType | undefined>()
 
@@ -28,7 +29,7 @@ const MainDatePicker = (props: { sessionsLink: string }) => {
 
   useEffect(() => {
     if (mainClock && mainDate && DateTime.difference(mainDate, mainClock?.start) != 0) {
-      setMainClock(new Clock(mainDate, mainDate.add({ days: 1 })))
+      setMainClock && setMainClock(new Clock(mainDate, mainDate.add({ days: 1 })))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mainDate])

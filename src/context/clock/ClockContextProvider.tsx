@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useCallback, useContext, useMemo, useReducer, useState } from "react";
+import { createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useReducer, useState } from "react";
 
 import { Clock } from "@/models/Clock";
 import { fromISO } from "@/modules/temporal/DateTime";
@@ -30,6 +30,11 @@ export const ClockProvider = (props: { children: ReactNode }) => {
 
   const setClock = useCallback((clock: Clock) => {
     setClockString(clock.toString())
+  }, [])
+
+  useEffect(() => {
+    setClock(new Clock())
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (

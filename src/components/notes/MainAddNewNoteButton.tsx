@@ -2,8 +2,6 @@ import { useCallback } from 'react'
 
 import { useMainNotes } from '@/context/gittodoro/MainNotesContextProvider'
 
-import styles from './Note.module.css'
-
 import * as Button from './buttons'
 
 const MainAddNewNoteButton = () => {
