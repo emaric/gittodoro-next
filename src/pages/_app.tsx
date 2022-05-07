@@ -8,9 +8,7 @@ import GittodoroContextProvider from '@/context/gittodoro/GittodoroContextProvid
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <GithubAuthProvider>
-      <GittodoroContextProvider>
-        <Component {...pageProps} />
-      </GittodoroContextProvider>
+      <Component {...pageProps} />
     </GithubAuthProvider>
   )
 }

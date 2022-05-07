@@ -27,7 +27,7 @@ export const createRecord = (session: Session): Record => {
   return new Record({
     state: session.stateString,
     start: now(),
-    end: now().add({ seconds: session.timer.duration + Session.TIMER_DELAY }),
+    end: now().add({ seconds: session.timer.duration }),
   })
 }
 
@@ -38,7 +38,7 @@ export const generateRecords = (session: Session, end: DateTimeType) => {
       state: State[firstTimer.state],
       start: session.startPlainDateTime,
       end: session.startPlainDateTime.add({
-        seconds: firstTimer.duration + Session.TIMER_DELAY,
+        seconds: firstTimer.duration,
       }),
     }),
   ]
@@ -52,7 +52,7 @@ export const generateRecords = (session: Session, end: DateTimeType) => {
       new Record({
         state: State[timer.state],
         start,
-        end: start.add({ seconds: timer.duration + Session.TIMER_DELAY }),
+        end: start.add({ seconds: timer.duration }),
       })
     )
 

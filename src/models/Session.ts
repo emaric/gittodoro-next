@@ -3,8 +3,6 @@ import { State } from '@/modules/gittodoro/models/State'
 import { DateTimeType, fromUTC } from '@/modules/temporal/DateTime'
 
 export class Session extends SessionViewModel {
-  static TIMER_DELAY = 0
-
   constructor(session: SessionViewModel) {
     super(session)
   }
