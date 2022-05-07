@@ -14,6 +14,7 @@ import { CurrentRecordTimer } from '@/components/clock/current-day/CurrentRecord
 import CurrentRecordAudioPlayer from "./CurrentRecordAudioPlayer"
 import CurrentDayClock from "./CurrentDayClock"
 import { useCurrentDayClock } from "@/context/clock/CurrentDayClockContextProvider"
+import CurrentRecordRing from "./CurrentRecordRing"
 
 const SessionsManagerRing = () => {
   const { currentDayClock: clock } = useCurrentDayClock()
@@ -106,6 +107,7 @@ const SessionsManagerRing = () => {
         <ClockButton onClick={handleClick}>
           <CurrentRecordTimer record={record} />
         </ClockButton>
+        <CurrentRecordRing record={record} />
       </CurrentDayClock>
     </>
   )

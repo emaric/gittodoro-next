@@ -45,15 +45,15 @@
   stroke: rgb(0, 30, 29);
 }
 
-.record[state="pomodoro"] {
+.record[state='pomodoro'] {
   stroke: var(--pomodoro-color);
 }
 
-.record[state="short"] {
+.record[state='short'] {
   stroke: var(--short-break-color);
 }
 
-.record[state="long"] {
+.record[state='long'] {
   stroke: var(--long-break-color);
 }
 
@@ -64,7 +64,7 @@
   --clock-duration-seconds: calc(24 * 60 * 60);
 }
 
-.seconds[animation="1"] {
+.seconds[animation='1'] {
   animation: animate-seconds-ring calc(var(--clock-duration-seconds) * 1s)
     linear calc(var(--elapsed-seconds) * -1s);
 }
@@ -78,24 +78,53 @@
   }
 }
 
-.active_timer {
-  --ending-dasharray: "0 100";
+.record_timer {
   --duration: 5;
 }
 
-.active_timer[state="pomodoro"] {
+.record_timer[state='pomodoro'] {
   stroke: var(--pomodoro-color);
 }
 
-.active_timer[state="short"] {
+.record_timer[state='short'] {
   stroke: var(--short-break-color);
 }
 
-.active_timer[state="long"] {
+.record_timer[state='long'] {
   stroke: var(--long-break-color);
 }
 
-.active_timer[animation="1"] {
+.record_timer[animation='1'] {
+  animation: animate-record-ring calc(var(--duration) * 1s) linear;
+}
+
+@keyframes animate-record-ring {
+  from {
+    stroke-dasharray: 0 100;
+  }
+  to {
+    stroke-dasharray: 100 0;
+  }
+}
+
+.active_timer {
+  --ending-dasharray: '0 100';
+  --duration: 5;
+}
+
+.active_timer[state='pomodoro'] {
+  stroke: var(--pomodoro-color);
+}
+
+.active_timer[state='short'] {
+  stroke: var(--short-break-color);
+}
+
+.active_timer[state='long'] {
+  stroke: var(--long-break-color);
+}
+
+.active_timer[animation='1'] {
   animation: animate-active-ring calc(var(--duration) * 1s) linear;
   stroke-dasharray: 0 100;
 }
@@ -116,15 +145,15 @@
   font-size: 0.7rem;
 }
 
-.clock_button_label[state="pomodoro"] {
+.clock_button_label[state='pomodoro'] {
   fill: var(--pomodoro-color);
 }
 
-.clock_button_label[state="short"] {
+.clock_button_label[state='short'] {
   fill: var(--short-break-color);
 }
 
-.clock_button_label[state="long"] {
+.clock_button_label[state='long'] {
   fill: var(--long-break-color);
 }
 
