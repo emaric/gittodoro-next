@@ -1,6 +1,23 @@
 :root {
---max-clock-width: 30rem;
---user-avatar-width: 3rem;
+  --white: #fff;
+  --black: #202124;
+
+  --grey: #dadce0;
+  --light-grey: #e3e3e3;
+  --dark-grey: #9aa0a6;
+
+  --red: #ec5e4f;
+  --green: #65b867;
+  --blue: #538ff7;
+  --yellow: #f6bd41;
+
+  --light-red: #f28b82;
+  --light-green: #81c995;
+  --light-blue: #8ab4f8;
+  --light-yellow: #fcd56c;
+
+  --max-clock-width: 30rem;
+  --user-avatar-width: 3rem;
 }
 
 html,
@@ -78,5 +95,4 @@ h6 {
     background: '#333';
     color: '#fff';
   }
-
 }
