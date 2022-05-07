@@ -80,6 +80,7 @@
 
 .record_timer {
   --duration: 5;
+  --elapsed: 0;
 }
 
 .record_timer[state='pomodoro'] {
@@ -95,7 +96,8 @@
 }
 
 .record_timer[animation='1'] {
-  animation: animate-record-ring calc(var(--duration) * 1s) linear;
+  animation: animate-record-ring calc(var(--duration) * 1s) linear
+    calc(var(--elapsed) * -1s);
 }
 
 @keyframes animate-record-ring {

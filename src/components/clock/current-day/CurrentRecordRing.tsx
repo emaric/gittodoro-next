@@ -37,14 +37,16 @@ const CurrentRecordRing: FC<Props> = ({ record }) => {
   }, [animation])
 
   useEffect(() => {
-    if (record && clock) {
+    if (record) {
       setState(record.state)
-      ref.current?.style.setProperty("--duration", String(record.remainingTime))
+      ref.current?.style.setProperty("--duration", String(clock?.duration))
+      ref.current?.style.setProperty("--elapsed", String(clock?.elapsed))
       setAnimation(Animation.Reset)
     } else {
       setAnimation(Animation.Disabled)
     }
-  }, [record, clock])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [record])
 
   const circleProps = {
     animation: animation,
