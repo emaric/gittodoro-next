@@ -2,7 +2,7 @@ import { createContext, ReactNode, useCallback, useContext, useEffect, useState 
 
 import { localSessionsAPI } from "@/modules/gittodoro";
 
-import { createRecord, generateRecords, Record } from "@/models/Record";
+import { createRecord, Record } from "@/models/Record";
 import { Session } from "@/models/Session";
 import { now } from "@/modules/temporal/DateTime";
 
@@ -36,22 +36,17 @@ export const SessionsManagerProvider = (props: { children: ReactNode }) => {
     if (record && session) {
       const tilNextState = 1000 * record.remainingTime
       const waitForNextState = setTimeout(() => {
-        record && setRecords(generateRecords(session, now()))
+        record && setRecords(records.concat(record))
         session.switchTimer()
         setRecord(createRecord(session))
       }, tilNextState)
 
       return () => clearTimeout(waitForNextState)
     } else {
-      if (record) {
-        record.end = now()
-        setRecords(records.concat(record))
-      }
       setRecord(undefined)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [record])
-
 
   const startSession = useCallback(async () => {
     // TODO: get default duration from other source
@@ -69,7 +64,7 @@ export const SessionsManagerProvider = (props: { children: ReactNode }) => {
       long: 15,
       longInterval: 4
     }
-    const result = await localSessionsAPI.start(testDuration, new Date())
+    const result = await localSessionsAPI.start(duration, new Date())
     if (result.session) {
       setSession(new Session(result.session))
     }

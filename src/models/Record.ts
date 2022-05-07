@@ -47,7 +47,7 @@ export const generateRecords = (session: Session, end: DateTimeType) => {
   let lastRecord = records[records.length - 1]
   while (lastRecord && difference(end, lastRecord.end) > 0) {
     const timer = session.timerSequence[timerIndex]
-    const start = lastRecord.end.add({ seconds: 1 })
+    const start = lastRecord.end
     records.push(
       new Record({
         state: State[timer.state],

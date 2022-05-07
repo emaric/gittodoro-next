@@ -13,7 +13,7 @@ import ClockActiveRing from "@/components/clock/ClockActiveRing"
 
 const CurrentDayClockRings = () => {
   const { currentDayClock: clock } = useCurrentDayClock()
-  const { record, records } = useSessionsManager()
+  const { record, records, sessions } = useSessionsManager()
 
   const promisedRecordsFromLocalStorage = useMemo(async () => {
     if (clock) {
@@ -23,7 +23,8 @@ const CurrentDayClockRings = () => {
       }
     }
     return []
-  }, [clock])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [clock, sessions])
   const [localRecords, setLocalRecords] = useState<Record[]>([])
 
   useEffect(() => {
@@ -34,7 +35,7 @@ const CurrentDayClockRings = () => {
       })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [clock])
+  }, [clock, sessions])
 
   return (
     <>
