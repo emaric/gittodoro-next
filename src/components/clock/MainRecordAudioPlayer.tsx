@@ -1,4 +1,4 @@
-import { useSessionsManager } from "@/context/gittodoro-sessions/SesssionsManagerContextProvider"
+import { useSessionsManager } from "@/context/gittodoro-sessions/SessionsManagerContextProvider"
 
 import CurrentRecordAudioPlayer from "./current-day/CurrentRecordAudioPlayer"
 

@@ -4,7 +4,7 @@ import { Session } from "@/models/Session"
 import { generateRecordsFromSessions, Record } from "@/models/Record"
 
 import { useCurrentDayClock } from "@/context/clock/CurrentDayClockContextProvider"
-import { useSessionsManager } from "@/context/gittodoro-sessions/SesssionsManagerContextProvider"
+import { useSessionsManager } from "@/context/gittodoro-sessions/SessionsManagerContextProvider"
 
 import ClockSecondsRing from "@/components/clock/ClockSecondsRing"
 import ClockRecordsRing from "@/components/clock/ClockRecordsRing"
@@ -17,7 +17,7 @@ const CurrentDayClockRings = () => {
   const { record, records, sessions } = useSessionsManager()
 
   const promisedRecordsFromLocalStorage = useMemo(async () => {
-    if (clock) {
+    if (clock && localSessionsAPI) {
       const result = await localSessionsAPI.viewByRange(clock.startDate, clock.endDate)
       if (result.sessions) {
         return generateRecordsFromSessions(result.sessions.map(session => new Session(session)))

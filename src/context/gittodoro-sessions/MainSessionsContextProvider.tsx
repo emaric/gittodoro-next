@@ -29,7 +29,7 @@ export const MainSessionsProvider: FC<Props> = ({ children }) => {
   const [mainSessions, setMainSessions] = useState<Session[]>([])
 
   const promisedMainSessions = useMemo(async () => {
-    if (mainClock) {
+    if (mainClock && localSessionsAPI) {
       const response = await localSessionsAPI.viewByRange(mainClock.startDate, mainClock.endDate)
       const sessions = response.sessions?.map(session => new Session(session))
       return sessions || []
@@ -54,14 +54,14 @@ export const MainSessionsProvider: FC<Props> = ({ children }) => {
       longInterval: 4
     }
 
-    localSessionsAPI.start(defaultDuration, now).then(({ session }) => {
+    localSessionsAPI && localSessionsAPI.start(defaultDuration, now).then(({ session }) => {
       session && setSession(new Session(session))
     })
   }, [localSessionsAPI])
 
   const stop = useCallback(() => {
     const now = new Date()
-    localSessionsAPI.stop(now).then(({ session }) => {
+    localSessionsAPI && localSessionsAPI.stop(now).then(({ session }) => {
       if (session) {
         const completed = new Session(session)
         setSession(completed)
@@ -71,15 +71,21 @@ export const MainSessionsProvider: FC<Props> = ({ children }) => {
   }, [mainSessions, localSessionsAPI])
 
   const viewByRange = useCallback(async (start: Date, end: Date) => {
-    const result = await localSessionsAPI.viewByRange(start, end)
-    const sessions = result.sessions
-    return sessions ? sessions.map(session => new Session(session)) : []
+    if (localSessionsAPI) {
+      const result = await localSessionsAPI.viewByRange(start, end)
+      const sessions = result.sessions
+      return sessions ? sessions.map(session => new Session(session)) : []
+    }
+    return []
   }, [localSessionsAPI])
 
   const viewFirstAndLast = useCallback(async () => {
-    const result = await localSessionsAPI.viewFirstAndLast()
-    const sessions = result.sessions
-    return sessions ? sessions.map(session => new Session(session)) : []
+    if (localSessionsAPI) {
+      const result = await localSessionsAPI.viewFirstAndLast()
+      const sessions = result.sessions
+      return sessions ? sessions.map(session => new Session(session)) : []
+    }
+    return []
   }, [localSessionsAPI])
 
   useEffect(() => {

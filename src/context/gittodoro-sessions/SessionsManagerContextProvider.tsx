@@ -63,16 +63,20 @@ export const SessionsManagerProvider = (props: { children: ReactNode }) => {
       long: 15,
       longInterval: 4
     }
-    const result = await localSessionsAPI.start(duration, new Date())
-    if (result.session) {
-      setSession(new Session(result.session))
+    if (localSessionsAPI) {
+      const result = await localSessionsAPI.start(duration, new Date())
+      if (result.session) {
+        setSession(new Session(result.session))
+      }
     }
   }, [localSessionsAPI])
 
   const stopSession = useCallback(async () => {
-    const result = await localSessionsAPI.stop(new Date())
-    if (result.session) {
-      setSessions(sessions.concat(new Session(result.session)))
+    if (localSessionsAPI) {
+      const result = await localSessionsAPI.stop(new Date())
+      if (result.session) {
+        setSessions(sessions.concat(new Session(result.session)))
+      }
     }
     setSession(undefined)
   }, [sessions, localSessionsAPI])

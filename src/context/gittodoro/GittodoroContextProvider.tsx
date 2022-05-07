@@ -2,7 +2,7 @@ import { ReactNode } from "react"
 
 import { ClockProvider } from "../clock/ClockContextProvider"
 import { CurrentDayClockProvider } from "../clock/CurrentDayClockContextProvider"
-import { SessionsManagerProvider } from "../gittodoro-sessions/SesssionsManagerContextProvider"
+import { SessionsManagerProvider } from "../gittodoro-sessions/SessionsManagerContextProvider"
 import { MainRecordsProvider } from "../gittodoro-sessions/MainRecordsContextProvider"
 import { MainSessionsProvider } from "../gittodoro-sessions/MainSessionsContextProvider"
 import { MainNotesProvider } from "./MainNotesContextProvider"

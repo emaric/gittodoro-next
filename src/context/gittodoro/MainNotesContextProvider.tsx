@@ -29,7 +29,7 @@ export const MainNotesProvider = (props: { children: ReactNode }) => {
   const [allowAdd, setAllowAdd] = useState(true)
 
   const loadNotesFromStorage = useCallback(() => {
-    if (mainClock) {
+    if (mainClock && localNotesAPI) {
       localNotesAPI.readByRange(mainClock.startDate, mainClock.endDate).then(({ notes }) => {
         setMainNotes(notes)
       })
@@ -37,37 +37,42 @@ export const MainNotesProvider = (props: { children: ReactNode }) => {
   }, [mainClock, localNotesAPI])
 
   const createNote = useCallback((content: string, date = new Date()) => {
-    localNotesAPI.create(content, date).then(({ note }) => {
+    localNotesAPI && localNotesAPI.create(content, date).then(({ note }) => {
       setNewNote(note)
       loadNotesFromStorage()
     })
   }, [loadNotesFromStorage, localNotesAPI])
 
   const updateNote = useCallback((note: Note) => {
-    localNotesAPI.update(note.id, note.content, new Date()).then((_) => {
+    localNotesAPI && localNotesAPI.update(note.id, note.content, new Date()).then((_) => {
       setNewNote(undefined)
       loadNotesFromStorage()
     })
   }, [loadNotesFromStorage, localNotesAPI])
 
   const deleteNote = useCallback((id: number) => {
-    localNotesAPI.delete(id).then((_) => {
+    localNotesAPI && localNotesAPI.delete(id).then((_) => {
       setNewNote(undefined)
       loadNotesFromStorage()
     })
   }, [loadNotesFromStorage, localNotesAPI])
 
   const readNotesByRange = useCallback(async (start: Date, end: Date) => {
-    const result = await localNotesAPI.readByRange(start, end)
-    const notes = result.notes
-    return notes ? notes.map(note => new Note(note)) : []
+    if (localNotesAPI) {
+      const result = await localNotesAPI.readByRange(start, end)
+      const notes = result.notes
+      return notes ? notes.map(note => new Note(note)) : []
+    }
+    return []
   }, [localNotesAPI])
 
   const readFirstNote = useCallback(async (): Promise<Note | undefined> => {
-    const result = await localNotesAPI.readFirst()
-    const note = result.note
-    if (note) {
-      return new Note(note)
+    if (localNotesAPI) {
+      const result = await localNotesAPI.readFirst()
+      const note = result.note
+      if (note) {
+        return new Note(note)
+      }
     }
     return undefined
   }, [localNotesAPI])

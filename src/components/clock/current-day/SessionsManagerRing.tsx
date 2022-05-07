@@ -1,6 +1,6 @@
 import { useCallback } from "react"
 
-import { useSessionsManager } from "@/context/gittodoro-sessions/SesssionsManagerContextProvider"
+import { useSessionsManager } from "@/context/gittodoro-sessions/SessionsManagerContextProvider"
 
 import ClockButton from "@/components/clock/ClockButton"
 import { CurrentRecordTimer } from '@/components/clock/current-day/CurrentRecordTimer'
