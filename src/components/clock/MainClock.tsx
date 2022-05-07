@@ -3,12 +3,12 @@ import { useMemo } from 'react'
 import { today } from '@/modules/temporal/DateTime'
 
 import { useClock } from '@/context/clock/ClockContextProvider'
+import { useMainRecords } from '@/context/gittodoro-sessions/MainRecordsContextProvider'
 
 import MainRecordAudioPlayer from './MainRecordAudioPlayer'
 import ClockBase from "./ClockBase"
-// import CurrentDayClockRings from './current-day/CurrentDayClockRings'
+import CurrentDayClockRings from './current-day/CurrentDayClockRings'
 import SessionsManagerRing from './current-day/SessionsManagerRing'
-import { useMainRecords } from '@/context/gittodoro-sessions/MainRecordsContextProvider'
 import ClockRecordsRing from './ClockRecordsRing'
 import ClockSecondsRing from './ClockSecondsRing'
 
@@ -27,7 +27,7 @@ const MainClock = () => {
       <MainRecordAudioPlayer />
 
       <ClockBase>
-        {/* {isCurrentDateSelected && <CurrentDayClockRings />} */}
+        {isCurrentDateSelected && <CurrentDayClockRings />}
         {!isCurrentDateSelected && selectedDate &&
           <>
             <ClockSecondsRing clock={selectedDate} />

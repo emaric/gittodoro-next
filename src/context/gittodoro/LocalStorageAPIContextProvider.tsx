@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useContext, useMemo } from "react"
+import { createContext, ReactNode, useContext, useEffect, useState } from "react"
 
 import { SessionLocalStorageGateway } from "@/modules/gittodoro/db/local/SessionLocalStorageGateway"
 import { NoteLocalStorageGateway } from "@/modules/gittodoro/db/local/NoteLocalStorageGateway"
@@ -13,16 +13,15 @@ type LocalStorageAPIContextType = {
 const LocalStorageAPIContext = createContext<LocalStorageAPIContextType | undefined>(undefined)
 
 export const LocalStorageAPIProvider = (props: { children: ReactNode }) => {
-  const localSessionsAPI = useMemo(() => {
-    // const localSessionsDB = new SessionLocalStorageGateway()
-    // return new SessionsAPI(localSessionsDB)
-    return undefined
-  }, [])
+  const [localSessionsAPI, setLocalSessionsAPI] = useState<SessionsAPI | undefined>()
+  const [localNotesAPI, setLocalNotesAPI] = useState<NotesAPI | undefined>()
 
-  const localNotesAPI = useMemo(() => {
-    // const localNotesDB = new NoteLocalStorageGateway()
-    // return new NotesAPI(localNotesDB)
-    return undefined
+  useEffect(() => {
+    const localSessionsDB = new SessionLocalStorageGateway()
+    setLocalSessionsAPI(new SessionsAPI(localSessionsDB))
+
+    const localNotesDB = new NoteLocalStorageGateway()
+    setLocalNotesAPI(new NotesAPI(localNotesDB))
   }, [])
 
   return (
