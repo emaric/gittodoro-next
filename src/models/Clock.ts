@@ -39,6 +39,10 @@ export class Clock {
   }
 
   toString() {
-    return JSON.stringify(this)
+    return JSON.stringify({ start: this.start, end: this.end })
+  }
+
+  valueOf() {
+    return this.toString()
   }
 }
