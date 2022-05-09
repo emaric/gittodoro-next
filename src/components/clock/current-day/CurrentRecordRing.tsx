@@ -37,10 +37,11 @@ const CurrentRecordRing: FC<Props> = ({ record }) => {
   }, [animation])
 
   useEffect(() => {
-    if (record) {
-      setState(record.state)
-      ref.current?.style.setProperty("--duration", String(clock?.duration))
-      ref.current?.style.setProperty("--elapsed", String(clock?.elapsed))
+    if (record && clock) {
+      const duration = String(Math.round(clock.duration))
+      const elapsed = String(Math.round(clock.elapsed))
+      ref.current?.style.setProperty("--duration", duration)
+      ref.current?.style.setProperty("--elapsed", elapsed)
       setAnimation(Animation.Reset)
     } else {
       setAnimation(Animation.Disabled)
