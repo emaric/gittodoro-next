@@ -64,7 +64,7 @@ export const SessionsManagerProvider = (props: { children: ReactNode }) => {
       longInterval: 4
     }
     if (localSessionsAPI) {
-      const result = await localSessionsAPI.start(testDuration, new Date())
+      const result = await localSessionsAPI.start(duration, new Date())
       if (result.session) {
         setSession(new Session(result.session))
       }

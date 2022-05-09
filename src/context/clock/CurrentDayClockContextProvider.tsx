@@ -13,11 +13,9 @@ export const CurrentDayClockProvider = (props: { children: ReactNode }) => {
   const [currentDayClock, setCurrentDayClock] = useState<Clock | undefined>()
 
   const createClock = useCallback(() => {
-    if (currentDayClock) {
-      return new Clock(currentDayClock.end, currentDayClock.end.add({ minutes: 2 }))
-    }
     const testClock = new Clock(now().subtract({ minutes: 2 }), now().add({ minutes: 2 }))
-    return testClock
+    // return testClock
+    return new Clock()
   }, [])
 
   useEffect(() => {

@@ -6,10 +6,12 @@ import * as DateTime from '@/modules/temporal/DateTime'
 import SessionsCalendar from "@/components/sessions/SessionsCalendar"
 import { useMainSessions } from "@/context/gittodoro-sessions/MainSessionsContextProvider"
 import { useMainNotes } from "@/context/gittodoro/MainNotesContextProvider"
+import { useClock } from "@/context/clock/ClockContextProvider"
 
 import styles from '@/styles/Sessions.module.css'
 
 const SesssionsPage: NextPage = () => {
+  const { clock: selectedDate } = useClock()
   const [minDate, setMinDate] = useState(DateTime.today())
 
   const { viewFirstAndLast } = useMainSessions()
