@@ -5,7 +5,7 @@ import * as DateTime from '@/modules/temporal/DateTime'
 
 import { Clock } from '@/models/Clock'
 import { Session } from '@/models/Session'
-import { generateRecords, Record } from '@/models/Record'
+import { generateRecords, generateRecordsFromSessions, Record } from '@/models/Record'
 import { useMainSessions } from '@/context/gittodoro-sessions/MainSessionsContextProvider'
 import { useMainNotes } from '@/context/gittodoro/MainNotesContextProvider'
 import { useClock } from '@/context/clock/ClockContextProvider'
@@ -16,6 +16,7 @@ import ClockLabel from '@/components/clock/ClockLabel'
 import ClockRecordsRing from '@/components/clock/ClockRecordsRing'
 
 import styles from './Sessions.module.css'
+import ClockSecondsRing from '../clock/ClockSecondsRing'
 interface Props {
   date: DateTime.DateTimeType
   disabled: boolean
@@ -27,6 +28,7 @@ const SessionsCalendarDay = ({ date, disabled }: Props) => {
   const clock = useMemo(() => new Clock(date, date.add({ days: 1 })), [date])
 
   const [sessions, setSessions] = useState<Session[]>([])
+  const [records, setRecords] = useState<Record[] | undefined>()
   const [notesCount, setNotesCount] = useState(0)
 
   const { viewByRange } = useMainSessions()
@@ -60,24 +62,17 @@ const SessionsCalendarDay = ({ date, disabled }: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [clock])
 
-  const records = useMemo(() => {
-    if (sessions) {
-      let sessionRecords: Record[] = []
-      sessions.forEach(session => {
-        const end = session.endPlainDateTime
-        if (end) {
-          sessionRecords = [...sessionRecords, ...generateRecords(session, end)]
-        }
-      })
-      return sessionRecords
+  useEffect(() => {
+    if (sessions.length > 0) {
+      setRecords(generateRecordsFromSessions(sessions))
     }
-    return []
   }, [sessions])
 
   return (
     <button title={dateString} className={[styles.day_container, disabled && styles.disabled].join(' ')}>
       <ClockBase>
-        <ClockRecordsRing clock={clock} records={records} />
+        <ClockSecondsRing clock={clock} />
+        {records && <ClockRecordsRing clock={clock} records={records} />}
         {!disabled && <ClockButton onClick={handleClick} />}
         <ClockLabel value={date.day.toString()} />
         {notesCount &&
