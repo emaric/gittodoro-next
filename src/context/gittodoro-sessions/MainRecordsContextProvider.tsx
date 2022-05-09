@@ -11,7 +11,7 @@ type MainRecordsContextType = {
   setRecord: (record?: Record) => void
 }
 
-const MainRecordsContext = createContext<MainRecordsContextType>({ mainRecords: [], setRecord: () => { } })
+const MainRecordsContext = createContext<MainRecordsContextType | undefined>(undefined)
 
 export const MainRecordsProvider = (props: { children: ReactNode }) => {
   const { promisedMainSessions } = useMainSessions()

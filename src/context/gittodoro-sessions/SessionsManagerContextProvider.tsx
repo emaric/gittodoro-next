@@ -7,13 +7,13 @@ import { useLocalStorageAPI } from "../gittodoro/LocalStorageAPIContextProvider"
 type SessionsManagerContextType = {
   session?: Session,
   record?: Record,
-  startSession?: () => void,
-  stopSession?: () => void,
-  sessions?: Session[],
-  records?: Record[]
+  startSession: () => void,
+  stopSession: () => void,
+  sessions: Session[],
+  records: Record[]
 }
 
-const SessionsManagerContext = createContext<SessionsManagerContextType>({})
+const SessionsManagerContext = createContext<SessionsManagerContextType | undefined>(undefined)
 
 export const SessionsManagerProvider = (props: { children: ReactNode }) => {
   const { localSessionsAPI } = useLocalStorageAPI()

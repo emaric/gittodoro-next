@@ -5,10 +5,10 @@ import { fromISO } from "@/modules/temporal/DateTime";
 
 type ClockContextType = {
   clock?: Clock,
-  setClock?: (clock: Clock) => void
+  setClock: (clock: Clock) => void
 }
 
-const ClockContext = createContext<ClockContextType>({})
+const ClockContext = createContext<ClockContextType | undefined>(undefined)
 
 export const ClockProvider = (props: { children: ReactNode }) => {
   const [clockString, setClockString] = useState(new Clock().toString())

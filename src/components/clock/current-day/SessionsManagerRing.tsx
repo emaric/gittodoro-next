@@ -3,22 +3,18 @@ import { useCallback } from "react"
 import { useSessionsManager } from "@/context/gittodoro-sessions/SessionsManagerContextProvider"
 
 import ClockButton from "@/components/clock/ClockButton"
-import { CurrentRecordTimer } from '@/components/clock/current-day/CurrentRecordTimer'
 import CurrentRecordRing from "@/components/clock/current-day/CurrentRecordRing"
+import { CurrentRecordTimer } from '@/components/clock/current-day/CurrentRecordTimer'
 
 const SessionsManagerRing = () => {
   const { session, record, startSession, stopSession } = useSessionsManager()
 
   const handleClick = useCallback(() => {
     // TODO: show loading
-    if (stopSession && startSession) {
-      if (session) {
-        stopSession()
-      } else {
-        startSession()
-      }
+    if (session) {
+      stopSession()
     } else {
-      throw new Error('Must be inside `SessionsMangerProvider`')
+      startSession()
     }
     // TODO: stop loading
   }, [session, startSession, stopSession])

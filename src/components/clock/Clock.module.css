@@ -111,7 +111,7 @@
 
 .active_timer {
   --ending-dasharray: '0 100';
-  --duration: 5;
+  --duration: 0;
 }
 
 .active_timer[state='pomodoro'] {
