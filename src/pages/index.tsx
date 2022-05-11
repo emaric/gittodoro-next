@@ -23,7 +23,7 @@ const HomePage = () => {
           <section className={styles.main_clock_container}>
             <MainClock />
           </section>
-          <div className={[styles.dotted_borders, styles.main_nav_container].join(' ')}>
+          <div className={[styles.top_bottom_borders, styles.main_nav_container].join(' ')}>
             <div>
               <MainAuth />
             </div>
@@ -34,7 +34,7 @@ const HomePage = () => {
               <MainAddNewNoteButton />
             </div>
           </div>
-          <section className={[styles.dotted_borders, styles.main_notes_container].join(' ')}>
+          <section className={[styles.top_bottom_borders, styles.main_notes_container].join(' ')}>
             <MainNotes />
           </section>
         </main>
