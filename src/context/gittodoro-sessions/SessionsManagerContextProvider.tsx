@@ -2,7 +2,8 @@ import { createContext, ReactNode, useCallback, useContext, useEffect, useState 
 
 import { createRecord, Record } from "@/models/Record";
 import { Session } from "@/models/Session";
-import { useLocalStorageAPI } from "../gittodoro/LocalStorageAPIContextProvider";
+import { useFirebaseAPI } from "../gittodoro-firebase/FirebaseAPIContextProvider";
+import { useGittorodoAPI } from "../gittodoro-firebase/GittodoroAPIContextProvider";
 
 type SessionsManagerContextType = {
   session?: Session,
@@ -16,7 +17,8 @@ type SessionsManagerContextType = {
 const SessionsManagerContext = createContext<SessionsManagerContextType | undefined>(undefined)
 
 export const SessionsManagerProvider = (props: { children: ReactNode }) => {
-  const { localSessionsAPI } = useLocalStorageAPI()
+  const { sessionsAPI } = useGittorodoAPI()
+  const { sessionsAPI: firebaseSessionsAPI } = useFirebaseAPI()
   const [session, setSession] = useState<Session | undefined>()
   const [record, setRecord] = useState<Record | undefined>()
 
@@ -63,23 +65,25 @@ export const SessionsManagerProvider = (props: { children: ReactNode }) => {
       long: 15,
       longInterval: 4
     }
-    if (localSessionsAPI) {
-      const result = await localSessionsAPI.start(duration, new Date())
-      if (result.session) {
+    if (sessionsAPI) {
+      // const result = await localSessionsAPI.start(duration, new Date())
+      const result = await firebaseSessionsAPI?.start(duration, new Date())
+      if (result?.session) {
         setSession(new Session(result.session))
       }
     }
-  }, [localSessionsAPI])
+  }, [sessionsAPI, firebaseSessionsAPI])
 
   const stopSession = useCallback(async () => {
-    if (localSessionsAPI) {
-      const result = await localSessionsAPI.stop(new Date())
-      if (result.session) {
+    if (sessionsAPI) {
+      // const result = await localSessionsAPI.stop(new Date())
+      const result = await firebaseSessionsAPI?.stop(new Date())
+      if (result?.session) {
         setSessions(sessions.concat(new Session(result.session)))
       }
     }
     setSession(undefined)
-  }, [sessions, localSessionsAPI])
+  }, [sessions, sessionsAPI, firebaseSessionsAPI])
 
   return (
     <SessionsManagerContext.Provider value={{ session, record, startSession, stopSession, sessions, records }}>

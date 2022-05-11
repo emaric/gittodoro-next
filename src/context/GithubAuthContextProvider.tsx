@@ -45,7 +45,7 @@ export const useGithubAuth = () => {
   const context = useContext(GithubAuthContext)
 
   if (!context) {
-    throw new Error("useMainClock must be used inside a `MainClockProvider`")
+    throw new Error("`useGithubAuth` must be used inside a `GithubAuthProvider`")
   }
 
   return context

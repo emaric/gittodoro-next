@@ -20,4 +20,8 @@ export class Session extends SessionViewModel {
   get startPlainDateTime(): DateTimeType {
     return fromUTC(this.start)
   }
+
+  toString() {
+    return JSON.stringify({ session: this.id })
+  }
 }

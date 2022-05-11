@@ -3,7 +3,7 @@ import { FC, ReactNode, createContext, useContext, useState, useCallback, useEff
 import { Session } from "@/models/Session"
 
 import { useClock } from "../clock/ClockContextProvider"
-import { useLocalStorageAPI } from "../gittodoro/LocalStorageAPIContextProvider"
+import { useGittorodoAPI } from "../gittodoro-firebase/GittodoroAPIContextProvider"
 
 type SessionContextType = {
   session?: Session,
@@ -22,20 +22,25 @@ interface Props {
 }
 
 export const MainSessionsProvider: FC<Props> = ({ children }) => {
-  const { localSessionsAPI } = useLocalStorageAPI()
+  const { sessionsAPI } = useGittorodoAPI()
   const { clock: mainClock } = useClock()
 
   const [session, setSession] = useState<Session | undefined>(undefined)
   const [mainSessions, setMainSessions] = useState<Session[]>([])
 
   const promisedMainSessions = useMemo(async () => {
-    if (mainClock && localSessionsAPI) {
-      const response = await localSessionsAPI.viewByRange(mainClock.startDate, mainClock.endDate)
-      const sessions = response.sessions?.map(session => new Session(session))
-      return sessions || []
+    if (mainClock && sessionsAPI) {
+      try {
+        const response = await sessionsAPI.viewByRange(mainClock.startDate, mainClock.endDate)
+        const sessions = response.sessions?.map(session => new Session(session))
+        return sessions || []
+      } catch (error) {
+        console.error(error)
+        return []
+      }
     }
     return []
-  }, [mainClock, localSessionsAPI])
+  }, [mainClock, sessionsAPI])
 
   const loadMainSessions = useCallback(() => {
     promisedMainSessions.then(sessions => {
@@ -54,39 +59,39 @@ export const MainSessionsProvider: FC<Props> = ({ children }) => {
       longInterval: 4
     }
 
-    localSessionsAPI && localSessionsAPI.start(defaultDuration, now).then(({ session }) => {
+    sessionsAPI && sessionsAPI.start(defaultDuration, now).then(({ session }) => {
       session && setSession(new Session(session))
     })
-  }, [localSessionsAPI])
+  }, [sessionsAPI])
 
   const stop = useCallback(() => {
     const now = new Date()
-    localSessionsAPI && localSessionsAPI.stop(now).then(({ session }) => {
+    sessionsAPI && sessionsAPI.stop(now).then(({ session }) => {
       if (session) {
         const completed = new Session(session)
         setSession(completed)
         setMainSessions(mainSessions.concat(completed))
       }
     })
-  }, [mainSessions, localSessionsAPI])
+  }, [mainSessions, sessionsAPI])
 
   const viewByRange = useCallback(async (start: Date, end: Date) => {
-    if (localSessionsAPI) {
-      const result = await localSessionsAPI.viewByRange(start, end)
+    if (sessionsAPI) {
+      const result = await sessionsAPI.viewByRange(start, end)
       const sessions = result.sessions
       return sessions ? sessions.map(session => new Session(session)) : []
     }
     return []
-  }, [localSessionsAPI])
+  }, [sessionsAPI])
 
   const viewFirstAndLast = useCallback(async () => {
-    if (localSessionsAPI) {
-      const result = await localSessionsAPI.viewFirstAndLast()
+    if (sessionsAPI) {
+      const result = await sessionsAPI.viewFirstAndLast()
       const sessions = result.sessions
       return sessions ? sessions.map(session => new Session(session)) : []
     }
     return []
-  }, [localSessionsAPI])
+  }, [sessionsAPI])
 
   useEffect(() => {
     loadMainSessions()

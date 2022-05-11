@@ -1,23 +1,17 @@
 import { SessionDataGatewayInterface } from '@emaric/gittodoro-ts/lib/interactor/data-gateways/SessionDataGatewayInterface'
 import { Session } from '@emaric/gittodoro-ts/lib/interactor/entities/Session'
-
 import {
-  createUserSession,
-  getUserData,
-} from '@/modules/firebase/controllers/sessions'
+  setUserSession,
+  retrieveLatestSession,
+  updateSession,
+  retrieveOldestSession,
+  retrieveSessionsByRange,
+  retrieveSession,
+} from '@/modules/gittodoro-firebase/controllers/sessions'
 import { Duration } from '@emaric/gittodoro-ts/lib/interactor/entities/Duration'
 
 const createID = (date: Date) => {
-  return Number(
-    [
-      date.getFullYear(),
-      date.getMonth(),
-      date.getDay(),
-      date.getHours(),
-      date.getMinutes(),
-      date.getSeconds(),
-    ].join('')
-  )
+  return Number(date.toJSON().replaceAll(/-|\.|\:|T|Z/g, ''))
 }
 
 export class SessionFirebaseGateway implements SessionDataGatewayInterface {
@@ -37,23 +31,92 @@ export class SessionFirebaseGateway implements SessionDataGatewayInterface {
         id: -1,
       }),
     })
-    const response = await createUserSession(String(id), session)
-    console.log('SessionFirebaseGateway.response: ', response)
+    await setUserSession(String(id), session)
     return session
   }
+
   readSession(start: Date): Promise<Session> {
-    throw new Error('Method not implemented.')
+    return new Promise(async (resolve, reject) => {
+      try {
+        const id = createID(start)
+        const session = await retrieveSession(String(id))
+        if (session) resolve(session)
+      } catch (error) {
+        reject(error)
+        reject(
+          new Error(
+            'Error on `SessionFirebaseGateway.readSession > retrieveSession(...)`.'
+          )
+        )
+      }
+      reject(
+        new Error(
+          'Error on `SessionFirebaseGateway.readSession(...)`. No Session found.'
+        )
+      )
+    })
   }
+
   endSession(end: Date): Promise<Session> {
-    throw new Error('Method not implemented.')
+    return new Promise(async (resolve, reject) => {
+      try {
+        const session = await retrieveLatestSession()
+        if (session) {
+          session.end = end
+          await updateSession(session)
+          resolve(session)
+        }
+      } catch (error) {
+        reject(error)
+        reject(
+          new Error(
+            'Error on `SessionFirebaseGateway.endSession > retrieveLatestSession()`.'
+          )
+        )
+      }
+    })
   }
-  viewSessionsByRange(start: Date, end: Date): Promise<Session[]> {
-    throw new Error('Method not implemented.')
+
+  async viewSessionsByRange(start: Date, end: Date): Promise<Session[]> {
+    try {
+      const sessions = await retrieveSessionsByRange(start, end)
+      if (sessions) return sessions
+    } catch (error) {
+      console.error(error)
+      throw new Error('Error trying to retrieve sessions by range. ' + error)
+    }
+    throw new Error(
+      'Error on `SessionFirebaseGateway.viewSessionsByRange(...)`. No sessions found.'
+    )
   }
-  first(): Promise<Session> {
-    throw new Error('Method not implemented.')
+
+  async first(): Promise<Session> {
+    try {
+      const session = await retrieveOldestSession()
+      if (session) return session
+    } catch (error) {
+      throw new Error('Error trying to get the first session. ' + error)
+    }
+    throw new Error('No sessions found.')
   }
-  last(): Promise<Session> {
-    throw new Error('Method not implemented.')
+
+  async last(): Promise<Session> {
+    try {
+      const session = await retrieveLatestSession()
+      if (session) return session
+    } catch (error) {
+      throw new Error('Error trying to get the last session. ' + error)
+    }
+    throw new Error('No sessions found.')
+  }
+
+  async saveAllSessions(sessions: Session[]) {
+    const result = await Promise.all(
+      sessions.map((session) => {
+        session.id = createID(session.start)
+        setUserSession(String(session.id), session)
+      })
+    )
+    console.log(result)
   }
 }

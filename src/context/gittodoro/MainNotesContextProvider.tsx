@@ -5,7 +5,7 @@ import * as DateTime from '@/modules/temporal/DateTime'
 import { Note } from "@/models/Note"
 
 import { useClock } from "../clock/ClockContextProvider"
-import { useLocalStorageAPI } from "./LocalStorageAPIContextProvider"
+import { useGittorodoAPI } from "../gittodoro-firebase/GittodoroAPIContextProvider"
 
 type MainNotesContextType = {
   mainNotes?: Note[],
@@ -22,60 +22,60 @@ type MainNotesContextType = {
 const MainNotesContext = createContext<MainNotesContextType | undefined>(undefined)
 
 export const MainNotesProvider = (props: { children: ReactNode }) => {
-  const { localNotesAPI } = useLocalStorageAPI()
+  const { notesAPI } = useGittorodoAPI()
   const { clock: mainClock } = useClock()
   const [newNote, setNewNote] = useState<Note | undefined>(undefined)
   const [mainNotes, setMainNotes] = useState<Note[]>([])
   const [allowAdd, setAllowAdd] = useState(true)
 
   const loadNotesFromStorage = useCallback(() => {
-    if (mainClock && localNotesAPI) {
-      localNotesAPI.readByRange(mainClock.startDate, mainClock.endDate).then(({ notes }) => {
+    if (mainClock && notesAPI) {
+      notesAPI.readByRange(mainClock.startDate, mainClock.endDate).then(({ notes }) => {
         setMainNotes(notes)
       })
     }
-  }, [mainClock, localNotesAPI])
+  }, [mainClock, notesAPI])
 
   const createNote = useCallback((content: string, date = new Date()) => {
-    localNotesAPI && localNotesAPI.create(content, date).then(({ note }) => {
+    notesAPI && notesAPI.create(content, date).then(({ note }) => {
       setNewNote(note)
       loadNotesFromStorage()
     })
-  }, [loadNotesFromStorage, localNotesAPI])
+  }, [loadNotesFromStorage, notesAPI])
 
   const updateNote = useCallback((note: Note) => {
-    localNotesAPI && localNotesAPI.update(note.id, note.content, new Date()).then((_) => {
+    notesAPI && notesAPI.update(note.id, note.content, new Date()).then((_) => {
       setNewNote(undefined)
       loadNotesFromStorage()
     })
-  }, [loadNotesFromStorage, localNotesAPI])
+  }, [loadNotesFromStorage, notesAPI])
 
   const deleteNote = useCallback((id: number) => {
-    localNotesAPI && localNotesAPI.delete(id).then((_) => {
+    notesAPI && notesAPI.delete(id).then((_) => {
       setNewNote(undefined)
       loadNotesFromStorage()
     })
-  }, [loadNotesFromStorage, localNotesAPI])
+  }, [loadNotesFromStorage, notesAPI])
 
   const readNotesByRange = useCallback(async (start: Date, end: Date) => {
-    if (localNotesAPI) {
-      const result = await localNotesAPI.readByRange(start, end)
+    if (notesAPI) {
+      const result = await notesAPI.readByRange(start, end)
       const notes = result.notes
       return notes ? notes.map(note => new Note(note)) : []
     }
     return []
-  }, [localNotesAPI])
+  }, [notesAPI])
 
   const readFirstNote = useCallback(async (): Promise<Note | undefined> => {
-    if (localNotesAPI) {
-      const result = await localNotesAPI.readFirst()
+    if (notesAPI) {
+      const result = await notesAPI.readFirst()
       const note = result.note
       if (note) {
         return new Note(note)
       }
     }
     return undefined
-  }, [localNotesAPI])
+  }, [notesAPI])
 
   useEffect(() => {
     loadNotesFromStorage()

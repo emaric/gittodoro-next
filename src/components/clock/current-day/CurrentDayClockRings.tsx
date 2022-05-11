@@ -9,25 +9,25 @@ import { useSessionsManager } from "@/context/gittodoro-sessions/SessionsManager
 import ClockSecondsRing from "@/components/clock/ClockSecondsRing"
 import ClockRecordsRing from "@/components/clock/ClockRecordsRing"
 import ClockActiveRing from "@/components/clock/ClockActiveRing"
-import { useLocalStorageAPI } from "@/context/gittodoro/LocalStorageAPIContextProvider"
+import { useGittorodoAPI } from "@/context/gittodoro-firebase/GittodoroAPIContextProvider"
 import { difference, now } from "@/modules/temporal/DateTime"
 
 const CurrentDayClockRings = () => {
-  const { localSessionsAPI } = useLocalStorageAPI()
+  const { sessionsAPI } = useGittorodoAPI()
   const { currentDayClock: clock } = useCurrentDayClock()
   const { record, records, session, sessions } = useSessionsManager()
   const [incompleteRecords, setIncompletRecords] = useState<Record[]>([])
 
   const promisedRecordsFromLocalStorage = useMemo(async () => {
-    if (clock && localSessionsAPI) {
-      const result = await localSessionsAPI.viewByRange(clock.startDate, clock.endDate)
+    if (clock && sessionsAPI) {
+      const result = await sessionsAPI.viewByRange(clock.startDate, clock.endDate)
       if (result.sessions) {
         return generateRecordsFromSessions(result.sessions.map(session => new Session(session)))
       }
     }
     return []
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [clock, sessions, localSessionsAPI])
+  }, [clock, sessions, sessionsAPI])
 
   const [localRecords, setLocalRecords] = useState<Record[]>([])
 
