@@ -6,3 +6,18 @@
 .container > button {
   padding: 0.5rem !important;
 }
+
+.display_time {
+  margin-left: 1rem;
+  color: var(--light-secondary-color);
+  background-color: var(--yellow);
+  padding: 3px;
+  border-radius: 3px;
+}
+
+@media screen and (prefers-color-scheme: dark) {
+  .display_time {
+    background-color: transparent;
+    color: var(--light-yellow);
+  }
+}

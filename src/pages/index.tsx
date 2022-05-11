@@ -7,6 +7,7 @@ import MainAddNewNoteButton from "@/components/notes/MainAddNewNoteButton"
 import MainNotes from "@/components/notes/MainNotes"
 
 import styles from '@/styles/Home.module.css'
+import { TimeProvider } from "@/context/clock/TimeContextProvider"
 
 const HomePage = () => {
   return (
@@ -26,7 +27,9 @@ const HomePage = () => {
             <div>
               <MainAuth />
             </div>
-            <MainDatePicker sessionsLink='/sessions' />
+            <TimeProvider>
+              <MainDatePicker sessionsLink='/sessions' />
+            </TimeProvider>
             <div>
               <MainAddNewNoteButton />
             </div>
