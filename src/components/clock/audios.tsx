@@ -5,7 +5,9 @@ export const AudioStart = ({ play = false }) => {
 
   useEffect(() => {
     if (play) {
-      audioStartRef.current?.play()
+      audioStartRef.current?.play().catch((reason) => {
+        console.error('Error playing sound.', reason)
+      })
     }
   }, [play])
 
@@ -27,7 +29,9 @@ export const AudioEnd = ({ play = false }) => {
 
   useEffect(() => {
     if (play) {
-      audioEndRef.current?.play()
+      audioEndRef.current?.play().catch((reason) => {
+        console.error('Error playing sound.', reason)
+      })
     }
   }, [play])
 
@@ -49,7 +53,9 @@ export const AudioTick = ({ playOnLoop = false }) => {
 
   const evaluateReplay = useCallback(() => {
     if (playOnLoop) {
-      audioTickRef.current?.play()
+      audioTickRef.current?.play().catch((reason) => {
+        console.error('Error playing sound.', reason)
+      })
     } else {
       audioTickRef.current?.load()
     }
