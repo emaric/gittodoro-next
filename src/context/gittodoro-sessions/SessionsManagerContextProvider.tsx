@@ -81,19 +81,6 @@ export const SessionsManagerProvider = (props: { children: ReactNode }) => {
     setSession(undefined)
   }, [sessions, sessionsAPI])
 
-  useEffect(() => {
-    if (sessionsAPI) {
-      sessionsAPI.viewFirstAndLast().then(({ sessions }) => {
-        if (sessions && sessions.length > 0) {
-          const last = sessions[sessions.length - 1]
-          if (last.end == undefined) {
-            setSession(new Session(last))
-          }
-        }
-      })
-    }
-  }, [sessionsAPI])
-
   return (
     <SessionsManagerContext.Provider value={{ session, record, startSession, stopSession, sessions, records }}>
       {props.children}
