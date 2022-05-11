@@ -1,3 +1,82 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
 .group {
   margin: 1rem;
+  --width: 290px;
+}
+
+.group h3 {
+  margin-left: 1rem;
+}
+
+.group > header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2px;
+  background-color: rgba(0, 0, 0, 0.1);
+  width: var(--width);
+}
+
+.header_buttons {
+  visibility: hidden;
+}
+
+.group:hover .header_buttons {
+  visibility: visible;
+}
+
+.session_container {
+  display: flex;
+  gap: 0.5rem;
+  width: var(--width);
+}
+
+.items {
+  width: 100%;
+}
+
+.session_container .item label {
+  font-weight: 100;
+}
+
+.groups_container > div {
+  padding: 1rem;
+  margin: 1px;
+}
+
+.groups_container > div:nth-child(even) {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.groups_container > div:nth-child(odd) {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.groups_container > div:hover {
+  background-color: transparent;
+}
+
+.groups_container > div:hover .buttons {
+  visibility: visible;
+}
+
+.item {
+  display: flex;
+  justify-content: space-between;
+}
+
+.buttons {
+  display: flex;
+  justify-content: right;
+  visibility: hidden;
+}
+
+.buttons > button {
+  width: 3rem;
 }

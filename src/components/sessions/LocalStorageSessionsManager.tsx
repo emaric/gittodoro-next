@@ -7,6 +7,8 @@ import { useLocalStorageAPI } from "@/context/gittodoro/LocalStorageAPIContextPr
 
 import styles from './LocalStorageSessionsManager.module.css'
 
+import * as Button from './buttons'
+
 const LocalStorageSessionsManager = () => {
   const { localSessionsAPI } = useLocalStorageAPI()
   const [localSessions, setLocalSessions] = useState<Session[]>([])
@@ -33,7 +35,7 @@ const LocalStorageSessionsManager = () => {
   }, [localSessionsAPI])
 
   return (
-    <div>
+    <div className={styles.container}>
       {groups.map(group =>
         <GroupedByStartDate key={group} date={group} sessions={localSessions} />
       )}
@@ -47,8 +49,16 @@ const GroupedByStartDate = (props: { date: string, sessions: Session[] }) => {
   }, [props.sessions, props.date])
   return (
     <section className={styles.group}>
-      <header>{props.date}<button>save all</button></header>
-      {filtered.map(session => <SessionComponent key={session.id} session={session} />)}
+      <header>
+        <h3>{props.date}</h3>
+        <div className={styles.header_buttons}>
+          <button>Upload All</button>
+          <button>Delete All</button>
+        </div>
+      </header>
+      <div className={styles.groups_container}>
+        {filtered.map(session => <SessionComponent key={session.id} session={session} />)}
+      </div>
     </section>
   )
 }
@@ -59,10 +69,22 @@ const SessionComponent = (props: { session: Session }) => {
   const minutes = useMemo(() => duration && Math.floor(duration / 60) % 60, [duration])
   const seconds = useMemo(() => duration && Math.floor(duration % 60), [duration])
   return (
-    <div>
-      <button>save</button>
-      <button>delete</button>
-      Duration: {duration} seconds ({hours} hours {minutes} minutes, {seconds} seconds)
+    <div className={styles.session_container}>
+      <div className={styles.items}>
+        <div className={styles.item}>
+          <label>Duration:</label> {duration && `${hours} hr ${minutes} min, ${seconds} sec`}
+        </div>
+        <div className={styles.item}>
+          <label>Start:</label>{props.session.startPlainDateTime.toLocaleString()}
+        </div>
+        <div className={styles.item}>
+          <label>End:</label>{props.session.endPlainDateTime?.toLocaleString()}
+        </div>
+      </div>
+      <div className={styles.buttons}>
+        <Button.Upload />
+        <Button.Delete />
+      </div>
     </div>
   )
 }

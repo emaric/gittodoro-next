@@ -51,8 +51,12 @@ button {
   padding: 3px;
   margin: 3px;
   font-size: 1rem;
-  cursor: pointer;
   color: #001e1d;
+}
+
+button:hover {
+  background-color: #fddaa5;
+  border-color: #fddaa5;
 }
 
 h1 {
