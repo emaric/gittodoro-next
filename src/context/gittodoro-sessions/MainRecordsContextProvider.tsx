@@ -29,14 +29,16 @@ export const MainRecordsProvider = (props: { children: ReactNode }) => {
       }
     })
     return records
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [promisedMainSessions])
 
-  useEffect(() => {
-    promisedMainRecords.then(records => {
-      setMainRecords(records)
-    })
+  const updateMainRecords = useCallback(async () => {
+    const records = await promisedMainRecords
+    setMainRecords(records)
   }, [promisedMainRecords])
+
+  useEffect(() => {
+    updateMainRecords()
+  }, [updateMainRecords])
 
   return (
     <MainRecordsContext.Provider value={{ mainRecords, record, setRecord }}>

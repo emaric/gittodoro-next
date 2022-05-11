@@ -38,8 +38,7 @@ const CurrentDayClockRings = () => {
         setLocalRecords(records)
       })
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [clock, sessions])
+  }, [clock, sessions, promisedRecordsFromLocalStorage])
 
   useEffect(() => {
     setIncompletRecords([])

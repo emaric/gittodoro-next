@@ -7,6 +7,7 @@ import {
   retrieveOldestSession,
   retrieveSessionsByRange,
   retrieveSession,
+  retrieveLatestActiveSession,
 } from '@/modules/gittodoro-firebase/controllers/sessions'
 import { Duration } from '@emaric/gittodoro-ts/lib/interactor/entities/Duration'
 
@@ -32,7 +33,9 @@ export class SessionFirebaseGateway implements SessionDataGatewayInterface {
       }),
     })
     await setUserSession(String(id), session)
-    return session
+    const result = await retrieveSession(String(id))
+    if (result) return result
+    throw new Error('Error on `SessionFirebaseGateway.createSession`.')
   }
 
   readSession(start: Date): Promise<Session> {
@@ -60,7 +63,7 @@ export class SessionFirebaseGateway implements SessionDataGatewayInterface {
   endSession(end: Date): Promise<Session> {
     return new Promise(async (resolve, reject) => {
       try {
-        const session = await retrieveLatestSession()
+        const session = await retrieveLatestActiveSession()
         if (session) {
           session.end = end
           await updateSession(session)

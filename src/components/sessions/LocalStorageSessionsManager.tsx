@@ -55,11 +55,14 @@ const GroupedByStartDate = (props: { date: string, sessions: Session[] }) => {
 
 const SessionComponent = (props: { session: Session }) => {
   const duration = useMemo(() => props.session.endPlainDateTime && difference(props.session.endPlainDateTime, props.session.startPlainDateTime), [props.session])
+  const hours = useMemo(() => duration && Math.floor(duration / (60 * 60)), [duration])
+  const minutes = useMemo(() => duration && Math.floor(duration / 60) % 60, [duration])
+  const seconds = useMemo(() => duration && Math.floor(duration % 60), [duration])
   return (
     <div>
       <button>save</button>
       <button>delete</button>
-      Duration: {duration && Math.round(duration / 60)}
+      Duration: {duration} seconds ({hours} hours {minutes} minutes, {seconds} seconds)
     </div>
   )
 }

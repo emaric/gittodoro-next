@@ -45,7 +45,7 @@ describe('[DateTime] unit tests', () => {
 
     const utc = DateTime.utc()
     const actual = DateTime.difference(DateTime.now(), utc)
-    expect(Math.round(actual)).toBe(diff)
+    expect(Math.floor(actual)).toBe(diff)
   })
 
   it('difference today and tomorrow', () => {

@@ -12,7 +12,7 @@ interface RecordTimerProps {
 export const CurrentRecordTimer = ({ record, defaultDuration = 25 * 60 }: RecordTimerProps) => {
   const initialDuration = useMemo(() => {
     if (record) {
-      return Math.round(record.remainingTime)
+      return Math.floor(record.remainingTime)
     } else {
       return defaultDuration
     }

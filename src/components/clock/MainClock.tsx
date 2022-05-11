@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 
 import { today } from '@/modules/temporal/DateTime'
 
@@ -20,6 +20,7 @@ const MainClock = () => {
     if (selectedDate) {
       return selectedDate.start.toPlainDate().toString() == today().toPlainDate().toString()
     }
+    return false
   }, [selectedDate])
 
   return (

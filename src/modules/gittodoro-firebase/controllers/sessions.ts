@@ -50,15 +50,13 @@ const getUserSessionsDocRef = (id: string) => {
   }
 }
 
-export const setUserSession = async (
-  id: string,
-  session: Session,
-  docFunc = setDoc
-) => {
-  const userDoc = await getUserSessionsDocRef(id)
-  if (userDoc) {
+export const setUserSession = async (id: string, session: Session) => {
+  const userDocRef = getUserSessionsDocRef(id)
+  if (userDocRef) {
+    const docExists = (await getDoc(userDocRef)).exists()
+    const docFunc = docExists ? updateDoc : setDoc
     const sessionDocSnap = await docFunc(
-      userDoc,
+      userDocRef,
       sessionConverter.toFirestore(session)
     )
     return sessionDocSnap
@@ -77,8 +75,16 @@ export const retrieveSession = async (id: string) => {
 }
 
 export const retrieveLatestSession = async () => {
-  const sessionsCollectionRef = getUserSessionsColRef()
-  const q = query(sessionsCollectionRef, orderBy('start', 'desc'), limit(1))
+  const q = query(getUserSessionsColRef(), orderBy('start', 'desc'), limit(1))
+  const response = await getDocs<Session>(q.withConverter(sessionConverter))
+  if (response.docs.length > 0) {
+    return response.docs[0].data()
+  }
+  return undefined
+}
+
+export const retrieveLatestActiveSession = async () => {
+  const q = query(getUserSessionsColRef(), where('end', '==', null))
   const response = await getDocs<Session>(q.withConverter(sessionConverter))
   if (response.docs.length > 0) {
     return response.docs[0].data()
@@ -87,7 +93,7 @@ export const retrieveLatestSession = async () => {
 }
 
 export const updateSession = async (session: Session) => {
-  await setUserSession(String(session.id), session, updateDoc)
+  await setUserSession(String(session.id), session)
 }
 
 export const retrieveOldestSession = async () => {
