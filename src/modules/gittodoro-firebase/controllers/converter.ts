@@ -7,6 +7,7 @@ import {
 
 import { Session } from '@emaric/gittodoro-ts/lib/interactor/entities/Session'
 import { Duration } from '@emaric/gittodoro-ts/lib/interactor/entities/Duration'
+import { Note } from '@emaric/gittodoro-ts/lib/interactor/entities/Note'
 
 export const sessionConverter = {
   toFirestore(session: Session): DocumentData {
@@ -28,5 +29,27 @@ export const sessionConverter = {
       end: data.end ? (data.end as Timestamp).toDate() : undefined,
       duration: new Duration(data.duration),
     })
+  },
+}
+
+export const noteConverter = {
+  toFirestore(note: Note): DocumentData {
+    return {
+      ...note,
+      date: Timestamp.fromDate(note.date),
+      updatedAt: Timestamp.fromDate(note.updatedAt || note.date),
+    }
+  },
+  fromFirestore(
+    snapshot: QueryDocumentSnapshot,
+    options: SnapshotOptions
+  ): Note {
+    const data = snapshot.data(options)!
+    return {
+      id: data.id,
+      content: data.content,
+      date: (data.date as Timestamp).toDate(),
+      updatedAt: (data.updatedAt as Timestamp).toDate(),
+    }
   },
 }

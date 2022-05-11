@@ -11,9 +11,7 @@ import {
 } from '@/modules/gittodoro-firebase/controllers/sessions'
 import { Duration } from '@emaric/gittodoro-ts/lib/interactor/entities/Duration'
 
-const createID = (date: Date) => {
-  return Number(date.toJSON().replaceAll(/-|\.|\:|T|Z/g, ''))
-}
+import { createID } from './utils'
 
 export class SessionFirebaseGateway implements SessionDataGatewayInterface {
   async createSession(args: {

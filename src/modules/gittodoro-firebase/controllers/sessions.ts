@@ -10,33 +10,11 @@ import {
   getDocs,
   where,
 } from 'firebase/firestore'
-import { getAuth } from 'firebase/auth'
 
 import { Session } from '@emaric/gittodoro-ts/lib/interactor/entities/Session'
 
-import { db } from '@/modules/firebase'
 import { sessionConverter } from './converter'
-
-const getUserDocRef = () => {
-  const auth = getAuth()
-  const user = auth.currentUser
-  if (user) {
-    return doc(collection(db, 'users'), user.uid)
-  } else {
-    throw new Error(
-      'Error on `sessions.retrieveSession(...)`. User authentication required.'
-    )
-  }
-}
-
-export const getUserData = async () => {
-  const userData = await getDoc(getUserDocRef())
-  if (userData.exists()) {
-    return userData.data()
-  } else {
-    throw new Error('Error on `sessions.getUserData()`. No user data found.')
-  }
-}
+import { getUserDocRef } from './users'
 
 export const getUserSessionsColRef = () => {
   return collection(getUserDocRef(), 'sessions')

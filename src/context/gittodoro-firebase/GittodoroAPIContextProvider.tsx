@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, ReactNode, useContext, useMemo } from "react";
 
 import { NotesAPI } from "@/modules/gittodoro/api/NotesAPI";
 import { SessionsAPI } from "@/modules/gittodoro/api/SessionsAPI";
@@ -15,26 +15,26 @@ type GittodoroAPIContextType = {
 const GittodoroAPIContext = createContext<GittodoroAPIContextType | undefined>(undefined)
 
 export const GittodoroAPIProvider = (props: { children: ReactNode }) => {
-  const [sessionsAPI, setSessionsAPI] = useState<SessionsAPI>()
   const { user } = useGithubAuth()
 
-  const { sessionsAPI: firebaseSessionsAPI } = useFirebaseAPI()
-  const { localSessionsAPI, localNotesAPI: notesAPI } = useLocalStorageAPI()
+  const { sessionsAPI: firebaseSessionsAPI, notesAPI: firebaseNotesAPI } = useFirebaseAPI()
+  const { localSessionsAPI, localNotesAPI } = useLocalStorageAPI()
 
-  const sessionsAPI_ = useMemo(() => {
+  const sessionsAPI = useMemo(() => {
     if (user) {
       return firebaseSessionsAPI
-    }
-    return localSessionsAPI
-  }, [firebaseSessionsAPI, localSessionsAPI, user])
-
-  useEffect(() => {
-    if (user) {
-      setSessionsAPI(firebaseSessionsAPI)
     } else {
-      setSessionsAPI(localSessionsAPI)
+      return localSessionsAPI
     }
   }, [user, firebaseSessionsAPI, localSessionsAPI])
+
+  const notesAPI = useMemo(() => {
+    if (user) {
+      return firebaseNotesAPI
+    } else {
+      return localNotesAPI
+    }
+  }, [user, firebaseNotesAPI, localNotesAPI])
 
   return (
     <GittodoroAPIContext.Provider value={{ sessionsAPI, notesAPI }} >
