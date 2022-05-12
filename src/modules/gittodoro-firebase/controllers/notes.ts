@@ -68,7 +68,10 @@ export const retrieveUserNotesByRange = async (start: Date, end: Date) => {
   ])
   result.forEach((snaps) => {
     snaps.docs.forEach((_doc) => {
-      notes.push(_doc.data())
+      const note = _doc.data()
+      if (!notes.find((_note) => _note.id == note.id)) {
+        notes.push(note)
+      }
     })
   })
   return notes
