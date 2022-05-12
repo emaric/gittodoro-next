@@ -19,7 +19,7 @@ const LocalStorageSessionsManager = () => {
       if (!byStartDate.includes(plainDate))
         byStartDate.push(plainDate)
     })
-    return byStartDate
+    return byStartDate.reverse()
   }, [localSessions])
 
   useEffect(() => {

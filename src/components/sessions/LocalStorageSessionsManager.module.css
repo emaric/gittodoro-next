@@ -1,8 +1,7 @@
 .container {
-  display: flex;
-  flex-direction: column-reverse;
+  display: grid;
   justify-content: center;
-  align-items: center;
+  grid-template-columns: auto;
 }
 
 .group {
@@ -79,4 +78,22 @@
 
 .buttons > button {
   width: 3rem;
+}
+
+@media screen and (min-width: 580px) {
+  .container {
+    grid-template-columns: auto auto;
+  }
+}
+
+@media screen and (min-width: 870px) {
+  .container {
+    grid-template-columns: auto auto auto;
+  }
+}
+
+@media screen and (min-width: 1160px) {
+  .container {
+    grid-template-columns: auto auto auto auto;
+  }
 }
