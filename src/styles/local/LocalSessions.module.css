@@ -1,0 +1,4 @@
+.header {
+  height: var(--user-avatar-width);
+  margin-bottom: 2rem;
+}
