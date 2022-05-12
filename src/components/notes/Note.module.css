@@ -25,7 +25,7 @@
   align-items: center;
   border-bottom-width: 1px;
   border-bottom-style: dotted;
-  border-color: #abd1c6;
+  border-color: rgba(126, 126, 126, 0.4);
   visibility: hidden;
 }
 
@@ -46,7 +46,7 @@
   align-items: center;
   border-top-width: 1px;
   border-top-style: dotted;
-  border-color: var(--light-secondary);
+  border-color: rgba(126, 126, 126, 0.4);
   margin-top: 3px;
   padding: 2px;
 }
@@ -57,7 +57,7 @@
 }
 
 .note_container .content {
-  padding: 1px 2px 1px 22px;
+  padding: 1rem;
 }
 
 .note_container button {
@@ -100,6 +100,12 @@
   text-align: center;
 }
 
+.add_button {
+  border-radius: 50%;
+  width: var(--user-avatar-width);
+  height: var(--user-avatar-width);
+}
+
 @media screen and (prefers-color-scheme: dark) {
   .note_container {
     background-color: var(--dark-primary);
@@ -110,21 +116,7 @@
   }
 
   .note_container textarea {
-    background-color: rgb(0, 30, 29);
-    color: rgb(171, 209, 198);
+    background-color: transparent;
+    color: var(--dark-color);
   }
-
-  .note_container .header {
-    border-color: var(--light-secondary);
-  }
-
-  .note_container .footer {
-    border-color: var(--light-secondary);
-  }
-}
-
-.add_button {
-  border-radius: 50%;
-  width: var(--user-avatar-width);
-  height: var(--user-avatar-width);
 }
