@@ -46,7 +46,7 @@ a {
 
 button {
   background-color: #f9bc60;
-  border: #f9bc60 3px solid;
+  border: none;
   border-radius: 3px;
   padding: 3px;
   margin: 3px;
@@ -55,8 +55,7 @@ button {
 }
 
 button:hover {
-  background-color: #fddaa5;
-  border-color: #fddaa5;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
 h1 {

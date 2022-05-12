@@ -76,8 +76,7 @@
 
 .secondary_button {
   background-color: transparent;
-  /* border-width: 1px; */
-  border-color: #abd1c6;
+  border: 1px solid #abd1c6;
   color: rgb(249, 188, 96);
 }
 
@@ -121,4 +120,10 @@
   .note_container .footer {
     border-color: #004643;
   }
+}
+
+.add_button {
+  border-radius: 50%;
+  width: var(--user-avatar-width);
+  height: var(--user-avatar-width);
 }

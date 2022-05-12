@@ -5,6 +5,12 @@
 
 .container > button {
   padding: 0.5rem !important;
+  height: var(--user-avatar-width);
+}
+
+.button {
+  width: var(--user-avatar-width);
+  border-radius: 50%;
 }
 
 .display_time {
