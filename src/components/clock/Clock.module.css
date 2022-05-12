@@ -8,8 +8,8 @@
   --seconds-color: rgba(249, 188, 96, 0.8);
 
   --clock-button-label-color: var(--light-color);
-  --clock-button-background: rgba(255, 255, 254, 0.5);
-  --clock-button-background-hover: var(--face-color);
+  --clock-button-background: var(--light-background);
+  --clock-button-background-hover: transparent;
 }
 
 .disabled {
@@ -179,7 +179,6 @@
 
     --clock-button-label-color: var(--dark-color);
     --clock-button-background: var(--dark-background);
-    --clock-button-background-hover: var(--dark-primary);
   }
 
   .record {

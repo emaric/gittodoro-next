@@ -16,7 +16,7 @@ const ClockBase = ({ children }: Props) => {
         xmlns="<http://www.w3.org/2000/svg>"
       >
         {/* <!-- C = 100; r = C/2*π --> */}
-        <circle className={styles.face} cx={CX} cy={CY} r={R - 0.4} />
+        <circle className={styles.face} cx={CX} cy={CY} r={R - 1} />
         <circle
           className={styles.case}
           cx={CX}

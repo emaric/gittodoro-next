@@ -62,7 +62,7 @@ const CurrentRecordRing: FC<Props> = ({ record }) => {
       cy={CY}
       r={R - 1.2}
       fill="transparent"
-      strokeWidth="0.3"
+      strokeWidth="0.4"
       strokeDashoffset="0"
       strokeDasharray="0 100"
     />
