@@ -19,7 +19,6 @@
   align-items: center;
   padding: 2px;
   background-color: rgba(0, 0, 0, 0.1);
-  width: var(--width);
 }
 
 .header_buttons {
@@ -50,11 +49,11 @@
 }
 
 .groups_container > div:nth-child(even) {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(170, 170, 170, 0.1);
 }
 
 .groups_container > div:nth-child(odd) {
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: rgba(170, 170, 170, 0.2);
 }
 
 .groups_container > div:hover {
