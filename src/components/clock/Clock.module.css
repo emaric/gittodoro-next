@@ -174,12 +174,12 @@
 
 @media screen and (prefers-color-scheme: dark) {
   .clock {
-    --face-color: var(--dark-secondary);
+    --face-color: var(--dark-primary);
     --case-color: var(--dark-background);
 
     --clock-button-label-color: var(--dark-color);
-    --clock-button-background: var(--dark-primary);
-    --clock-button-background-hover: var(--dark-secondary);
+    --clock-button-background: var(--dark-background);
+    --clock-button-background-hover: var(--dark-primary);
   }
 
   .record {
