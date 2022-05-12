@@ -1,13 +1,13 @@
 .clock {
-  --face-color: rgba(255, 255, 255, 0.2);
-  --case-color: rgba(255, 255, 254, 1);
+  --face-color: var(--light-secondary);
+  --case-color: var(--light-background);
 
-  --pomodoro-color: rgba(255, 99, 71, 1);
+  --pomodoro-color: rgb(255, 99, 71);
   --short-break-color: rgb(85, 194, 135);
   --long-break-color: rgb(71, 189, 255);
-  --seconds-color: rgb(249, 188, 96);
+  --seconds-color: rgba(249, 188, 96, 0.8);
 
-  --clock-button-label-color: rgb(0, 70, 67);
+  --clock-button-label-color: var(--light-color);
   --clock-button-background: rgba(255, 255, 254, 0.5);
   --clock-button-background-hover: var(--face-color);
 }
@@ -42,7 +42,7 @@
 }
 
 .record {
-  stroke: rgb(0, 30, 29);
+  stroke: rgb(24, 24, 24);
 }
 
 .record[state='pomodoro'] {
@@ -174,12 +174,12 @@
 
 @media screen and (prefers-color-scheme: dark) {
   .clock {
-    --face-color: rgba(0, 30, 29, 0.2);
-    --case-color: rgb(0, 30, 29);
+    --face-color: var(--dark-secondary);
+    --case-color: var(--dark-background);
 
-    --clock-button-label-color: rgb(171, 209, 198);
-    --clock-button-background: rgba(0, 30, 29, 0.5);
-    --clock-button-background-hover: rgba(0, 70, 67, 0.3);
+    --clock-button-label-color: var(--dark-color);
+    --clock-button-background: var(--dark-primary);
+    --clock-button-background-hover: var(--dark-secondary);
   }
 
   .record {

@@ -9,10 +9,4 @@
   min-width: var(--user-avatar-width);
   min-height: var(--user-avatar-width);
   font-size: 2.4rem !important;
-  color: #d1f9ed;
-}
-
-.button:hover {
-  color: #d1f9ed;
-  border-color: #d1f9ed;
 }

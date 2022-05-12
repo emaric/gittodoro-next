@@ -8,10 +8,11 @@
 }
 
 .note_container {
-  background-color: rgba(255, 255, 254, 1);
+  background-color: var(--light-primary);
   /* min-height: 6rem; */
   padding: 0.2rem;
   width: 100%;
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2);
 }
 
 .note_container a {
@@ -45,7 +46,7 @@
   align-items: center;
   border-top-width: 1px;
   border-top-style: dotted;
-  border-color: #abd1c6;
+  border-color: var(--light-secondary);
   margin-top: 3px;
   padding: 2px;
 }
@@ -76,7 +77,7 @@
 
 .secondary_button {
   background-color: transparent;
-  border: 1px solid #abd1c6;
+  border: 1px solid var(--light-secondary);
   color: rgb(249, 188, 96);
 }
 
@@ -101,11 +102,11 @@
 
 @media screen and (prefers-color-scheme: dark) {
   .note_container {
-    background-color: rgb(0, 30, 29);
+    background-color: var(--dark-primary);
   }
 
   .secondary_button {
-    border-color: #004643;
+    border-color: var(--dark-background);
   }
 
   .note_container textarea {
@@ -114,11 +115,11 @@
   }
 
   .note_container .header {
-    border-color: #004643;
+    border-color: var(--light-secondary);
   }
 
   .note_container .footer {
-    border-color: #004643;
+    border-color: var(--light-secondary);
   }
 }
 
