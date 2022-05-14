@@ -1,4 +1,3 @@
-import LocalStorageSessionsManager from "@/components/sessions/LocalStorageSessionsManager"
 
 const LocalPage = () => {
   return (
