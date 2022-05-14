@@ -76,5 +76,5 @@ export const retrieveUserNotesByRange = async (start: Date, end: Date) => {
       }
     })
   })
-  return notes
+  return notes.sort((a, b) => a.date.getTime() - b.date.getTime())
 }
