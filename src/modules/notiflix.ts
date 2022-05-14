@@ -12,7 +12,9 @@ export const confirmDelete = (props: { onDelete: CallableFunction }) => {
     'Cancel',
     function okCb() {
       props.onDelete()
-    }
+    },
+    undefined,
+    { backgroundColor: 'var(--background)', messageColor: 'var(--color)' }
   )
 }
 
@@ -30,7 +32,15 @@ export const confirmAction = ({
   okLabel = 'Confirm',
   cancelLabel = 'Cancel',
 }: confirmActionProps) => {
-  Notiflix.Confirm.show(title, message, okLabel, cancelLabel, callback)
+  Notiflix.Confirm.show(
+    title,
+    message,
+    okLabel,
+    cancelLabel,
+    callback,
+    undefined,
+    { backgroundColor: 'var(--background)', messageColor: 'var(--color)' }
+  )
 }
 
 export const notifyLoginRequired = (
