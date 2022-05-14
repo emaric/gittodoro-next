@@ -12,6 +12,7 @@ const MainSignInButton = () => {
       <GithubIcon />
     </button>
   )
+
 }
 
 export default MainSignInButton
