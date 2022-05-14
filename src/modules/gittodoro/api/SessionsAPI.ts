@@ -1,7 +1,10 @@
 import { SessionController } from '@emaric/gittodoro-ts/lib/controller/SessionController'
 import { SessionDataGatewayInterface } from '@emaric/gittodoro-ts/lib/interactor/data-gateways/SessionDataGatewayInterface'
 import {
+  DeleteAllRequest,
   EndSessionRequest,
+  SaveAllRequest,
+  SessionModelRequest,
   StartSessionRequest,
   ViewFirstAndLastSessionsRequest,
   ViewSessionsByRangeRequest,
@@ -10,13 +13,17 @@ import { StartSessionCommand } from '@emaric/gittodoro-ts/lib/interactor/use-cas
 import { EndSessionCommand } from '@emaric/gittodoro-ts/lib/interactor/use-cases/EndSessionCommand'
 import { ViewSessionsByRangeCommand } from '@emaric/gittodoro-ts/lib/interactor/use-cases/ViewSessionsByRangeCommand'
 import { ViewFirstAndLastSessionsCommand } from '@emaric/gittodoro-ts/lib/interactor/use-cases/ViewFirstAndLastSessionsCommand'
+import { DeleteAllSessionsCommand } from '@emaric/gittodoro-ts/lib/interactor/use-cases/DeleteAllSessionsCommand'
+import { SaveAllSessionsCommand } from '@emaric/gittodoro-ts/lib/interactor/use-cases/SaveAllSessionsCommand'
 
 import {
   SessionsPresenter,
   SessionsViewInterface,
   SessionsViewType,
-} from '../controllers/presenters/sessions'
-import { Duration } from '../models/Duration'
+} from '@/modules/gittodoro/controllers/presenters/sessions'
+import { Duration } from '@/modules/gittodoro/models/Duration'
+import { Session } from '@/modules/gittodoro/models/Session'
+import { mapSessionsToRequests } from '../controllers/presenters/mappers'
 
 export class SessionsAPI {
   private controller: SessionController
@@ -100,6 +107,38 @@ export class SessionsAPI {
         this.createPresenter(resolve)
       )
       this.controller.viewFirstAndLastSessions(interactor, request)
+    })
+  }
+
+  deleteSessions(ids: number[]): Promise<SessionsViewType> {
+    const request: DeleteAllRequest = {
+      timestamp: new Date(),
+      message: 'Delete multiple Sessions by IDs.',
+      ids,
+    }
+    return new Promise((resolve) => {
+      const interactor = new DeleteAllSessionsCommand(
+        this.db,
+        this.createPresenter(resolve)
+      )
+      this.controller.deleteAllSessions(interactor, request)
+    })
+  }
+
+  saveSessions(sessions: Session[]) {
+    const requestSessions: SessionModelRequest[] =
+      mapSessionsToRequests(sessions)
+    const request: SaveAllRequest = {
+      timestamp: new Date(),
+      message: 'Save multiple Sessions.',
+      sessions: requestSessions,
+    }
+    return new Promise((resolve) => {
+      const interactor = new SaveAllSessionsCommand(
+        this.db,
+        this.createPresenter(resolve)
+      )
+      this.controller.saveAllSessions(interactor, request)
     })
   }
 }

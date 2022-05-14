@@ -6,6 +6,8 @@ import { State } from '@/modules/gittodoro/models/State'
 
 import { NoteResponse } from '@emaric/gittodoro-ts/lib/interactor/responses/NoteResponse'
 import { Note } from '@/modules/gittodoro/models/Note'
+import { SessionModelRequest } from '@emaric/gittodoro-ts/lib/interactor/requests/SessionRequest'
+import { Duration } from '@/models/Duration'
 
 export const mapTimerSequence = (
   timerSequence: StateTimerResponse[]
@@ -43,4 +45,39 @@ export const mapNote = (noteResponse: NoteResponse): Note => {
 
 export const mapNotes = (notes: NoteResponse[]): Note[] => {
   return notes.map((note) => mapNote(note))
+}
+
+export const mapTimerSequenceToDuration = (
+  timerSequence: StateTimer[]
+): Duration => {
+  const duration: Duration = {
+    pomodoro:
+      timerSequence.find((timer) => timer.state == State.pomodoro)?.duration ||
+      0,
+    short:
+      timerSequence.find((timer) => timer.state == State.short)?.duration || 0,
+    long:
+      timerSequence.find((timer) => timer.state == State.long)?.duration || 0,
+    longInterval: timerSequence.length / 2,
+  }
+  return duration
+}
+
+export const mapSessionToRequest = (session: Session) => {
+  const duration = mapTimerSequenceToDuration(session.timerSequence)
+  const request: SessionModelRequest = {
+    id: session.id,
+    start: session.start,
+    end: session.end,
+    pomodoro: duration.pomodoro,
+    short: duration.short,
+    long: duration.long,
+    longInterval: duration.longInterval,
+  }
+
+  return request
+}
+
+export const mapSessionsToRequests = (sessions: Session[]) => {
+  return sessions.map((session) => mapSessionToRequest(session))
 }

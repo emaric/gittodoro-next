@@ -8,6 +8,9 @@ import {
   retrieveSessionsByRange,
   retrieveSession,
   retrieveLatestActiveSession,
+  saveSessions as saveAllSessions,
+  deleteSessionsByIDs,
+  retrieveSessionsByIDs,
 } from '@/modules/gittodoro-firebase/controllers/sessions'
 import { Duration } from '@emaric/gittodoro-ts/lib/interactor/entities/Duration'
 
@@ -111,13 +114,27 @@ export class SessionFirebaseGateway implements SessionDataGatewayInterface {
     throw new Error('No sessions found.')
   }
 
-  async saveAllSessions(sessions: Session[]) {
-    const result = await Promise.all(
-      sessions.map((session) => {
-        session.id = createID(session.start)
-        setUserSession(String(session.id), session)
-      })
-    )
-    console.log(result)
+  async saveSessions(sessions: Session[]): Promise<Session[]> {
+    const sessionsWithAssignedIDs = sessions.map((session) => {
+      session.id = createID(session.start)
+      return session
+    })
+    const ids: string[] = sessions.map((session) => String(session.id))
+    await saveAllSessions(ids, sessionsWithAssignedIDs)
+
+    return await retrieveSessionsByIDs(ids)
+  }
+
+  async deleteSessions(ids: number[]): Promise<Session[]> {
+    const stringIDs = ids.map((id) => String(id))
+    const sessionsToDelete = await retrieveSessionsByIDs(stringIDs)
+    await deleteSessionsByIDs(stringIDs)
+
+    const tryToGetTheDeletedSessions = await retrieveSessionsByIDs(stringIDs)
+    if (tryToGetTheDeletedSessions.length > 0) {
+      throw new Error('Error deleting the sessions.')
+    }
+
+    return sessionsToDelete
   }
 }

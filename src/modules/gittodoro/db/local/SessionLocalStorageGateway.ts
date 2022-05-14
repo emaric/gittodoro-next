@@ -152,4 +152,28 @@ export class SessionLocalStorageGateway implements SessionDataGatewayInterface {
     )
     return Promise.resolve(sorted[sorted.length - 1])
   }
+
+  saveSessions(sessions: Session[]): Promise<Session[]> {
+    const savedSessions: Session[] = []
+
+    sessions.forEach((session) => {
+      const id = this.lastID + 1
+      session.id = id
+      this.updateSessions(this.sessions.concat(session))
+      this.updateLastID(id)
+      savedSessions.push(session)
+    })
+
+    return Promise.resolve(savedSessions)
+  }
+
+  deleteSessions(ids: number[]): Promise<Session[]> {
+    const sessionsToDelete = this.sessions.filter((session) =>
+      ids.includes(session.id)
+    )
+    this.updateSessions(
+      this.sessions.filter((session) => !ids.includes(session.id))
+    )
+    return Promise.resolve(sessionsToDelete)
+  }
 }

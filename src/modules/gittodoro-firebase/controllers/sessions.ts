@@ -9,6 +9,8 @@ import {
   limit,
   getDocs,
   where,
+  documentId,
+  deleteDoc,
 } from 'firebase/firestore'
 
 import { Session } from '@emaric/gittodoro-ts/lib/interactor/entities/Session'
@@ -21,25 +23,18 @@ export const getUserSessionsColRef = () => {
 }
 
 const getUserSessionsDocRef = (id: string) => {
-  const sessionsCollection = getUserSessionsColRef()
-  if (sessionsCollection) {
-    const sessionsDocRef = doc(sessionsCollection, id)
-    return sessionsDocRef
-  }
+  return doc(getUserSessionsColRef(), id)
 }
 
 export const setUserSession = async (id: string, session: Session) => {
   const userDocRef = getUserSessionsDocRef(id)
-  if (userDocRef) {
-    const docExists = (await getDoc(userDocRef)).exists()
-    const docFunc = docExists ? updateDoc : setDoc
-    const sessionDocSnap = await docFunc(
-      userDocRef,
-      sessionConverter.toFirestore(session)
-    )
-    return sessionDocSnap
-  }
-  throw new Error('Error trying to create session.')
+  const docExists = (await getDoc(userDocRef)).exists()
+  const docFunc = docExists ? updateDoc : setDoc
+  const sessionDocSnap = await docFunc(
+    userDocRef,
+    sessionConverter.toFirestore(session)
+  )
+  return sessionDocSnap
 }
 
 export const retrieveSession = async (id: string) => {
@@ -112,4 +107,27 @@ export const retrieveSessionsByRange = async (start: Date, end: Date) => {
     })
   })
   return result
+}
+
+export const retrieveSessionsByIDs = async (
+  ids: string[]
+): Promise<Session[]> => {
+  const q = query(getUserSessionsColRef(), where(documentId(), 'in', ids))
+  const response = await getDocs<Session>(q.withConverter(sessionConverter))
+  return response.docs.map((_doc) => _doc.data())
+}
+
+export const saveSessions = async (ids: string[], sessions: Session[]) => {
+  await Promise.all(
+    sessions.map((session, i) =>
+      setDoc(
+        getUserSessionsDocRef(ids[i]),
+        sessionConverter.toFirestore(session)
+      )
+    )
+  )
+}
+
+export const deleteSessionsByIDs = async (ids: string[]) => {
+  await Promise.all(ids.map((id) => deleteDoc(getUserSessionsDocRef(id))))
 }

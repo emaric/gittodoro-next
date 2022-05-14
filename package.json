@@ -12,7 +12,7 @@
     "deploy:firebase": "next build && next export && firebase deploy"
   },
   "dependencies": {
-    "@emaric/gittodoro-ts": "^0.3.0",
+    "@emaric/gittodoro-ts": "^0.3.2",
     "@fortawesome/fontawesome-svg-core": "^6.1.1",
     "@fortawesome/free-brands-svg-icons": "^6.1.1",
     "@fortawesome/free-regular-svg-icons": "^6.1.1",

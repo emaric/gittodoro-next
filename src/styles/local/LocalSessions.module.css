@@ -2,3 +2,7 @@
   height: var(--user-avatar-width);
   margin-bottom: 2rem;
 }
+
+.footer {
+  min-height: 5rem;
+}

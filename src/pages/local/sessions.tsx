@@ -1,7 +1,7 @@
 import Head from "next/head"
 
 import Header from "@/components/auth/Header"
-import LocalStorageSessionsManager from "@/components/sessions/LocalStorageSessionsManager"
+import SessionsManagerContainer from "@/components/local-storage-management/SessionsManager"
 
 import styles from '@/styles/local/LocalSessions.module.css'
 
@@ -15,9 +15,10 @@ const LocalSessionsPage = () => {
         <header className={styles.header}>
           <Header />
         </header>
-        <main>
-          <LocalStorageSessionsManager />
+        <main className={styles.main}>
+          <SessionsManagerContainer />
         </main>
+        <footer className={styles.footer}></footer>
       </div>
     </>
   )

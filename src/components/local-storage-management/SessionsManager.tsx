@@ -1,17 +1,21 @@
-import { useEffect, useMemo, useState } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 
 import { difference } from "@/modules/temporal/DateTime"
-
 import { Session } from "@/models/Session"
-import { useLocalStorageAPI } from "@/context/gittodoro/LocalStorageAPIContextProvider"
 
-import styles from './LocalStorageSessionsManager.module.css'
+import { useGithubAuth } from "@/context/GithubAuthContextProvider"
+import { useLocalStorageAPI } from "@/context/gittodoro/LocalStorageAPIContextProvider"
+import { useFirebaseAPI } from "@/context/gittodoro-firebase/FirebaseAPIContextProvider"
+import { SessionsProvider, useLocalSessions } from "@/context/local-storage-management/SessionsContextProvider"
+
+import styles from './SessionsManager.module.css'
 
 import * as Button from './buttons'
+import { confirmDelete } from "@/modules/notiflix"
 
-const LocalStorageSessionsManager = () => {
-  const { localSessionsAPI } = useLocalStorageAPI()
-  const [localSessions, setLocalSessions] = useState<Session[]>([])
+const SessionsManager = () => {
+  const { localSessions } = useLocalSessions()
+
   const groups = useMemo(() => {
     const byStartDate: string[] = []
     localSessions.forEach((session) => {
@@ -21,18 +25,6 @@ const LocalStorageSessionsManager = () => {
     })
     return byStartDate.reverse()
   }, [localSessions])
-
-  useEffect(() => {
-    if (localSessionsAPI) {
-      const start = new Date('2022-01-01')
-      const end = new Date()
-      localSessionsAPI.viewByRange(start, end).then(({ sessions }) => {
-        if (sessions) {
-          setLocalSessions(sessions.map(session => new Session(session)))
-        }
-      })
-    }
-  }, [localSessionsAPI])
 
   return (
     <div className={styles.container}>
@@ -47,13 +39,20 @@ const GroupedByStartDate = (props: { date: string, sessions: Session[] }) => {
   const filtered = useMemo(() => {
     return props.sessions.filter((session) => session.startPlainDateTime.toPlainDate().toString() == props.date)
   }, [props.sessions, props.date])
+
+  const { handleDelete } = useLocalSessions()
+
+  const handleDeleteAll = useCallback(() => {
+    confirmDelete({ onDelete: () => handleDelete(filtered) })
+  }, [filtered, handleDelete])
+
   return (
     <section className={styles.group}>
       <header>
         <h3>{props.date}</h3>
         <div className={styles.header_buttons}>
           <button>Upload All</button>
-          <button>Delete All</button>
+          <button onClick={handleDeleteAll}>Delete All</button>
         </div>
       </header>
       <div className={styles.groups_container}>
@@ -68,6 +67,20 @@ const SessionComponent = (props: { session: Session }) => {
   const hours = useMemo(() => duration && Math.floor(duration / (60 * 60)), [duration])
   const minutes = useMemo(() => duration && Math.floor(duration / 60) % 60, [duration])
   const seconds = useMemo(() => duration && Math.floor(duration % 60), [duration])
+
+  const { updateSessions, handleDelete } = useLocalSessions()
+
+  const { user } = useGithubAuth()
+  const { sessionsAPI } = useFirebaseAPI()
+
+  const onDelete = useCallback(() => {
+    handleDelete([props.session])
+  }, [props.session, handleDelete])
+
+  const handleUpload = useCallback(() => {
+    throw new Error('Not yet implemented.')
+  }, [])
+
   return (
     <div className={styles.session_container}>
       <div className={styles.items}>
@@ -82,11 +95,19 @@ const SessionComponent = (props: { session: Session }) => {
         </div>
       </div>
       <div className={styles.buttons}>
-        <Button.Upload />
-        <Button.Delete />
+        <Button.Upload onClick={handleUpload} />
+        <Button.Delete onClick={onDelete} />
       </div>
     </div>
   )
 }
 
-export default LocalStorageSessionsManager
+const SessionsManagerContainer = () => {
+  return (
+    <SessionsProvider>
+      <SessionsManager />
+    </SessionsProvider>
+  )
+}
+
+export default SessionsManagerContainer
