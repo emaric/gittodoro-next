@@ -8,3 +8,7 @@
   height: var(--user-avatar-width);
   cursor: pointer;
 }
+
+.avatar img {
+  border-radius: 50%;
+}
