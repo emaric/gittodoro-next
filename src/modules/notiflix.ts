@@ -15,3 +15,34 @@ export const confirmDelete = (props: { onDelete: CallableFunction }) => {
     }
   )
 }
+
+interface confirmActionProps {
+  title: string
+  message: string
+  callback: () => void
+  okLabel?: string
+  cancelLabel?: string
+}
+export const confirmAction = ({
+  title,
+  message,
+  callback,
+  okLabel = 'Confirm',
+  cancelLabel = 'Cancel',
+}: confirmActionProps) => {
+  Notiflix.Confirm.show(title, message, okLabel, cancelLabel, callback)
+}
+
+export const notifyLoginRequired = (
+  message = 'You must be logged in to perform this action.'
+) => {
+  Notiflix.Notify.info(message)
+}
+
+export const showLoading = () => {
+  Notiflix.Loading.standard('Uploading...')
+}
+
+export const removeLoading = () => {
+  Notiflix.Loading.remove()
+}

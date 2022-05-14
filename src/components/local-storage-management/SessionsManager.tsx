@@ -1,17 +1,14 @@
-import { useCallback, useEffect, useMemo, useState } from "react"
+import { useCallback, useMemo } from "react"
 
 import { difference } from "@/modules/temporal/DateTime"
 import { Session } from "@/models/Session"
 
-import { useGithubAuth } from "@/context/GithubAuthContextProvider"
-import { useLocalStorageAPI } from "@/context/gittodoro/LocalStorageAPIContextProvider"
-import { useFirebaseAPI } from "@/context/gittodoro-firebase/FirebaseAPIContextProvider"
 import { SessionsProvider, useLocalSessions } from "@/context/local-storage-management/SessionsContextProvider"
 
 import styles from './SessionsManager.module.css'
 
 import * as Button from './buttons'
-import { confirmDelete } from "@/modules/notiflix"
+import { confirmAction, confirmDelete } from "@/modules/notiflix"
 
 const SessionsManager = () => {
   const { localSessions } = useLocalSessions()
@@ -40,18 +37,26 @@ const GroupedByStartDate = (props: { date: string, sessions: Session[] }) => {
     return props.sessions.filter((session) => session.startPlainDateTime.toPlainDate().toString() == props.date)
   }, [props.sessions, props.date])
 
-  const { handleDelete } = useLocalSessions()
+  const { handleDelete, handleUpload } = useLocalSessions()
 
   const handleDeleteAll = useCallback(() => {
     confirmDelete({ onDelete: () => handleDelete(filtered) })
   }, [filtered, handleDelete])
+
+  const handleUploadAll = useCallback(() => {
+    confirmAction({
+      title: 'Confirm Upload',
+      message: 'Are you sure you want to upload all these sessions?',
+      callback: () => handleUpload(filtered)
+    })
+  }, [filtered, handleUpload])
 
   return (
     <section className={styles.group}>
       <header>
         <h3>{props.date}</h3>
         <div className={styles.header_buttons}>
-          <button>Upload All</button>
+          <button onClick={handleUploadAll}>Upload All</button>
           <button onClick={handleDeleteAll}>Delete All</button>
         </div>
       </header>
@@ -68,18 +73,15 @@ const SessionComponent = (props: { session: Session }) => {
   const minutes = useMemo(() => duration && Math.floor(duration / 60) % 60, [duration])
   const seconds = useMemo(() => duration && Math.floor(duration % 60), [duration])
 
-  const { updateSessions, handleDelete } = useLocalSessions()
-
-  const { user } = useGithubAuth()
-  const { sessionsAPI } = useFirebaseAPI()
+  const { handleDelete, handleUpload } = useLocalSessions()
 
   const onDelete = useCallback(() => {
     handleDelete([props.session])
   }, [props.session, handleDelete])
 
-  const handleUpload = useCallback(() => {
-    throw new Error('Not yet implemented.')
-  }, [])
+  const onUpload = useCallback(() => {
+    handleUpload([props.session])
+  }, [props.session, handleUpload])
 
   return (
     <div className={styles.session_container}>
@@ -95,7 +97,7 @@ const SessionComponent = (props: { session: Session }) => {
         </div>
       </div>
       <div className={styles.buttons}>
-        <Button.Upload onClick={handleUpload} />
+        <Button.Upload onClick={onUpload} />
         <Button.Delete onClick={onDelete} />
       </div>
     </div>

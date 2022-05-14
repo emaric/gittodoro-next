@@ -18,8 +18,10 @@ import { Session } from '@emaric/gittodoro-ts/lib/interactor/entities/Session'
 import { sessionConverter } from './converter'
 import { getUserDocRef } from './users'
 
+const COLLECTION_NAME = 'sessions'
+
 export const getUserSessionsColRef = () => {
-  return collection(getUserDocRef(), 'sessions')
+  return collection(getUserDocRef(), COLLECTION_NAME)
 }
 
 const getUserSessionsDocRef = (id: string) => {
@@ -112,9 +114,14 @@ export const retrieveSessionsByRange = async (start: Date, end: Date) => {
 export const retrieveSessionsByIDs = async (
   ids: string[]
 ): Promise<Session[]> => {
-  const q = query(getUserSessionsColRef(), where(documentId(), 'in', ids))
-  const response = await getDocs<Session>(q.withConverter(sessionConverter))
-  return response.docs.map((_doc) => _doc.data())
+  if (ids.length <= 10) {
+    const q = query(getUserSessionsColRef(), where(documentId(), 'in', ids))
+    const response = await getDocs<Session>(q.withConverter(sessionConverter))
+    return response.docs.map((_doc) => _doc.data())
+  }
+  throw new Error(
+    'Not yet implemented. TODO: execute by batch when size exceeds 10.'
+  )
 }
 
 export const saveSessions = async (ids: string[], sessions: Session[]) => {

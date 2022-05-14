@@ -15,8 +15,10 @@ import { Note } from '@emaric/gittodoro-ts/lib/interactor/entities/Note'
 import { noteConverter } from './converter'
 import { getUserDocRef } from './users'
 
+const COLLECTION_NAME = 'notes'
+
 const getUserNotesColRef = () => {
-  return collection(getUserDocRef(), 'notes')
+  return collection(getUserDocRef(), COLLECTION_NAME)
 }
 
 const getUserNoteDocRef = (id: string) => {

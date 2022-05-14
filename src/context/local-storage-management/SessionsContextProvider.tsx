@@ -3,18 +3,30 @@ import { createContext, ReactNode, useCallback, useContext, useEffect, useState 
 import { Session } from "@/models/Session";
 
 import { useLocalStorageAPI } from "@/context/gittodoro/LocalStorageAPIContextProvider";
+import { useGithubAuth } from "../GithubAuthContextProvider";
+import { notifyLoginRequired, notifySuccess, showLoading } from "@/modules/notiflix";
+import { SessionsAPI } from "@/modules/gittodoro/api/SessionsAPI";
+import { useFirebaseAPI } from "../gittodoro-firebase/FirebaseAPIContextProvider";
 
 type SessionsContextType = {
   localSessions: Session[]
   updateSessions: CallableFunction
   handleDelete: (sessions: Session[]) => void
+  handleUpload: (sessions: Session[]) => void
 }
 
 const SessionsContext = createContext<SessionsContextType | undefined>(undefined)
 
-export const SessionsProvider = (props: { children: ReactNode }) => {
+interface Props {
+  children: ReactNode
+}
+
+export const SessionsProvider = ({ children }: Props) => {
   const [localSessions, setLocalSessions] = useState<Session[]>([])
   const { localSessionsAPI } = useLocalStorageAPI()
+
+  const { user } = useGithubAuth()
+  const { sessionsAPI: destinationAPI } = useFirebaseAPI()
 
   const updateSessions = useCallback(async () => {
     if (localSessionsAPI) {
@@ -30,7 +42,6 @@ export const SessionsProvider = (props: { children: ReactNode }) => {
     setLocalSessions([])
   }, [localSessionsAPI])
 
-
   const handleDelete = useCallback((sessions: Session[]) => {
     if (localSessionsAPI) {
       const ids = sessions.map(s => s.id)
@@ -43,13 +54,31 @@ export const SessionsProvider = (props: { children: ReactNode }) => {
     }
   }, [localSessionsAPI, localSessions])
 
+  const handleUpload = useCallback((sessions: Session[]) => {
+    if (user) {
+      if (destinationAPI) {
+        destinationAPI.saveSessions(sessions).then(({ sessions: savedSessions }) => {
+          if (savedSessions) {
+            notifySuccess('Upload successful!')
+          }
+        }).catch((reason) => {
+          console.error('Error uploading sessions:', reason)
+        })
+      } else {
+        throw new Error('A destination is not set.')
+      }
+    } else {
+      notifyLoginRequired()
+    }
+  }, [user, destinationAPI])
+
   useEffect(() => {
     updateSessions()
   }, [updateSessions])
 
   return (
-    <SessionsContext.Provider value={{ localSessions, updateSessions, handleDelete }}>
-      {props.children}
+    <SessionsContext.Provider value={{ localSessions, updateSessions, handleDelete, handleUpload }}>
+      {children}
     </SessionsContext.Provider>
   )
 }

@@ -125,7 +125,7 @@ export class SessionsAPI {
     })
   }
 
-  saveSessions(sessions: Session[]) {
+  saveSessions(sessions: Session[]): Promise<SessionsViewType> {
     const requestSessions: SessionModelRequest[] =
       mapSessionsToRequests(sessions)
     const request: SaveAllRequest = {
