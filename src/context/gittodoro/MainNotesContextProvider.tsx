@@ -4,8 +4,8 @@ import * as DateTime from '@/modules/temporal/DateTime'
 
 import { Note } from "@/models/Note"
 
-import { useClock } from "../clock/ClockContextProvider"
-import { useGittorodoAPI } from "../gittodoro-firebase/GittodoroAPIContextProvider"
+import { useClock } from "@/context/clock/ClockContextProvider"
+import { useGittorodoAPI } from "@/context/gittodoro-firebase/GittodoroAPIContextProvider"
 
 type MainNotesContextType = {
   mainNotes?: Note[],
@@ -28,7 +28,7 @@ export const MainNotesProvider = (props: { children: ReactNode }) => {
   const [mainNotes, setMainNotes] = useState<Note[]>([])
   const [allowAdd, setAllowAdd] = useState(true)
 
-  const loadNotesFromStorage = useCallback(() => {
+  const loadNotes = useCallback(() => {
     if (mainClock && notesAPI) {
       notesAPI.readByRange(mainClock.startDate, mainClock.endDate).then(({ notes }) => {
         setMainNotes(notes)
@@ -39,23 +39,23 @@ export const MainNotesProvider = (props: { children: ReactNode }) => {
   const createNote = useCallback((content: string, date = new Date()) => {
     notesAPI && notesAPI.create(content, date).then(({ note }) => {
       setNewNote(note)
-      loadNotesFromStorage()
+      loadNotes()
     })
-  }, [loadNotesFromStorage, notesAPI])
+  }, [loadNotes, notesAPI])
 
   const updateNote = useCallback((note: Note) => {
     notesAPI && notesAPI.update(note.id, note.content, new Date()).then((_) => {
       setNewNote(undefined)
-      loadNotesFromStorage()
+      loadNotes()
     })
-  }, [loadNotesFromStorage, notesAPI])
+  }, [loadNotes, notesAPI])
 
   const deleteNote = useCallback((id: number) => {
     notesAPI && notesAPI.delete(id).then((_) => {
       setNewNote(undefined)
-      loadNotesFromStorage()
+      loadNotes()
     })
-  }, [loadNotesFromStorage, notesAPI])
+  }, [loadNotes, notesAPI])
 
   const readNotesByRange = useCallback(async (start: Date, end: Date) => {
     if (notesAPI) {
@@ -78,7 +78,7 @@ export const MainNotesProvider = (props: { children: ReactNode }) => {
   }, [notesAPI])
 
   useEffect(() => {
-    loadNotesFromStorage()
+    loadNotes()
 
     if (mainClock) {
       setAllowAdd(0 == DateTime.difference(mainClock?.start, DateTime.today()))
@@ -88,10 +88,10 @@ export const MainNotesProvider = (props: { children: ReactNode }) => {
 
   useEffect(() => {
     if (mainNotes.length == 0) {
-      loadNotesFromStorage()
+      loadNotes()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loadNotesFromStorage])
+  }, [loadNotes])
 
   return (
     <MainNotesContext.Provider value={{

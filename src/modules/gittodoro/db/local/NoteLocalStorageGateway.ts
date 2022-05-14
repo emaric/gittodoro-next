@@ -1,5 +1,6 @@
 import { NoteDataGatewayInterface } from '@emaric/gittodoro-ts/lib/interactor/data-gateways/NoteDataGatewayInterface'
 import { Note } from '@emaric/gittodoro-ts/lib/interactor/entities/Note'
+import { InitialNotes } from './InitialNotes'
 
 const mapToEntity = (notesString: string): Note[] => {
   const objs = JSON.parse(notesString)
@@ -21,6 +22,12 @@ const mapToString = (notes: Note[]) => {
 export class NoteLocalStorageGateway implements NoteDataGatewayInterface {
   static NOTES_ID = 'gittodoro-notes'
   static NOTES_LAST_ID = 'gittodoro-notes-id'
+
+  constructor() {
+    if (this.lastID <= -1) {
+      InitialNotes.forEach((note) => this.create(note))
+    }
+  }
 
   private get lastID() {
     const lastIDString = localStorage.getItem(

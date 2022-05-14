@@ -12,10 +12,6 @@ import { TimeProvider } from "@/context/clock/TimeContextProvider"
 const HomePage = () => {
   return (
     <>
-      <Head>
-        <title>GIT TODO RO</title>
-      </Head>
-
       <div className={styles.container}>
         <header>
         </header>
