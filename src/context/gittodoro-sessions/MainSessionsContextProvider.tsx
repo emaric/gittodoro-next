@@ -86,9 +86,14 @@ export const MainSessionsProvider: FC<Props> = ({ children }) => {
 
   const viewFirstAndLast = useCallback(async () => {
     if (sessionsAPI) {
-      const result = await sessionsAPI.viewFirstAndLast()
-      const sessions = result.sessions
-      return sessions ? sessions.map(session => new Session(session)) : []
+      try {
+        const result = await sessionsAPI.viewFirstAndLast()
+        const sessions = result.sessions
+        return sessions ? sessions.map(session => new Session(session)) : []
+      } catch (error) {
+        console.error('TODO: check if sessions are empty before trying to run this query. ??')
+        return []
+      }
     }
     return []
   }, [sessionsAPI])

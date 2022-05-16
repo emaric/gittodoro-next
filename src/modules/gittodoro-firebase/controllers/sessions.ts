@@ -52,7 +52,8 @@ export const retrieveSession = async (id: string) => {
 export const retrieveLatestSession = async () => {
   const q = query(getUserSessionsColRef(), orderBy('start', 'desc'), limit(1))
   const response = await getDocs<Session>(q.withConverter(sessionConverter))
-  if (response.docs.length > 0) {
+  debugger
+  if (response.docs.length > 0 && response.docs[0] != undefined) {
     return response.docs[0].data()
   }
   return undefined
@@ -62,7 +63,7 @@ export const retrieveLatestActiveSession = async () => {
   const q = query(getUserSessionsColRef(), where('end', '==', null))
   const response = await getDocs<Session>(q.withConverter(sessionConverter))
   if (response.docs.length > 0) {
-    return response.docs[0].data()
+    return response.docs[response.docs.length - 1].data()
   }
   return undefined
 }
@@ -75,7 +76,7 @@ export const retrieveOldestSession = async () => {
   const sessionsCollectionRef = getUserSessionsColRef()
   const q = query(sessionsCollectionRef, orderBy('start', 'asc'), limit(1))
   const response = await getDocs<Session>(q.withConverter(sessionConverter))
-  if (response.docs) {
+  if (response.docs && response.docs[0] != undefined) {
     return response.docs[0].data()
   }
   return undefined

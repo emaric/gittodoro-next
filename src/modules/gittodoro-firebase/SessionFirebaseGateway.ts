@@ -101,7 +101,7 @@ export class SessionFirebaseGateway implements SessionDataGatewayInterface {
     } catch (error) {
       throw new Error('Error trying to get the first session. ' + error)
     }
-    throw new Error('No sessions found.')
+    return Promise.reject(new Error('No sessions found.'))
   }
 
   async last(): Promise<Session> {
