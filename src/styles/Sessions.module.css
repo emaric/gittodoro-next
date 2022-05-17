@@ -1,6 +1,7 @@
 .main {
   height: 100vh;
   margin: 0 2rem;
+  padding-top: 6rem;
 }
 
 .main button {
