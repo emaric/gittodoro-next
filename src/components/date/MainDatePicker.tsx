@@ -21,6 +21,9 @@ const MainDatePicker = (props: { sessionsLink: string }) => {
     return mainDate && mainDate.toPlainDate().toString() == DateTime.today().toPlainDate().toString()
   }, [mainDate])
 
+  const displayPrevTime = useMemo(() => mainDate?.subtract({ days: 1 }).toLocaleString('default', { weekday: 'short', day: 'numeric', month: 'long' }), [mainDate])
+  const displayNextTime = useMemo(() => mainDate?.add({ days: 1 }).toLocaleString('default', { weekday: 'short', day: 'numeric', month: 'long' }), [mainDate])
+
   const handleLeft = useCallback(() => {
     setMainDate(mainDate?.subtract({ days: 1 }))
   }, [mainDate])
@@ -42,14 +45,14 @@ const MainDatePicker = (props: { sessionsLink: string }) => {
 
   return (
     <div className={styles.container}>
-      <Button.Left onClick={handleLeft} />
+      <Button.Left title={`Prev: ${displayPrevTime || ''}`} onClick={handleLeft} />
       <Link href={props.sessionsLink} passHref>
         <button>
-          {mainDate?.toPlainDate().toString()}
+          {mainDate?.toLocaleString('default', { weekday: 'short', day: 'numeric', month: 'long', year: 'numeric' })}
           {isDisplayTime && <label className={styles.display_time}>{displayTime}</label>}
         </button>
       </Link>
-      <Button.Right onClick={handleRight} />
+      <Button.Right title={`Next: ${displayNextTime || ''}`} onClick={handleRight} />
     </div>
   )
 }
