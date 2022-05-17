@@ -24,9 +24,11 @@ const HomePage = () => {
               <div>
                 <MainAuth />
               </div>
-              <TimeProvider>
-                <MainDatePicker sessionsLink='/sessions' />
-              </TimeProvider>
+              <div className={styles.date_picker}>
+                <TimeProvider>
+                  <MainDatePicker sessionsLink='/sessions' />
+                </TimeProvider>
+              </div>
               <div>
                 <MainAddNewNoteButton />
               </div>
