@@ -1,8 +1,10 @@
-import { createContext, ReactNode, useCallback, useContext, useState, useEffect } from "react"
+import { createContext, ReactNode, useCallback, useContext, useEffect } from "react"
 
 import { User } from "@/modules/firebase/models/User"
 import { listenOnAuthStateChanged, signInWithGithub as signIn, signOutFromGithub as signOut } from "@/modules/firebase/controller"
-import { logger } from "@/loggers"
+
+import { login as setLoggedInUser, logout as removeLoggedInUser, selectUser } from '@/modules/redux/features/userSlice'
+import { useSelector, useDispatch } from '@/modules/redux'
 
 type GithubAuthContextType = {
   signInWithGithub: () => void
@@ -16,11 +18,14 @@ interface Props {
 }
 
 export const GithubAuthProvider = ({ children }: Props) => {
-  const [githubUser, setGithubUser] = useState<User | undefined>(undefined)
+  const githubUser = useSelector(selectUser)
+  const dispatch = useDispatch()
 
   const handleUserChanged = useCallback((user?: User) => {
-    setGithubUser(user)
-  }, [])
+    if (user?.uid) {
+      dispatch(setLoggedInUser(user))
+    }
+  }, [dispatch])
 
   const signInWithGithub = useCallback(() => {
     signIn()
@@ -28,16 +33,13 @@ export const GithubAuthProvider = ({ children }: Props) => {
 
   const signOutFromGithub = useCallback(() => {
     signOut()
+    removeLoggedInUser()
   }, [])
 
   useEffect(() => {
     const unsubscribe = listenOnAuthStateChanged(handleUserChanged)
     return () => unsubscribe()
   }, [handleUserChanged])
-
-  useEffect(() => {
-    logger?.debug('user changed: user.exists:', githubUser != undefined)
-  }, [githubUser])
 
   return (
     <GithubAuthContext.Provider value={{ signInWithGithub, signOutFromGithub, user: githubUser }}>
