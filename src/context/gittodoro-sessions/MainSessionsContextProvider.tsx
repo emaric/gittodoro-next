@@ -4,7 +4,6 @@ import { Session } from "@/models/Session"
 
 import { useClock } from "../clock/ClockContextProvider"
 import { useGittorodoAPI } from "../GittodoroAPIContextProvider"
-import { logger } from "@/loggers"
 
 type SessionContextType = {
   session?: Session,
@@ -30,14 +29,12 @@ export const MainSessionsProvider: FC<Props> = ({ children }) => {
   const [mainSessions, setMainSessions] = useState<Session[]>([])
 
   const queryMainSessions = useCallback(async () => {
-    logger?.debug(new Date().toJSON() + ' queryMainSessions')
     if (mainClock && sessionsAPI) {
       try {
         const response = await sessionsAPI.viewByRange(mainClock.startDate, mainClock.endDate)
         const sessions = response.sessions?.map(session => new Session(session))
         return sessions || []
       } catch (error) {
-        logger?.error(error)
         return []
       }
     }

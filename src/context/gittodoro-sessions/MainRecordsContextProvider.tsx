@@ -3,7 +3,6 @@ import { createContext, ReactNode, useState, useContext, useEffect, useCallback,
 import { generateRecords, Record } from "@/models/Record";
 
 import { useMainSessions } from "./MainSessionsContextProvider";
-import { logger } from "@/loggers";
 
 
 type MainRecordsContextType = {
@@ -23,8 +22,6 @@ export const MainRecordsProvider = (props: { children: ReactNode }) => {
   const generateMainRecords = useCallback(async () => {
     let records: Record[] = []
     const sessions = await queryMainSessions()
-    logger?.debug('sessions:')
-    logger?.table(sessions)
     sessions.forEach((session) => {
       if (session.endPlainDateTime) {
         const end = session.endPlainDateTime
@@ -35,11 +32,7 @@ export const MainRecordsProvider = (props: { children: ReactNode }) => {
   }, [queryMainSessions])
 
   const updateMainRecords = useCallback(async () => {
-    logger?.debug('updateMainRecords > generateMainRecords')
-    logger?.time('[updateMainRecords]')
     const records = await generateMainRecords()
-    logger?.timeEnd('[updateMainRecords]')
-    logger?.table(records)
     setMainRecords(records)
   }, [generateMainRecords])
 

@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useCallback, useContext, useEffect } from "react"
+import { createContext, ReactNode, useCallback, useContext, useEffect, useState } from "react"
 
 import { User } from "@/modules/firebase/models/User"
 import { listenOnAuthStateChanged, signInWithGithub as signIn, signOutFromGithub as signOut } from "@/modules/firebase/controller"
@@ -18,7 +18,7 @@ interface Props {
 }
 
 export const GithubAuthProvider = ({ children }: Props) => {
-  const githubUser = useSelector(selectUser)
+  const user = useSelector(selectUser)
   const dispatch = useDispatch()
 
   const handleUserChanged = useCallback((user?: User) => {
@@ -32,8 +32,8 @@ export const GithubAuthProvider = ({ children }: Props) => {
   }, [])
 
   const signOutFromGithub = useCallback(() => {
+    dispatch(removeLoggedInUser())
     signOut()
-    removeLoggedInUser()
   }, [])
 
   useEffect(() => {
@@ -41,8 +41,12 @@ export const GithubAuthProvider = ({ children }: Props) => {
     return () => unsubscribe()
   }, [handleUserChanged])
 
+  useEffect(() => {
+    console.log('[useEffect] user:', user)
+  }, [user])
+
   return (
-    <GithubAuthContext.Provider value={{ signInWithGithub, signOutFromGithub, user: githubUser }}>
+    <GithubAuthContext.Provider value={{ signInWithGithub, signOutFromGithub, user }}>
       {children}
     </GithubAuthContext.Provider>
   )

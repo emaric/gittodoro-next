@@ -5,14 +5,11 @@ import {
   signOut as fireSignOut,
 } from 'firebase/auth'
 
-import { logger } from '@/loggers'
-
 const provider = new GithubAuthProvider()
 provider.addScope('repo')
 provider.setCustomParameters({ allow_signup: 'true', login: '' })
 
 export const signIn = () => {
-  logger?.info('Sign in with redirect.')
   const auth = getAuth()
   signInWithRedirect(auth, provider)
     .then((result) => {
@@ -28,7 +25,6 @@ export const signIn = () => {
 }
 
 export const signOut = async () => {
-  logger?.info('Sign out.')
   const auth = getAuth()
   await fireSignOut(auth)
 }

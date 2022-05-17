@@ -7,7 +7,6 @@ import { useGithubAuth } from "../GithubAuthContextProvider";
 import { notifyLoginRequired, notifySuccess, showLoading } from "@/modules/notiflix";
 import { SessionsAPI } from "@/modules/gittodoro/api/SessionsAPI";
 import { useFirebaseAPI } from "../gittodoro-firebase/FirebaseAPIContextProvider";
-import { logger } from "@/loggers";
 
 type SessionsContextType = {
   localSessions: Session[]
