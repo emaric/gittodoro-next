@@ -22,6 +22,9 @@ const Flaticons = () => {
         <li>
           <a href="https://www.flaticon.com/free-icons/sofa" title="sofa icons">Sofa icons created by Freepik - Flaticon</a>
         </li>
+        <li>
+          <a href="https://www.flaticon.com/free-icons/tomato" title="tomato icons">Tomato icons created by Freepik - Flaticon</a>
+        </li>
       </ul>
     </>
   )
