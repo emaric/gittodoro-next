@@ -1,0 +1,16 @@
+{
+  "name": "GIT TODO RO",
+  "short_name": "Gittodoro",
+  "icons": [
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#FFFFFF",
+  "background_color": "#F0F2F5",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait"
+}

@@ -1,6 +1,11 @@
 /** @type {import('next').NextConfig} */
 
-const nextConfig = {
+const withPWA = require('next-pwa')
+
+const nextConfig = withPWA({
+  pwa: {
+    dest: 'public',
+  },
   experimental: {
     outputStandalone: true,
   },
@@ -14,6 +19,6 @@ const nextConfig = {
     path: '',
     domains: ['avatars.githubusercontent.com'],
   },
-}
+})
 
 module.exports = nextConfig

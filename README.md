@@ -23,5 +23,6 @@ docker build -t gittodoro:prod --build-arg GITHUB_NPM_TOKEN=$GITHUB_NPM_TOKEN .
 - <a href="https://www.flaticon.com/free-icons/coffee-time" title="coffee time icons">Coffee time icons created by Freepik - Flaticon</a>
 - <a href="https://www.flaticon.com/free-icons/sofa" title="sofa icons">Sofa icons created by Freepik - Flaticon</a>
 - <a href="https://www.flaticon.com/free-icons/tomato" title="tomato icons">Tomato icons created by Freepik - Flaticon</a>
+- <a href="https://www.flaticon.com/free-icons/electronics" title="electronics icons">Electronics icons created by Freepik - Flaticon</a>
 
 - “Sounds by https://quicksounds.com“
