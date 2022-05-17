@@ -1,6 +1,6 @@
 .clock {
-  --face-color: var(--light-background);
-  --case-color: var(--light-secondary);
+  --face-color: var(--light-primary);
+  --case-color: var(--light-background);
 
   --pomodoro-color: rgb(255, 99, 71);
   --short-break-color: rgb(85, 194, 135);
