@@ -3,9 +3,9 @@ import { createContext, ReactNode, useContext, useMemo } from "react";
 import { NotesAPI } from "@/modules/gittodoro/api/NotesAPI";
 import { SessionsAPI } from "@/modules/gittodoro/api/SessionsAPI";
 
-import { useGithubAuth } from "../GithubAuthContextProvider";
-import { FirebaseAPIProvider, useFirebaseAPI } from "./FirebaseAPIContextProvider";
-import { LocalStorageAPIProvider, useLocalStorageAPI } from "../gittodoro/LocalStorageAPIContextProvider";
+import { useGithubAuth } from "./GithubAuthContextProvider";
+import { FirebaseAPIProvider, useFirebaseAPI } from "./gittodoro-firebase/FirebaseAPIContextProvider";
+import { LocalStorageAPIProvider, useLocalStorageAPI } from "./gittodoro/LocalStorageAPIContextProvider";
 
 type GittodoroAPIContextType = {
   sessionsAPI?: SessionsAPI
@@ -22,17 +22,25 @@ export const GittodoroAPIProvider = (props: { children: ReactNode }) => {
 
   const sessionsAPI = useMemo(() => {
     if (user) {
-      return firebaseSessionsAPI
+      if (user.uid) {
+        return firebaseSessionsAPI
+      } else {
+        return localSessionsAPI
+      }
     } else {
-      return localSessionsAPI
+      return undefined
     }
   }, [user, firebaseSessionsAPI, localSessionsAPI])
 
   const notesAPI = useMemo(() => {
     if (user) {
-      return firebaseNotesAPI
+      if (user.uid) {
+        return firebaseNotesAPI
+      } else {
+        return localNotesAPI
+      }
     } else {
-      return localNotesAPI
+      return undefined
     }
   }, [user, firebaseNotesAPI, localNotesAPI])
 

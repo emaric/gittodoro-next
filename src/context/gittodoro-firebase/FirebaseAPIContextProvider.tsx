@@ -4,6 +4,7 @@ import { SessionsAPI } from "@/modules/gittodoro/api/SessionsAPI";
 import { SessionFirebaseGateway } from "@/modules/gittodoro-firebase/SessionFirebaseGateway";
 import { NotesAPI } from "@/modules/gittodoro/api/NotesAPI";
 import { NoteFirebaseGateway } from "@/modules/gittodoro-firebase/NotesFirebaseGateway";
+import { logger } from "@/loggers";
 
 type FirebaseAPIContextType = {
   sessionsAPI?: SessionsAPI,
@@ -17,9 +18,11 @@ export const FirebaseAPIProvider = (props: { children: ReactNode }) => {
   const [notesAPI, setNotesAPI] = useState<NotesAPI | undefined>()
 
   useEffect(() => {
+    logger?.debug(new Date().toJSON() + ' [debug] Initialize Firebase SessionsAPI.')
     const sessionFirebase = new SessionFirebaseGateway()
     setSessionsAPI(new SessionsAPI(sessionFirebase))
 
+    logger?.debug(new Date().toJSON() + ' [debug] Initialize Firebase NotesAPI.')
     const noteFirebase = new NoteFirebaseGateway()
     setNotesAPI(new NotesAPI(noteFirebase))
   }, [])

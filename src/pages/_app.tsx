@@ -1,11 +1,13 @@
 import { AppProps } from 'next/app'
 import Head from 'next/head'
 
+import '@/modules/firebase/index'
+
 import '../styles/globals.css'
 
 import { GithubAuthProvider } from '@/context/GithubAuthContextProvider'
+import { GittodoroAPIFactoryProvider } from '@/context/GittodoroAPIContextProvider'
 import GittodoroContextProvider from '@/context/gittodoro/GittodoroContextProvider'
-import { GittodoroAPIFactoryProvider } from '@/context/gittodoro-firebase/GittodoroAPIContextProvider'
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (

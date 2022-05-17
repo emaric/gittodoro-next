@@ -3,7 +3,8 @@ import { FC, ReactNode, createContext, useContext, useState, useCallback, useEff
 import { Session } from "@/models/Session"
 
 import { useClock } from "../clock/ClockContextProvider"
-import { useGittorodoAPI } from "../gittodoro-firebase/GittodoroAPIContextProvider"
+import { useGittorodoAPI } from "../GittodoroAPIContextProvider"
+import { logger } from "@/loggers"
 
 type SessionContextType = {
   session?: Session,
@@ -12,7 +13,7 @@ type SessionContextType = {
   mainSessions: Session[],
   viewByRange: (start: Date, end: Date) => Promise<Session[]>,
   viewFirstAndLast: () => Promise<Session[]>,
-  promisedMainSessions: Promise<Session[]>
+  queryMainSessions: () => Promise<Session[]>
 }
 
 const SessionContext = createContext<SessionContextType | undefined>(undefined)
@@ -28,25 +29,20 @@ export const MainSessionsProvider: FC<Props> = ({ children }) => {
   const [session, setSession] = useState<Session | undefined>(undefined)
   const [mainSessions, setMainSessions] = useState<Session[]>([])
 
-  const promisedMainSessions = useMemo(async () => {
+  const queryMainSessions = useCallback(async () => {
+    logger?.debug(new Date().toJSON() + ' queryMainSessions')
     if (mainClock && sessionsAPI) {
       try {
         const response = await sessionsAPI.viewByRange(mainClock.startDate, mainClock.endDate)
         const sessions = response.sessions?.map(session => new Session(session))
         return sessions || []
       } catch (error) {
-        console.error(error)
+        logger?.error(error)
         return []
       }
     }
     return []
   }, [mainClock, sessionsAPI])
-
-  const loadMainSessions = useCallback(() => {
-    promisedMainSessions.then(sessions => {
-      setMainSessions(sessions)
-    })
-  }, [promisedMainSessions])
 
   const start = useCallback(() => {
     const now = new Date()
@@ -99,11 +95,15 @@ export const MainSessionsProvider: FC<Props> = ({ children }) => {
   }, [sessionsAPI])
 
   useEffect(() => {
-    loadMainSessions()
-  }, [loadMainSessions])
+    queryMainSessions().then(sessions => {
+      setMainSessions(sessions)
+    })
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sessionsAPI])
 
   return (
-    <SessionContext.Provider value={{ session, start, stop, mainSessions, viewByRange, viewFirstAndLast, promisedMainSessions }}>
+    <SessionContext.Provider value={{ session, start, stop, mainSessions, viewByRange, viewFirstAndLast, queryMainSessions }}>
       {children}
     </SessionContext.Provider>
   )

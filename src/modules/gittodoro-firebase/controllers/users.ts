@@ -8,7 +8,7 @@ const COLLECTION_NAME = 'users'
 export const getUserDocRef = () => {
   const auth = getAuth()
   const user = auth.currentUser
-  if (user) {
+  if (user?.uid) {
     return doc(collection(db, COLLECTION_NAME), user.uid)
   } else {
     throw new Error(

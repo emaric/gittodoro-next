@@ -3,6 +3,7 @@ import { createContext, ReactNode, useState, useContext, useEffect, useCallback,
 import { generateRecords, Record } from "@/models/Record";
 
 import { useMainSessions } from "./MainSessionsContextProvider";
+import { logger } from "@/loggers";
 
 
 type MainRecordsContextType = {
@@ -14,14 +15,16 @@ type MainRecordsContextType = {
 const MainRecordsContext = createContext<MainRecordsContextType | undefined>(undefined)
 
 export const MainRecordsProvider = (props: { children: ReactNode }) => {
-  const { promisedMainSessions } = useMainSessions()
+  const { queryMainSessions } = useMainSessions()
 
   const [record, setRecord] = useState<Record | undefined>(undefined)
   const [mainRecords, setMainRecords] = useState<Record[]>([])
 
-  const promisedMainRecords = useMemo(async () => {
+  const generateMainRecords = useCallback(async () => {
     let records: Record[] = []
-    const sessions = await promisedMainSessions
+    const sessions = await queryMainSessions()
+    logger?.debug('sessions:')
+    logger?.table(sessions)
     sessions.forEach((session) => {
       if (session.endPlainDateTime) {
         const end = session.endPlainDateTime
@@ -29,12 +32,16 @@ export const MainRecordsProvider = (props: { children: ReactNode }) => {
       }
     })
     return records
-  }, [promisedMainSessions])
+  }, [queryMainSessions])
 
   const updateMainRecords = useCallback(async () => {
-    const records = await promisedMainRecords
+    logger?.debug('updateMainRecords > generateMainRecords')
+    logger?.time('[updateMainRecords]')
+    const records = await generateMainRecords()
+    logger?.timeEnd('[updateMainRecords]')
+    logger?.table(records)
     setMainRecords(records)
-  }, [promisedMainRecords])
+  }, [generateMainRecords])
 
   useEffect(() => {
     updateMainRecords()

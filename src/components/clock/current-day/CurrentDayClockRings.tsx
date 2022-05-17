@@ -9,7 +9,7 @@ import { useSessionsManager } from "@/context/gittodoro-sessions/SessionsManager
 import ClockSecondsRing from "@/components/clock/ClockSecondsRing"
 import ClockRecordsRing from "@/components/clock/ClockRecordsRing"
 import ClockActiveRing from "@/components/clock/ClockActiveRing"
-import { useGittorodoAPI } from "@/context/gittodoro-firebase/GittodoroAPIContextProvider"
+import { useGittorodoAPI } from "@/context/GittodoroAPIContextProvider"
 import { difference, now } from "@/modules/temporal/DateTime"
 
 const CurrentDayClockRings = () => {

@@ -2,13 +2,18 @@ import { User } from './models/User'
 import { signIn, signOut } from './authGithub'
 import { onAuthStateChanged } from 'firebase/auth'
 import { auth } from '.'
+import { logger } from '@/loggers'
 
 export const signInWithGithub = signIn
 
 export const signOutFromGithub = signOut
 
 export const listenOnAuthStateChanged = (cb: (user?: User) => void) => {
-  onAuthStateChanged(auth, (user) => {
+  return onAuthStateChanged(auth, (user) => {
+    logger?.debug(
+      new Date().toJSON() + ' [debug] onAuthStateChanged.user.exists?',
+      user != undefined
+    )
     if (user) {
       user.providerData.forEach((profile) => {
         const firebaseUser: User = {
@@ -22,7 +27,10 @@ export const listenOnAuthStateChanged = (cb: (user?: User) => void) => {
         cb(firebaseUser)
       })
     } else {
-      cb(undefined)
+      cb({
+        uid: '',
+        userData: { uid: '', displayName: 'Anonymous', photoURL: '' },
+      })
     }
   })
 }

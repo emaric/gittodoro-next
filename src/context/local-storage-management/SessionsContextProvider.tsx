@@ -7,6 +7,7 @@ import { useGithubAuth } from "../GithubAuthContextProvider";
 import { notifyLoginRequired, notifySuccess, showLoading } from "@/modules/notiflix";
 import { SessionsAPI } from "@/modules/gittodoro/api/SessionsAPI";
 import { useFirebaseAPI } from "../gittodoro-firebase/FirebaseAPIContextProvider";
+import { logger } from "@/loggers";
 
 type SessionsContextType = {
   localSessions: Session[]
@@ -55,6 +56,9 @@ export const SessionsProvider = ({ children }: Props) => {
   }, [localSessionsAPI, localSessions])
 
   const handleUpload = useCallback((sessions: Session[]) => {
+    if (!user?.uid)
+      return
+
     if (user) {
       if (destinationAPI) {
         destinationAPI.saveSessions(sessions).then(({ sessions: savedSessions }) => {

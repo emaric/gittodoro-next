@@ -6,7 +6,7 @@ const MainAuth = () => {
   const { user } = useGithubAuth()
   return (
     <>
-      {user ?
+      {user?.uid ?
         <MainAvatar />
         :
         <MainSignInButton />

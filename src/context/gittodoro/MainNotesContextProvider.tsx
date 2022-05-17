@@ -5,7 +5,7 @@ import * as DateTime from '@/modules/temporal/DateTime'
 import { Note } from "@/models/Note"
 
 import { useClock } from "@/context/clock/ClockContextProvider"
-import { useGittorodoAPI } from "@/context/gittodoro-firebase/GittodoroAPIContextProvider"
+import { useGittorodoAPI } from "@/context/GittodoroAPIContextProvider"
 
 type MainNotesContextType = {
   mainNotes?: Note[],

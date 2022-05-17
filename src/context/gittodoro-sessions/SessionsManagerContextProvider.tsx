@@ -2,7 +2,7 @@ import { createContext, ReactNode, useCallback, useContext, useEffect, useState 
 
 import { createRecord, Record } from "@/models/Record";
 import { Session } from "@/models/Session";
-import { useGittorodoAPI } from "../gittodoro-firebase/GittodoroAPIContextProvider";
+import { useGittorodoAPI } from "../GittodoroAPIContextProvider";
 
 type SessionsManagerContextType = {
   session?: Session,
