@@ -52,8 +52,8 @@
   width: var(--user-avatar-width);
 }
 
-.main_nav_container .date_picker {
-  min-width: 23rem;
+.main_nav_container .date_picker button:nth-child(2) {
+  min-width: 14rem;
 }
 
 .main_nav_container button {
