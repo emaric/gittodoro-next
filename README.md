@@ -17,6 +17,7 @@ Github issues tracker using the pomodoro technique.
 docker build -t gittodoro:prod --build-arg GITHUB_NPM_TOKEN=$GITHUB_NPM_TOKEN .
 ```
 
-### Credits
+### Credits / Attributions
 
-“Sounds by https://quicksounds.com“
+- <a href="https://www.flaticon.com/free-icons/workplace" title="workplace icons">Workplace icons created by Freepik - Flaticon</a>
+- “Sounds by https://quicksounds.com“

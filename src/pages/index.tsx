@@ -8,6 +8,8 @@ import MainNotes from "@/components/notes/MainNotes"
 
 import styles from '@/styles/Home.module.css'
 import { TimeProvider } from "@/context/clock/TimeContextProvider"
+import Attributions from "@/components/footer/Attributions"
+import Copyright from "@/components/footer/Copyright"
 
 const HomePage = () => {
   return (
@@ -39,10 +41,10 @@ const HomePage = () => {
           </section>
         </main>
         <footer>
-          <p>“Sounds by <a href="https://quicksounds.com">https://quicksounds.com</a>“</p>
-        </footer>
-        <footer>
-          <span>Copyright © 2022</span> <a href="https://github.com/emaric/gittodoro.git">@emaric/gittorodo</a>
+          <div>
+            <Copyright />
+            <Attributions />
+          </div>
         </footer>
       </div>
     </>

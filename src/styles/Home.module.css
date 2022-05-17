@@ -81,13 +81,17 @@
 .container footer {
   display: flex;
   justify-content: center;
-  align-items: center;
-  font-weight: 100;
-  font-size: 1rem;
 }
 
-.container footer span {
-  margin: 5px;
+.container footer > div {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: top;
+  font-weight: 100;
+  font-size: 1rem;
+  margin: 2rem 0;
+  max-width: 720px;
+  width: 100%;
 }
 
 .title {
