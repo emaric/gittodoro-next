@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useCallback, useContext, useEffect, useState } from "react"
+import { createContext, ReactNode, useCallback, useContext, useEffect } from "react"
 
 import { User } from "@/modules/firebase/models/User"
 import { listenOnAuthStateChanged, signInWithGithub as signIn, signOutFromGithub as signOut } from "@/modules/firebase/controller"
@@ -34,16 +34,12 @@ export const GithubAuthProvider = ({ children }: Props) => {
   const signOutFromGithub = useCallback(() => {
     dispatch(removeLoggedInUser())
     signOut()
-  }, [])
+  }, [dispatch])
 
   useEffect(() => {
     const unsubscribe = listenOnAuthStateChanged(handleUserChanged)
     return () => unsubscribe()
   }, [handleUserChanged])
-
-  useEffect(() => {
-    console.log('[useEffect] user:', user)
-  }, [user])
 
   return (
     <GithubAuthContext.Provider value={{ signInWithGithub, signOutFromGithub, user }}>
