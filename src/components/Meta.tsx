@@ -30,8 +30,12 @@ const Meta = () => {
       <link rel='shortcut icon' href='/favicon.ico' />
       {/* <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto:300,400,500' /> */}
 
+      <meta charSet="UTF-8" />
       <meta name="title" content="Gittodoro. | Pomodoro Task Tracker" />
       <meta name="description" content="A Github Issues progress tracker using the Pomodoro Technique." />
+      <meta name="keywords" content="productivity,pomodoro,git,github,issues,progress,tracker" />
+      <meta name="author" content="Maricris E." />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
       <meta property="og:type" content="website" />
       <meta property="og:url" content="https://gittodoro.web.app/" />
