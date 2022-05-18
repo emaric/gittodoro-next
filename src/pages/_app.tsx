@@ -19,6 +19,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         <meta name="background-color" content="#ffffff" media="(prefers-color-scheme: light)" />
         <meta name="background-color" content="#242526" media="(prefers-color-scheme: dark)" />
         <link rel='manifest' href='/manifest.json' />
+        <link rel='apple-touch-icon' sizes='180x180' href='/icons/touch-icon-iphone-retina.png' />
       </Head>
       <Provider store={store}>
         <GithubAuthProvider>
