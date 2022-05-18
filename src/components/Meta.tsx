@@ -7,7 +7,6 @@ const Meta = () => {
       <meta name='apple-mobile-web-app-capable' content='yes' />
       <meta name='apple-mobile-web-app-status-bar-style' content='default' />
       <meta name='apple-mobile-web-app-title' content='Gittodoro.' />
-      <meta name='description' content='A Github Issues progress tracker using the Pomodoro Technique.' />
       <meta name='format-detection' content='telephone=no' />
       <meta name='mobile-web-app-capable' content='yes' />
       <meta name='msapplication-config' content='/icons/browserconfig.xml' />
@@ -31,18 +30,20 @@ const Meta = () => {
       <link rel='shortcut icon' href='/favicon.ico' />
       {/* <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto:300,400,500' /> */}
 
-      <meta name='twitter:card' content='summary' />
-      <meta name='twitter:url' content='https://gittodoro.web.app' />
-      <meta name='twitter:title' content='Gittodoro.' />
-      <meta name='twitter:description' content='A Github Issues progress tracker using the Pomodoro Technique.' />
-      <meta name='twitter:image' content='https://gittodoro.web.app/icons/touch-icon-iphone-retina.png' />
-      <meta name='twitter:creator' content='@gittodoro' />
-      <meta property='og:type' content='website' />
-      <meta property='og:title' content='Gittodoro.' />
-      <meta property='og:description' content='A Github Issues progress tracker using the Pomodoro Technique.' />
-      <meta property='og:site_name' content='Gittodoro.' />
-      <meta property='og:url' content='https://gittodoro.web.app' />
-      <meta property='og:image' content='https://gittodoro.web.app/icons/touch-icon-iphone-retina.png' />
+      <meta name="title" content="Gittodoro. | Pomodoro Task Tracker" />
+      <meta name="description" content="A Github Issues progress tracker using the Pomodoro Technique." />
+
+      <meta property="og:type" content="website" />
+      <meta property="og:url" content="https://gittodoro.web.app/" />
+      <meta property="og:title" content="Gittodoro. | Pomodoro Task Tracker" />
+      <meta property="og:description" content="A Github Issues progress tracker using the Pomodoro Technique." />
+      <meta property="og:image" content="https://gittodoro.web.app/assets/timer-screen-shot.png" />
+
+      <meta property="twitter:card" content="summary_large_image" />
+      <meta property="twitter:url" content="https://gittodoro.web.app/" />
+      <meta property="twitter:title" content="Gittodoro. | Pomodoro Task Tracker" />
+      <meta property="twitter:description" content="A Github Issues progress tracker using the Pomodoro Technique." />
+      <meta property="twitter:image" content="https://gittodoro.web.app/assets/timer-screen-shot.png" />
 
       {/*  <link rel='apple-touch-startup-image' href='/images/apple_splash_2048.png' sizes='2048x2732' />
       <link rel='apple-touch-startup-image' href='/images/apple_splash_1668.png' sizes='1668x2224' />
