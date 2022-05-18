@@ -31,7 +31,7 @@ const Meta = () => {
       <link rel='shortcut icon' href='/favicon.ico' />
       {/* <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto:300,400,500' /> */}
 
-      <meta name='twitter:card' content='A Github Issues progress tracker using the Pomodoro Technique.' />
+      <meta name='twitter:card' content='summary' />
       <meta name='twitter:url' content='https://gittodoro.web.app' />
       <meta name='twitter:title' content='Gittodoro.' />
       <meta name='twitter:description' content='A Github Issues progress tracker using the Pomodoro Technique.' />
