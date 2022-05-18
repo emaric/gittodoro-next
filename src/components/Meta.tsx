@@ -36,7 +36,7 @@ const Meta = () => {
       <meta name='twitter:title' content='Gittodoro.' />
       <meta name='twitter:description' content='A Github Issues progress tracker using the Pomodoro Technique.' />
       <meta name='twitter:image' content='https://gittodoro.web.app/icons/touch-icon-iphone-retina.png' />
-      <meta name='twitter:creator' content='@apothecarycode' />
+      <meta name='twitter:creator' content='@gittodoro' />
       <meta property='og:type' content='website' />
       <meta property='og:title' content='Gittodoro.' />
       <meta property='og:description' content='A Github Issues progress tracker using the Pomodoro Technique.' />
