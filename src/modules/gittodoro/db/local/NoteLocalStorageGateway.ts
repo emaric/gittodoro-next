@@ -1,5 +1,11 @@
-import { NoteDataGatewayInterface } from '@emaric/gittodoro-ts/lib/interactor/data-gateways/NoteDataGatewayInterface'
-import { Note } from '@emaric/gittodoro-ts/lib/interactor/entities/Note'
+import {
+  CreateNotesGatewayInterface,
+  ReadNotesGatewayInterface,
+  ReadFirstNoteGatewayInterface,
+  DeleteNotesGatewayInterface,
+  UpdateNotesGatewayInterface,
+} from '@emaric/gittodoro-ts/lib/interactor/external-users/notes/io/data.gateway'
+import Note from '@emaric/gittodoro-ts/lib/interactor/entities/Note'
 import { InitialNotes } from './InitialNotes'
 
 const mapToEntity = (notesString: string): Note[] => {
@@ -8,7 +14,7 @@ const mapToEntity = (notesString: string): Note[] => {
     const note: Note = {
       id: obj.id,
       date: new Date(obj.date),
-      updatedAt: obj.updatedAt ? new Date(obj.updatedAt) : new Date(obj.date),
+      updatedAt: obj.updatedAt && new Date(obj.updatedAt),
       content: obj.content,
     }
     return note
@@ -19,14 +25,29 @@ const mapToString = (notes: Note[]) => {
   return JSON.stringify(notes)
 }
 
-export class NoteLocalStorageGateway implements NoteDataGatewayInterface {
+export class NoteLocalStorageGateway
+  implements
+    CreateNotesGatewayInterface,
+    ReadFirstNoteGatewayInterface,
+    ReadNotesGatewayInterface,
+    DeleteNotesGatewayInterface,
+    UpdateNotesGatewayInterface
+{
   static NOTES_ID = 'gittodoro-notes'
   static NOTES_LAST_ID = 'gittodoro-notes-id'
 
   constructor() {
     if (this.lastID <= -1) {
-      InitialNotes.forEach((note) => this.create(note))
+      this.create(InitialNotes)
     }
+  }
+
+  get notes(): Note[] {
+    const notes = localStorage.getItem(NoteLocalStorageGateway.NOTES_ID)
+    if (notes) {
+      return mapToEntity(notes)
+    }
+    return []
   }
 
   private get lastID() {
@@ -48,55 +69,23 @@ export class NoteLocalStorageGateway implements NoteDataGatewayInterface {
     localStorage.setItem(NoteLocalStorageGateway.NOTES_ID, mapToString(notes))
   }
 
-  get notes(): Note[] {
-    const notes = localStorage.getItem(NoteLocalStorageGateway.NOTES_ID)
-    if (notes) {
-      return mapToEntity(notes)
-    }
-    return []
-  }
-
-  create(note: Note) {
-    const id = this.lastID + 1
-    const newNote: Note = {
-      ...note,
-      id,
-    }
-    this.updateNotes(this.notes.concat(newNote))
-    this.updateLastID(id)
-    return this.read(id)
-  }
-
-  read(id: number) {
-    const found = this.notes.find((note) => {
-      return note.id == id
+  create(
+    notes: { content: string; date: Date; updatedAt?: Date | undefined }[]
+  ): Promise<Note[]> {
+    const newNotes = notes.map((note, i) => {
+      const id = String(this.lastID + i + 1)
+      return new Note(id, note.date, note.content)
     })
-    if (found) {
-      return Promise.resolve(found)
-    } else {
-      throw new Error('Note not found. ID: ' + id)
-    }
+
+    this.updateNotes([...this.notes, ...newNotes])
+    const lastID = newNotes[newNotes.length - 1].id
+    this.updateLastID(Number(lastID))
+    return Promise.resolve(newNotes)
   }
 
-  update(note: Note) {
-    this.updateNotes(
-      this.notes.map((savedNote) => {
-        if (savedNote.id == note.id) {
-          return {
-            ...note,
-          }
-        } else {
-          return savedNote
-        }
-      })
-    )
-
-    return this.read(note.id)
-  }
-
-  delete(id: number) {
-    this.updateNotes(this.notes.filter((note) => note.id != id))
-    return Promise.resolve(undefined)
+  readByIDs(ids: string[]): Promise<Note[]> {
+    const notes = this.notes.filter((n) => ids.includes(n.id))
+    return Promise.resolve(notes)
   }
 
   readByRange(start: Date, end: Date) {
@@ -106,5 +95,50 @@ export class NoteLocalStorageGateway implements NoteDataGatewayInterface {
         note.date.getTime() < end.getTime()
     )
     return Promise.resolve(notesInRange)
+  }
+
+  update(
+    notes: { id: string; content: string; updatedAt: Date }[]
+  ): Promise<Note[]> {
+    const ids = notes.map((n) => n.id)
+    const notesToUpdate = this.notes.filter((n) => ids.includes(n.id))
+    const updated = notesToUpdate.map((note) => {
+      const newValues = notes.find((n) => n.id == note.id)
+      note.content = newValues?.content || note.content
+      note.updatedAt = newValues?.updatedAt
+      return note
+    })
+
+    this.updateNotes(
+      this.notes.map((note) => {
+        const updatedNote = updated.find((n) => n.id == note.id)
+        if (updatedNote) {
+          return updatedNote
+        }
+        return note
+      })
+    )
+
+    return Promise.resolve(updated)
+  }
+
+  async deleteByIDs(ids: string[]): Promise<Note[]> {
+    const toDelete = await this.readByIDs(ids)
+    this.updateNotes(this.notes.filter((n) => !ids.includes(n.id)))
+    return Promise.resolve(toDelete)
+  }
+
+  async deleteByRange(startInclusive: Date, end: Date): Promise<Note[]> {
+    const toDelete = await this.readByRange(startInclusive, end)
+    const ids = toDelete.map((n) => n.id)
+    this.updateNotes(this.notes.filter((n) => !ids.includes(n.id)))
+    return Promise.resolve(toDelete)
+  }
+
+  first(): Promise<Note | undefined> {
+    const first = this.notes.sort(
+      (a, b) => a.date.getTime() - b.date.getTime()
+    )[0]
+    return Promise.resolve(first)
   }
 }
