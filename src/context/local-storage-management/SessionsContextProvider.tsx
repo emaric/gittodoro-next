@@ -5,7 +5,7 @@ import { Session } from "@/models/Session";
 import { useLocalStorageAPI } from "@/context/gittodoro/LocalStorageAPIContextProvider";
 import { useGithubAuth } from "../GithubAuthContextProvider";
 import { notifyLoginRequired, notifySuccess, showLoading } from "@/modules/notiflix";
-import { SessionsAPI } from "@/modules/gittodoro/api/SessionsAPI";
+import { SessionsAPI } from "@/modules/gittodoro/api/SessionLocalStorageAPI";
 import { useFirebaseAPI } from "../gittodoro-firebase/FirebaseAPIContextProvider";
 
 type SessionsContextType = {

@@ -2,7 +2,7 @@ import { NotePresenterInterface } from '@emaric/gittodoro-ts/lib/interactor/resp
 import { NoteBaseResponse } from '@emaric/gittodoro-ts/lib/interactor/responses/NoteResponse'
 import { Note } from '../../models/Note'
 
-import { mapNote, mapNotes } from './mappers'
+import { mapNote, mapNotes } from '../../models/mappers'
 
 export type NotesViewType = {
   note?: Note

@@ -1,6 +1,6 @@
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 
-import { SessionsAPI } from "@/modules/gittodoro/api/SessionsAPI";
+import { SessionsAPI } from "@/modules/gittodoro/api/SessionLocalStorageAPI";
 import { SessionFirebaseGateway } from "@/modules/gittodoro-firebase/SessionFirebaseGateway";
 import { NotesAPI } from "@/modules/gittodoro/api/NotesAPI";
 import { NoteFirebaseGateway } from "@/modules/gittodoro-firebase/NotesFirebaseGateway";

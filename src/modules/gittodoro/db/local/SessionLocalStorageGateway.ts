@@ -1,14 +1,8 @@
 import Duration from '@emaric/gittodoro-ts/lib/interactor/entities/Duration'
 import Session from '@emaric/gittodoro-ts/lib/interactor/entities/Session'
-import {
-  CreateSessionsGatewayInterface,
-  ReadSessionsGatewayInterface,
-  ReadFirstSessionGatewayInterface,
-  DeleteSessionsGatewayInterface,
-  StartSessionGatewayInterface,
-  StopSessionGatewayInterface,
-} from '@emaric/gittodoro-ts/lib/interactor/external-users/session/io/data.gateway'
+import SessionGatewayInterface from '../SessionGatewayInterface'
 import gatewayProvider from '.'
+import GittodoroError from '../../errors/GittodoroError'
 
 const mapToEntity = (sessionsString: string): Session[] => {
   const objs = JSON.parse(sessionsString)
@@ -33,15 +27,7 @@ const mapToString = (sessions: Session[]) => {
   return JSON.stringify(sessions)
 }
 
-export class SessionLocalStorageGateway
-  implements
-    CreateSessionsGatewayInterface,
-    ReadSessionsGatewayInterface,
-    ReadFirstSessionGatewayInterface,
-    DeleteSessionsGatewayInterface,
-    StartSessionGatewayInterface,
-    StopSessionGatewayInterface
-{
+export class SessionLocalStorageGateway implements SessionGatewayInterface {
   static SESSIONS_ID = 'gittodoro-sessions'
   static SESSIONS_LAST_ID = 'gittodoro-sessions-last-id'
   static DEFAULT_DURATION_ID = 'gittodoro-default-duration'
@@ -81,7 +67,41 @@ export class SessionLocalStorageGateway
     )
   }
 
-  async start(start: Date, durationId: string): Promise<Session> {
+  async startWithDuration(
+    start: Date,
+    pomodoro: number,
+    short: number,
+    long: number,
+    interval: number
+  ): Promise<Session> {
+    try {
+      let duration = await gatewayProvider.durationGateway.findMatch(
+        pomodoro,
+        short,
+        long,
+        interval
+      )
+      if (duration == undefined) {
+        duration = await gatewayProvider.durationGateway.create(
+          pomodoro,
+          short,
+          long,
+          interval
+        )
+      }
+
+      return await this.startWithDurationID(start, duration.id)
+    } catch (error) {
+      return Promise.reject(
+        new GittodoroError(
+          'Failed to start a Session with Duration.',
+          error as Error
+        )
+      )
+    }
+  }
+
+  async startWithDurationID(start: Date, durationId: string): Promise<Session> {
     try {
       const duration = (
         await gatewayProvider.durationGateway.readByIDs([durationId])
@@ -93,16 +113,18 @@ export class SessionLocalStorageGateway
       this.updateLastID(id)
       return Promise.resolve(session)
     } catch (error) {
-      return Promise.reject(new Error('Failed to start a session.'))
+      return Promise.reject(
+        new GittodoroError(
+          'Failed to start a Session with Duration ID.',
+          error as Error
+        )
+      )
     }
   }
 
   stop(date: Date): Promise<Session | undefined> {
     const last = this.sessions[this.sessions.length - 1]
-    if (last) {
-      if (last.end) {
-        throw new Error('No active session.')
-      }
+    if (last && last.end == undefined) {
       last.end = date
       this.updateSessions(
         this.sessions.map((s) => {
@@ -114,7 +136,7 @@ export class SessionLocalStorageGateway
       )
       return Promise.resolve(last)
     }
-    throw new Error('Sessions storage is empty.')
+    return Promise.resolve(undefined)
   }
 
   async createWithDurationID(

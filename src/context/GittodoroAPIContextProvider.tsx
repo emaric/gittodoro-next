@@ -1,7 +1,7 @@
 import { createContext, ReactNode, useContext, useMemo } from "react";
 
 import { NotesAPI } from "@/modules/gittodoro/api/NotesAPI";
-import { SessionsAPI } from "@/modules/gittodoro/api/SessionsAPI";
+import SessionsAPI from "@/modules/gittodoro/api/SessionLocalStorageAPI";
 
 import { useGithubAuth } from "./GithubAuthContextProvider";
 import { FirebaseAPIProvider, useFirebaseAPI } from "./gittodoro-firebase/FirebaseAPIContextProvider";

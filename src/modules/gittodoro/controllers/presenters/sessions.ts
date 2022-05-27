@@ -2,7 +2,7 @@ import { SessionPresenterInterface } from '@emaric/gittodoro-ts/lib/interactor/r
 import { SessionBaseResponse } from '@emaric/gittodoro-ts/lib/interactor/responses/SessionResponse'
 
 import { Session } from '@/modules/gittodoro/models/Session'
-import { mapSession, mapSessions } from './mappers'
+import { mapSession, mapSessions } from '../../models/mappers'
 
 export type SessionsViewType = {
   session?: Session

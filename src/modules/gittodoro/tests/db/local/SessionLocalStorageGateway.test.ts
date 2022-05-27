@@ -23,7 +23,7 @@ describe('[SessionLocalStorageGateway] unit tests', () => {
         SessionLocalStorageGateway.SESSIONS_ID
       )
       const expected =
-        '[{"id":"0","duration":{"id":"0","pomodoro":50,"short":5,"long":15,"interval":4},"start":"2022-04-15T00:01:00.000Z"}]'
+        '[{"id":"0","duration":{"id":"1","pomodoro":50,"short":5,"long":15,"interval":4},"start":"2022-04-15T00:01:00.000Z"}]'
 
       expect(actual).toBe(expected)
     })

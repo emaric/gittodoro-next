@@ -1,4 +1,6 @@
-import Duration from '@emaric/gittodoro-ts/lib/interactor/entities/Duration'
+import Duration, {
+  defaultDuration,
+} from '@emaric/gittodoro-ts/lib/interactor/entities/Duration'
 
 const mapToEntity = (durationsString: string): Duration[] => {
   const objs = JSON.parse(durationsString)
@@ -15,6 +17,13 @@ const mapToString = (durations: Duration[]) => {
 export default class DurationLocalStorageGateway {
   static DURATIONS_ID = 'gittodoro-durations'
   static DURATIONS_LAST_ID = 'gittodoro-durations-last-id'
+
+  constructor() {
+    const { pomodoro, short, long, interval } = defaultDuration
+    this.create(pomodoro, short, long, interval).catch((error) => {
+      console.error(error)
+    })
+  }
 
   private get durations() {
     const durations = localStorage.getItem(
@@ -51,6 +60,9 @@ export default class DurationLocalStorageGateway {
   create(pomodoro: number, short: number, long: number, interval: number) {
     const id = String(this.lastID + 1)
     const duration = new Duration(id, pomodoro, short, long, interval)
+
+    this.updateDurations(this.durations.concat(duration))
+    this.updateLastID(id)
     return Promise.resolve(duration)
   }
 
