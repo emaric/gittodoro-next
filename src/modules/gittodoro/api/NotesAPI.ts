@@ -1,108 +1,63 @@
-import { NoteController } from '@emaric/gittodoro-ts/lib/controller/NoteController'
-import { NoteDataGatewayInterface } from '@emaric/gittodoro-ts/lib/interactor/data-gateways/NoteDataGatewayInterface'
-import {
-  NoteRangeRequest,
-  NoteRequest,
-} from '@emaric/gittodoro-ts/lib/interactor/requests/NoteRequest'
-import {
-  readNoteByRangeCommand,
-  createNoteCommand,
-  updateNoteCommand,
-  deleteNoteCommand,
-} from '@emaric/gittodoro-ts/lib/interactor/use-cases/CRUDNoteCommandFactory'
-
-import {
-  NotesPresenter,
-  NotesViewInterface,
-} from '../controllers/presenters/notes'
+import NoteController, {
+  NoteViewInterface,
+} from '../controllers/NoteController'
+import NoteGatewayInterface from '../db/NoteGatewayInterface'
+import GittodoroError from '../errors/GittodoroError'
 import { Note } from '../models/Note'
+import NoteModel from '../models/NoteModel'
+import NoteModelInterface from '../models/NoteModelInterface'
+import Logger from '../utils/Logger'
+
+export class NoteLogger implements NoteViewInterface {
+  private logger: Logger
+
+  constructor(name: string) {
+    this.logger = new Logger(name)
+  }
+
+  setNote(note?: Note): void {
+    this.logger.log('Note:', JSON.stringify(note))
+  }
+  setNotes(notes: Note[]): void {
+    this.logger.log('Notes:', notes.map((n) => JSON.stringify(n)).join('\n'))
+  }
+}
 
 export class NotesAPI {
   private controller: NoteController
-  private view?: NotesViewInterface
-  private db: NoteDataGatewayInterface
+  private model: NoteModelInterface
 
-  constructor(db: NoteDataGatewayInterface, view?: NotesViewInterface) {
-    this.db = db
-    this.view = view
-    this.controller = new NoteController()
+  constructor(dataGateway: NoteGatewayInterface, view: NoteViewInterface) {
+    this.model = new NoteModel(dataGateway)
+    this.controller = new NoteController(view, this.model)
   }
 
-  private createPresenter(resolve: CallableFunction) {
-    return new NotesPresenter({
-      updateView: (value) => {
-        this.view && this.view.updateView(value)
-        resolve(value)
-      },
-    })
-  }
-
-  create(content: string, date: Date): Promise<{ note: Note }> {
-    const request: NoteRequest = {
-      timestamp: new Date(),
-      message: 'Create a new Note',
-      content,
-      date,
+  async create(content: string, date: Date): Promise<{ note: Note }> {
+    await this.controller.create({ content, date })
+    if (this.model.note) {
+      return { note: this.model.note }
     }
-    return new Promise((resolve) => {
-      const interactor = createNoteCommand(
-        this.db,
-        this.createPresenter(resolve)
-      )
-      this.controller.createNote(interactor, request)
-    })
+    throw new GittodoroError('Failed to create a new note.')
   }
 
-  update(
-    id: number,
+  async update(
+    id: string,
     content: string,
     updatedAt: Date
   ): Promise<{ note: Note }> {
-    const request: NoteRequest = {
-      timestamp: new Date(),
-      message: 'Update Note',
-      id,
-      content,
-      updatedAt,
-    }
-    return new Promise((resolve) => {
-      const interactor = updateNoteCommand(
-        this.db,
-        this.createPresenter(resolve)
-      )
-      this.controller.updateNote(interactor, request)
-    })
+    await this.controller.update({ id, content, updatedAt })
+    if (this.model.note) return { note: this.model.note }
+    throw new GittodoroError('Failed to update a note.')
   }
 
-  delete(id: number) {
-    const request: NoteRequest = {
-      timestamp: new Date(),
-      message: 'Delete Note',
-      id,
-    }
-    return new Promise((resolve) => {
-      const interactor = deleteNoteCommand(
-        this.db,
-        this.createPresenter(resolve)
-      )
-      this.controller.deleteNote(interactor, request)
-    })
+  async delete(id: string) {
+    await this.controller.delete(id)
+    return this.model.note
   }
 
-  readByRange(start: Date, end: Date): Promise<{ notes: Note[] }> {
-    const request: NoteRangeRequest = {
-      timestamp: new Date(),
-      message: 'Read Notes by Range',
-      start,
-      end,
-    }
-    return new Promise((resolve) => {
-      const interactor = readNoteByRangeCommand(
-        this.db,
-        this.createPresenter(resolve)
-      )
-      this.controller.readNoteByRange(interactor, request)
-    })
+  async readByRange(start: Date, end: Date): Promise<{ notes: Note[] }> {
+    await this.controller.readByRange(start, end)
+    return { notes: this.model.notes }
   }
 
   async readFirst(): Promise<{ note?: Note }> {

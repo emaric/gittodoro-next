@@ -13,7 +13,7 @@ import {
   deleteDoc,
 } from 'firebase/firestore'
 
-import { Session } from '@emaric/gittodoro-ts/lib/interactor/entities/Session'
+import Session from '@emaric/gittodoro-ts/lib/interactor/entities/Session'
 
 import { sessionConverter } from './converter'
 import { getUserDocRef } from './users'

@@ -1,4 +1,3 @@
-import { ReadFirstNoteGatewayInterface } from '@emaric/gittodoro-ts/lib/interactor/external-users/notes/io/data.gateway'
 import {
   CreateSessionsGatewayInterface,
   DeleteSessionsGatewayInterface,

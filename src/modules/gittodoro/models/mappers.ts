@@ -4,7 +4,6 @@ import { Session } from './Session'
 export const mapSession = (sessionResponse: SessionResponse): Session => {
   const session = new Session({
     ...sessionResponse,
-    timerSequence: [],
   })
 
   return session

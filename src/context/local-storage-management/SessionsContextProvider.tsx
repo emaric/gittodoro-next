@@ -5,7 +5,6 @@ import { Session } from "@/models/Session";
 import { useLocalStorageAPI } from "@/context/gittodoro/LocalStorageAPIContextProvider";
 import { useGithubAuth } from "../GithubAuthContextProvider";
 import { notifyLoginRequired, notifySuccess, showLoading } from "@/modules/notiflix";
-import { SessionsAPI } from "@/modules/gittodoro/api/SessionLocalStorageAPI";
 import { useFirebaseAPI } from "../gittodoro-firebase/FirebaseAPIContextProvider";
 
 type SessionsContextType = {
@@ -30,11 +29,10 @@ export const SessionsProvider = ({ children }: Props) => {
 
   const updateSessions = useCallback(async () => {
     if (localSessionsAPI) {
-      const firstAndLast = await localSessionsAPI.viewFirstAndLast()
-      if (firstAndLast.sessions && firstAndLast.sessions.length > 0) {
-        const first = firstAndLast.sessions[0]
-        const sessionsByRange = localSessionsAPI.viewByRange(first.start, new Date())
-        const sessions = (await sessionsByRange).sessions?.map(session => new Session(session)) || []
+      const first = await localSessionsAPI.first()
+      if (first) {
+        const sessionsByRange = await localSessionsAPI.readByRange(first.start, new Date())
+        const sessions = sessionsByRange.map(session => new Session(session)) || []
         setLocalSessions(sessions)
         return;
       }
@@ -45,7 +43,7 @@ export const SessionsProvider = ({ children }: Props) => {
   const handleDelete = useCallback((sessions: Session[]) => {
     if (localSessionsAPI) {
       const ids = sessions.map(s => s.id)
-      localSessionsAPI.deleteSessions(ids).then(({ sessions }) => {
+      localSessionsAPI.deleteByIDs(ids).then((sessions) => {
         if (sessions) {
           const filtered = localSessions.filter(session => !ids.includes(session.id))
           setLocalSessions(filtered)
@@ -60,7 +58,7 @@ export const SessionsProvider = ({ children }: Props) => {
 
     if (user) {
       if (destinationAPI) {
-        destinationAPI.saveSessions(sessions).then(({ sessions: savedSessions }) => {
+        destinationAPI.save(sessions).then((savedSessions) => {
           if (savedSessions) {
             notifySuccess('Upload successful!')
           }

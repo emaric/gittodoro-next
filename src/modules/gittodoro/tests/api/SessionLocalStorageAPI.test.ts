@@ -1,11 +1,17 @@
 import { Duration } from '@/modules/gittodoro/models/Duration'
-import SessionLocalStorageAPI from '@/modules/gittodoro/api/SessionLocalStorageAPI'
+import SessionAPI, { SessionLogger } from '@/modules/gittodoro/api/SessionAPI'
 
 import '../MockLocalStorage'
+import gatewayProvider from '../../db/local'
+import { Session } from '../../models/Session'
 
-describe('[SessionLocalStorageAPI] unit tests', () => {
-  const api = new SessionLocalStorageAPI()
+describe('[SessionAPI] unit tests', () => {
+  const api = new SessionAPI(
+    gatewayProvider.sessionGateway,
+    new SessionLogger('session')
+  )
   const sampleDuration: Duration = {
+    id: '1',
     pomodoro: 10,
     short: 2,
     long: 5,
@@ -21,14 +27,15 @@ describe('[SessionLocalStorageAPI] unit tests', () => {
   const expected = {
     id: '0',
     start: new Date(),
+    duration: sampleDuration,
   }
 
   describe('when trying to start session', () => {
     it('should display started session details', async () => {
       await api.start(sampleDuration, expected.start)
-      expect(lastLineFromOutput(log).includes(JSON.stringify(expected))).toBe(
-        true
-      )
+      const expectedString = JSON.stringify(new Session({ ...expected }))
+      // expect(lastLineFromOutput(log)).toBe(expectedString)
+      expect(lastLineFromOutput(log).includes(expectedString)).toBe(true)
     })
   })
 
@@ -36,7 +43,7 @@ describe('[SessionLocalStorageAPI] unit tests', () => {
     it('should display stopped session details', async () => {
       const end = new Date()
       await api.stop(end)
-      const expectedString = JSON.stringify({ ...expected, end })
+      const expectedString = JSON.stringify(new Session({ ...expected, end }))
       expect(lastLineFromOutput(log).includes(expectedString)).toBe(true)
     })
   })
@@ -53,8 +60,8 @@ describe('[SessionLocalStorageAPI] unit tests', () => {
       id: '2',
     }
 
-    const sample1Output = { ...expected, ...sample1 }
-    const sample2Output = { ...expected, ...sample2 }
+    const sample1Output = new Session({ ...expected, ...sample1 })
+    const sample2Output = new Session({ ...expected, ...sample2 })
 
     it('should display the sessions that started on and after the given start datetime but before the end datetime', async () => {
       await api.start(sampleDuration, sample1.start)
@@ -78,6 +85,7 @@ describe('[SessionLocalStorageAPI] unit tests', () => {
       await api.readByRange(start, end)
 
       const expectedString = JSON.stringify(sample2Output)
+      // expect(lastLineFromOutput(log)).toBe(expectedString)
       expect(lastLineFromOutput(log).includes(expectedString)).toBe(true)
     })
   })

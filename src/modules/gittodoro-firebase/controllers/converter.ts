@@ -5,9 +5,9 @@ import {
   Timestamp,
 } from 'firebase/firestore'
 
-import { Session } from '@emaric/gittodoro-ts/lib/interactor/entities/Session'
-import { Duration } from '@emaric/gittodoro-ts/lib/interactor/entities/Duration'
-import { Note } from '@emaric/gittodoro-ts/lib/interactor/entities/Note'
+import Session from '@emaric/gittodoro-ts/lib/interactor/entities/Session'
+import Duration from '@emaric/gittodoro-ts/lib/interactor/entities/Duration'
+import Note from '@emaric/gittodoro-ts/lib/interactor/entities/Note'
 
 export const sessionConverter = {
   toFirestore(session: Session): DocumentData {
@@ -23,12 +23,13 @@ export const sessionConverter = {
     options: SnapshotOptions
   ): Session {
     const data = snapshot.data(options)!
-    return new Session({
-      id: data.id,
-      start: (data.start as Timestamp).toDate(),
-      end: data.end ? (data.end as Timestamp).toDate() : undefined,
-      duration: new Duration(data.duration),
-    })
+    const { id, pomodoro, short, long, interval } = data.duration
+    return new Session(
+      data.id,
+      new Duration(id, pomodoro, short, long, interval),
+      (data.start as Timestamp).toDate(),
+      data.end ? (data.end as Timestamp).toDate() : undefined
+    )
   },
 }
 

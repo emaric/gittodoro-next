@@ -11,7 +11,7 @@ type MainNotesContextType = {
   mainNotes?: Note[],
   createNote: (content: string, date?: Date) => void,
   updateNote: (note: Note) => void,
-  deleteNote: (id: number) => void,
+  deleteNote: (id: string) => void,
   readNotesByRange: (start: Date, end: Date) => Promise<Note[]>,
   readFirstNote: () => Promise<Note | undefined>
   mainNote?: Note,
@@ -50,7 +50,7 @@ export const MainNotesProvider = (props: { children: ReactNode }) => {
     })
   }, [loadNotes, notesAPI])
 
-  const deleteNote = useCallback((id: number) => {
+  const deleteNote = useCallback((id: string) => {
     notesAPI && notesAPI.delete(id).then((_) => {
       setNewNote(undefined)
       loadNotes()

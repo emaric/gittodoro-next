@@ -4,7 +4,7 @@ export const InitialNotes: Note[] = []
 
 InitialNotes.push(
   new Note({
-    id: -1,
+    id: '-1',
     date: new Date(),
     content: `# How To Use This App
 

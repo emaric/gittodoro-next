@@ -1,5 +1,5 @@
 export class Note {
-  id: number
+  id: string
   date: Date
   content: string
   updatedAt?: Date

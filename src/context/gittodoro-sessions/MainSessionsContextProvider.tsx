@@ -31,8 +31,8 @@ export const MainSessionsProvider: FC<Props> = ({ children }) => {
   const queryMainSessions = useCallback(async () => {
     if (mainClock && sessionsAPI) {
       try {
-        const response = await sessionsAPI.viewByRange(mainClock.startDate, mainClock.endDate)
-        const sessions = response.sessions?.map(session => new Session(session))
+        const response = await sessionsAPI.readByRange(mainClock.startDate, mainClock.endDate)
+        const sessions = response?.map(session => new Session(session))
         return sessions || []
       } catch (error) {
         return []
@@ -46,20 +46,21 @@ export const MainSessionsProvider: FC<Props> = ({ children }) => {
 
     // TODO: get default duration from db
     const defaultDuration = {
-      pomodoro: 25 * 60,
-      short: 5 * 60,
-      long: 15 * 60,
-      longInterval: 4
+      id: '0',
+      pomodoro: 25 * 60 * 1000,
+      short: 5 * 60 * 1000,
+      long: 15 * 60 * 1000,
+      interval: 4
     }
 
-    sessionsAPI && sessionsAPI.start(defaultDuration, now).then(({ session }) => {
+    sessionsAPI && sessionsAPI.start(defaultDuration, now).then((session) => {
       session && setSession(new Session(session))
     })
   }, [sessionsAPI])
 
   const stop = useCallback(() => {
     const now = new Date()
-    sessionsAPI && sessionsAPI.stop(now).then(({ session }) => {
+    sessionsAPI && sessionsAPI.stop(now).then((session) => {
       if (session) {
         const completed = new Session(session)
         setSession(completed)
@@ -70,8 +71,7 @@ export const MainSessionsProvider: FC<Props> = ({ children }) => {
 
   const viewByRange = useCallback(async (start: Date, end: Date) => {
     if (sessionsAPI) {
-      const result = await sessionsAPI.viewByRange(start, end)
-      const sessions = result.sessions
+      const sessions = await sessionsAPI.readByRange(start, end)
       return sessions ? sessions.map(session => new Session(session)) : []
     }
     return []
@@ -80,9 +80,8 @@ export const MainSessionsProvider: FC<Props> = ({ children }) => {
   const viewFirstAndLast = useCallback(async () => {
     if (sessionsAPI) {
       try {
-        const result = await sessionsAPI.viewFirstAndLast()
-        const sessions = result.sessions
-        return sessions ? sessions.map(session => new Session(session)) : []
+        const session = await sessionsAPI.first()
+        return session ? [new Session(session)] : []
       } catch (error) {
         console.error('TODO: check if sessions are empty before trying to run this query. ??')
         return []

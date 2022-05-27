@@ -4,13 +4,15 @@ import {
   doc,
   getDoc,
   getDocs,
+  limit,
+  orderBy,
   query,
   setDoc,
   updateDoc,
   where,
 } from 'firebase/firestore'
 
-import { Note } from '@emaric/gittodoro-ts/lib/interactor/entities/Note'
+import Note from '@emaric/gittodoro-ts/lib/interactor/entities/Note'
 
 import { noteConverter } from './converter'
 import { getUserDocRef } from './users'
@@ -78,4 +80,14 @@ export const retrieveUserNotesByRange = async (start: Date, end: Date) => {
   })
   const sortedNotes = notes.sort((a, b) => a.date.getTime() - b.date.getTime())
   return sortedNotes
+}
+
+export const retrieveOldestNote = async () => {
+  const notesCollectionRef = getUserNotesColRef()
+  const q = query(notesCollectionRef, orderBy('date', 'asc'), limit(1))
+  const response = await getDocs<Note>(q.withConverter(noteConverter))
+  if (response.docs && response.docs[0] != undefined) {
+    return response.docs[0].data()
+  }
+  return undefined
 }

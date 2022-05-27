@@ -1,15 +1,17 @@
-import { createContext, ReactNode, useContext, useMemo } from "react";
+import { createContext, ReactNode, useContext, useEffect, useMemo, useState } from "react";
 
 import { NotesAPI } from "@/modules/gittodoro/api/NotesAPI";
-import SessionsAPI from "@/modules/gittodoro/api/SessionLocalStorageAPI";
+import SessionsAPI from "@/modules/gittodoro/api/SessionAPI";
 
 import { useGithubAuth } from "./GithubAuthContextProvider";
 import { FirebaseAPIProvider, useFirebaseAPI } from "./gittodoro-firebase/FirebaseAPIContextProvider";
 import { LocalStorageAPIProvider, useLocalStorageAPI } from "./gittodoro/LocalStorageAPIContextProvider";
+import RecordAPI, { RecordLogger } from "@/modules/gittodoro/api/RecordAPI";
 
 type GittodoroAPIContextType = {
   sessionsAPI?: SessionsAPI
   notesAPI?: NotesAPI
+  recordAPI?: RecordAPI
 }
 
 const GittodoroAPIContext = createContext<GittodoroAPIContextType | undefined>(undefined)
@@ -19,6 +21,8 @@ export const GittodoroAPIProvider = (props: { children: ReactNode }) => {
 
   const { sessionsAPI: firebaseSessionsAPI, notesAPI: firebaseNotesAPI } = useFirebaseAPI()
   const { localSessionsAPI, localNotesAPI } = useLocalStorageAPI()
+
+  const [recordAPI, setRecordAPI] = useState<RecordAPI | undefined>()
 
   const sessionsAPI = useMemo(() => {
     if (user) {
@@ -44,8 +48,13 @@ export const GittodoroAPIProvider = (props: { children: ReactNode }) => {
     }
   }, [user, firebaseNotesAPI, localNotesAPI])
 
+  useEffect(() => {
+    const api = new RecordAPI(new RecordLogger('record'))
+    setRecordAPI(api)
+  }, [recordAPI])
+
   return (
-    <GittodoroAPIContext.Provider value={{ sessionsAPI, notesAPI }} >
+    <GittodoroAPIContext.Provider value={{ sessionsAPI, notesAPI, recordAPI }} >
       {props.children}
     </GittodoroAPIContext.Provider>
   )

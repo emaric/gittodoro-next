@@ -1,6 +1,7 @@
 import Duration, {
   defaultDuration,
 } from '@emaric/gittodoro-ts/lib/interactor/entities/Duration'
+import DurationGatewayInterface from '../DurationGatewayInterface'
 
 const mapToEntity = (durationsString: string): Duration[] => {
   const objs = JSON.parse(durationsString)
@@ -14,7 +15,9 @@ const mapToString = (durations: Duration[]) => {
   return JSON.stringify(durations)
 }
 
-export default class DurationLocalStorageGateway {
+export default class DurationLocalStorageGateway
+  implements DurationGatewayInterface
+{
   static DURATIONS_ID = 'gittodoro-durations'
   static DURATIONS_LAST_ID = 'gittodoro-durations-last-id'
 

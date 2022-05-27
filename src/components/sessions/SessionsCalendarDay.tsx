@@ -5,7 +5,7 @@ import * as DateTime from '@/modules/temporal/DateTime'
 
 import { Clock } from '@/models/Clock'
 import { Session } from '@/models/Session'
-import { generateRecords, generateRecordsFromSessions, Record } from '@/models/Record'
+import { Record } from '@/models/Record'
 import { useMainSessions } from '@/context/gittodoro-sessions/MainSessionsContextProvider'
 import { useMainNotes } from '@/context/gittodoro/MainNotesContextProvider'
 import { useClock } from '@/context/clock/ClockContextProvider'
@@ -17,12 +17,15 @@ import ClockRecordsRing from '@/components/clock/ClockRecordsRing'
 
 import styles from './Sessions.module.css'
 import ClockSecondsRing from '../clock/ClockSecondsRing'
+import { useGittorodoAPI } from '@/context/GittodoroAPIContextProvider'
+import { mapRecords } from '@/models/mapper'
 interface Props {
   date: DateTime.DateTimeType
   disabled: boolean
 }
 
 const SessionsCalendarDay = ({ date, disabled }: Props) => {
+  const { recordAPI } = useGittorodoAPI()
   const dateString = date.toPlainDate().toString()
   const router = useRouter()
   const clock = useMemo(() => new Clock(date, date.add({ days: 1 })), [date])
@@ -64,9 +67,12 @@ const SessionsCalendarDay = ({ date, disabled }: Props) => {
 
   useEffect(() => {
     if (sessions.length > 0) {
-      setRecords(generateRecordsFromSessions(sessions))
+      recordAPI?.createAllForSessions(sessions).then(_records => {
+        setRecords(mapRecords(_records))
+      })
+      // setRecords(generateRecordsFromSessions(sessions))
     }
-  }, [sessions])
+  }, [sessions, recordAPI])
 
   return (
     <button title={dateString} className={[styles.day_container, disabled && styles.disabled].join(' ')}>
