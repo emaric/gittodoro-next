@@ -2,7 +2,6 @@ import {
   CreateWithDuration,
   DeleteByIDs,
   ReadByRange,
-  RequestWith,
   StartSessionWithDurationRequest,
 } from '@emaric/gittodoro-ts/lib/interactor/external-users/session/io/request.model'
 import { RequestBy } from '@emaric/gittodoro-ts/lib/interactor/external-users/common/io/request.model'
@@ -12,6 +11,7 @@ import { Session } from '@/modules/gittodoro/models/Session'
 import SessionModelInterface from '@/modules/gittodoro/models/SessionModelInterface'
 
 import SessionCommandProvider from '@/modules/gittodoro/controllers/SessionCommandProvider'
+import { RequestWith } from '@emaric/gittodoro-ts/lib/interactor/common/io/request.model'
 
 export interface SessionViewInterface {
   setStarted(session?: Session): void

@@ -20,7 +20,7 @@ export class RecordLogger implements RecordViewInterface {
   setRecords(records: Record[]): void {
     this.logger.log(
       'Created Records.',
-      records.map((r) => JSON.stringify(r)).join('\n')
+      records.map((r) => JSON.stringify(r)).join('\n ')
     )
   }
 }
@@ -40,6 +40,7 @@ export default class RecordAPI {
   }
 
   async createAll(session: Session, end: Date) {
+    debugger
     const { duration, start } = session
     await this.controller.createAll(duration, start, end)
     return this.model.records
