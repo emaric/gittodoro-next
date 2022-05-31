@@ -34,7 +34,9 @@ export default class NoteModel implements NoteModelInterface {
             const { id, content, date, updatedAt } = note
             return new Note({ id, date, content, updatedAt })
           }
-          throw new GittodoroError('Failed to present notes.')
+          throw new GittodoroError(
+            'Failed to present notes. ' + JSON.stringify(note)
+          )
         })
         return Promise.resolve(notes)
       },

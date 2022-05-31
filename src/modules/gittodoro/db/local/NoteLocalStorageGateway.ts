@@ -12,7 +12,7 @@ const mapToEntity = (notesString: string): Note[] => {
   const objs = JSON.parse(notesString)
   return objs.map((obj: any) => {
     const note: Note = {
-      id: obj.id,
+      id: String(obj.id),
       date: new Date(obj.date),
       updatedAt: obj.updatedAt && new Date(obj.updatedAt),
       content: obj.content,

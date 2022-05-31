@@ -68,10 +68,14 @@ export const MainNotesProvider = (props: { children: ReactNode }) => {
 
   const readFirstNote = useCallback(async (): Promise<Note | undefined> => {
     if (notesAPI) {
-      const result = await notesAPI.readFirst()
-      const note = result.note
-      if (note) {
-        return new Note(note)
+      try {
+        const result = await notesAPI.readFirst()
+        const note = result.note
+        if (note) {
+          return new Note(note)
+        }
+      } catch (error) {
+        return undefined
       }
     }
     return undefined

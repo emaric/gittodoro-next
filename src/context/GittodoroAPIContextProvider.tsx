@@ -27,26 +27,18 @@ export const GittodoroAPIProvider = (props: { children: ReactNode }) => {
   const [recordAPI, setRecordAPI] = useState<RecordAPI>(new RecordAPI())
 
   const sessionsAPI = useMemo(() => {
-    if (user) {
-      if (user.uid) {
-        return firebaseSessionsAPI
-      } else {
-        return localSessionsAPI
-      }
+    if (user && user.uid) {
+      return firebaseSessionsAPI
     } else {
-      return undefined
+      return localSessionsAPI
     }
   }, [user, firebaseSessionsAPI, localSessionsAPI])
 
   const notesAPI = useMemo(() => {
-    if (user) {
-      if (user.uid) {
-        return firebaseNotesAPI
-      } else {
-        return localNotesAPI
-      }
+    if (user && user.uid) {
+      return firebaseNotesAPI
     } else {
-      return undefined
+      return localNotesAPI
     }
   }, [user, firebaseNotesAPI, localNotesAPI])
 
