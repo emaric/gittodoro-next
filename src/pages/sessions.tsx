@@ -3,41 +3,39 @@ import { NextPage } from "next"
 
 import * as DateTime from '@/modules/temporal/DateTime'
 
-import { useMainSessions } from "@/context/gittodoro-sessions/MainSessionsContextProvider"
 import { useMainNotes } from "@/context/gittodoro/MainNotesContextProvider"
 import { useClock } from "@/context/clock/ClockContextProvider"
 
 import styles from '@/styles/Sessions.module.css'
 import SessionsCalendar from "@/components/sessions/SessionsCalendar"
 import Header from "@/components/auth/Header"
+import { useGittorodoAPI } from "@/context/GittodoroAPIContextProvider"
 
 const SesssionsPage: NextPage = () => {
   const { clock: selectedDate } = useClock()
   const [minDate, setMinDate] = useState(DateTime.today())
 
-  const { viewFirstAndLast } = useMainSessions()
   const { readFirstNote } = useMainNotes()
+  const { sessionsAPI } = useGittorodoAPI()
 
-  const updateMinDate = useCallback(() => {
-    viewFirstAndLast().then((sessions) => {
-      const first = sessions[0];
-      if (first) {
-        const start = DateTime.fromUTC(new Date(first.start.toDateString()))
-        if (DateTime.difference(minDate, start) > 0) {
-          setMinDate(start)
-        }
+  const updateMinDate = useCallback(async () => {
+    let _minDate = new Date()
+    if (sessionsAPI) {
+      const firstSession = await sessionsAPI.first()
+      if (firstSession) {
+        _minDate = firstSession.start
       }
-    })
+    }
 
-    readFirstNote().then((note) => {
-      if (note) {
-        const date = DateTime.fromUTC(new Date(note.date.toDateString()))
-        if (DateTime.difference(minDate, date) > 0) {
-          setMinDate(date)
-        }
+    const firstNote = await readFirstNote()
+    if (firstNote) {
+      if (_minDate.getTime() > firstNote.date.getTime()) {
+        _minDate = firstNote.date
       }
-    })
-  }, [minDate, readFirstNote, viewFirstAndLast])
+    }
+
+    setMinDate(DateTime.fromUTC(_minDate))
+  }, [readFirstNote, sessionsAPI])
 
   useEffect(() => {
     updateMinDate()

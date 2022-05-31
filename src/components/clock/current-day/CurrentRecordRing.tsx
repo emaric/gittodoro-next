@@ -45,6 +45,8 @@ const CurrentRecordRing: FC<Props> = ({ record }) => {
     if (record) {
       setState(record.state)
       setClock(new Clock(record.start, record.end))
+    } else {
+      setClock(undefined)
     }
 
   }, [record])

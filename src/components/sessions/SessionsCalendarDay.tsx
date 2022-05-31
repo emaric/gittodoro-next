@@ -25,7 +25,7 @@ interface Props {
 }
 
 const SessionsCalendarDay = ({ date, disabled }: Props) => {
-  const { recordAPI } = useGittorodoAPI()
+  const { recordAPI, sessionsAPI } = useGittorodoAPI()
   const dateString = date.toPlainDate().toString()
   const router = useRouter()
   const clock = useMemo(() => new Clock(date, date.add({ days: 1 })), [date])
@@ -34,7 +34,6 @@ const SessionsCalendarDay = ({ date, disabled }: Props) => {
   const [records, setRecords] = useState<Record[] | undefined>()
   const [notesCount, setNotesCount] = useState(0)
 
-  const { viewByRange } = useMainSessions()
   const { readNotesByRange } = useMainNotes()
 
   const { setClock: setMainClock } = useClock()
@@ -45,11 +44,14 @@ const SessionsCalendarDay = ({ date, disabled }: Props) => {
   }, [router, clock, setMainClock])
 
 
-  const viewSessions = useCallback(() => {
-    viewByRange(clock.startDate, clock.endDate).then((sessions) => {
-      setSessions(sessions.map(session => new Session(session)))
-    })
-  }, [clock, viewByRange])
+  const updateSessions = useCallback(() => {
+    if (clock && sessionsAPI) {
+      sessionsAPI.readByRange(clock.startDate, clock.endDate).then((_sessions) => {
+        setSessions(_sessions.map(s => new Session(s)))
+      })
+    }
+
+  }, [clock, sessionsAPI])
 
   const updateNotesCount = useCallback(() => {
     readNotesByRange(clock.startDate, clock.endDate).then((notes) => {
@@ -59,7 +61,7 @@ const SessionsCalendarDay = ({ date, disabled }: Props) => {
 
   useEffect(() => {
     if (clock) {
-      viewSessions()
+      updateSessions()
       updateNotesCount()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -67,12 +69,12 @@ const SessionsCalendarDay = ({ date, disabled }: Props) => {
 
   useEffect(() => {
     if (sessions.length > 0) {
-      recordAPI?.createAllForSessions(sessions).then(_records => {
+      recordAPI.createAllForSessions(sessions).then(_records => {
         setRecords(mapRecords(_records))
       })
-      // setRecords(generateRecordsFromSessions(sessions))
     }
-  }, [sessions, recordAPI])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sessions])
 
   return (
     <button title={dateString} className={[styles.day_container, disabled && styles.disabled].join(' ')}>
