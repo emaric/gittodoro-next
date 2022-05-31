@@ -33,7 +33,7 @@ const SesssionsPage: NextPage = () => {
         _minDate = firstNote.date
       }
     }
-
+    console.log(minDate)
     setMinDate(DateTime.fromISO((DateTime.fromUTC(_minDate).toPlainDate().toJSON())))
   }, [readFirstNote, sessionsAPI])
 
