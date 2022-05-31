@@ -20,7 +20,9 @@ export class RecordLogger implements RecordViewInterface {
   setRecords(records: Record[]): void {
     this.logger.log(
       'Created Records.',
-      records.map((r) => JSON.stringify(r)).join('\n ')
+      records
+        .map((r) => JSON.stringify(r.end.getTime() - r.start.getTime()))
+        .join('\n ')
     )
   }
 }
@@ -29,9 +31,9 @@ export default class RecordAPI {
   private model: RecordModel
   private controller: RecordController
 
-  constructor(view: RecordViewInterface) {
+  constructor(view?: RecordViewInterface) {
     this.model = new RecordModel()
-    this.controller = new RecordController(view, this.model)
+    this.controller = new RecordController(this.model, view)
   }
 
   async create(session: Session, current: Date) {

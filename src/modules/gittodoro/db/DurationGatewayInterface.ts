@@ -1,6 +1,14 @@
 import Duration from '@emaric/gittodoro-ts/lib/interactor/entities/Duration'
+import {
+  ReadDefaultDurationDataGatewayInterface,
+  ResetDefaultDurationDataGatewayInterface,
+  UpdateDefaultDurationDataGatewayInterface,
+} from '@emaric/gittodoro-ts/lib/interactor/external-users/default-duration/io/data.gateway'
 
-export default interface DurationGatewayInterface {
+export default interface DurationGatewayInterface
+  extends ReadDefaultDurationDataGatewayInterface,
+    UpdateDefaultDurationDataGatewayInterface,
+    ResetDefaultDurationDataGatewayInterface {
   create(
     pomodoro: number,
     short: number,

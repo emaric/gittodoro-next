@@ -1,5 +1,5 @@
 import { difference, now } from "@/modules/temporal/DateTime";
-import { createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, ReactNode, useContext, useEffect, useMemo, useState } from "react";
 
 type TimeContextType = {
   displayTime: string

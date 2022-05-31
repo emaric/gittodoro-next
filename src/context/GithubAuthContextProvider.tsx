@@ -3,7 +3,7 @@ import { createContext, ReactNode, useCallback, useContext, useEffect } from "re
 import { User } from "@/modules/firebase/models/User"
 import { listenOnAuthStateChanged, signInWithGithub as signIn, signOutFromGithub as signOut } from "@/modules/firebase/controller"
 
-import { login as setLoggedInUser, logout as removeLoggedInUser, selectUser } from '@/modules/redux/features/userSlice'
+import { login, logout, selectUser } from '@/modules/redux/features/userSlice'
 import { useSelector, useDispatch } from '@/modules/redux'
 
 type GithubAuthContextType = {
@@ -23,7 +23,7 @@ export const GithubAuthProvider = ({ children }: Props) => {
 
   const handleUserChanged = useCallback((user?: User) => {
     if (user?.uid) {
-      dispatch(setLoggedInUser(user))
+      dispatch(login(user))
     }
   }, [dispatch])
 
@@ -32,7 +32,7 @@ export const GithubAuthProvider = ({ children }: Props) => {
   }, [])
 
   const signOutFromGithub = useCallback(() => {
-    dispatch(removeLoggedInUser())
+    dispatch(logout())
     signOut()
   }, [dispatch])
 

@@ -13,8 +13,8 @@ interface Props {
 const ClockRecordsRing = ({ clock, records }: Props) => {
   return (
     <>
-      {records.map((record) => (
-        <ClockRing key={record.start.toJSON()}
+      {records.map((record, i) => (
+        <ClockRing key={i}
           state={record.state}
           start={record.start}
           end={record.end}

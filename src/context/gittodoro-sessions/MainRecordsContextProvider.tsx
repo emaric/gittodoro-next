@@ -17,30 +17,21 @@ const MainRecordsContext = createContext<MainRecordsContextType | undefined>(und
 
 export const MainRecordsProvider = (props: { children: ReactNode }) => {
   const { recordAPI } = useGittorodoAPI()
-  const { queryMainSessions } = useMainSessions()
+  const { mainSessions, mainRecords } = useMainSessions()
 
   const [record, setRecord] = useState<Record | undefined>(undefined)
-  const [mainRecords, setMainRecords] = useState<Record[]>([])
 
   const generateMainRecords = useCallback(async () => {
     if (recordAPI) {
-      const sessions = await queryMainSessions()
-      const records = await recordAPI.createAllForSessions(sessions)
-
-      // sessions.forEach((session) => {
-      //   if (session.endPlainDateTime) {
-      //     const end = session.endPlainDateTime
-      //     records = [...records, ...generateRecords(session, end)]
-      //   }
-      // })
+      const records = await recordAPI.createAllForSessions(mainSessions)
       return mapRecords(records)
     }
     return []
-  }, [queryMainSessions, recordAPI])
+  }, [mainSessions, recordAPI])
 
   const updateMainRecords = useCallback(async () => {
     const records = await generateMainRecords()
-    setMainRecords(records)
+    // setMainRecords(records)
   }, [generateMainRecords])
 
   useEffect(() => {

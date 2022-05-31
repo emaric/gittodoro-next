@@ -16,8 +16,8 @@ const MAX_MINUTES = 300
 const MAX_SECONDS = 60
 
 const ClockCountdownTimer = ({ state, initialDuration, running = false, speed = 1000 }: Props) => {
-  const minutes = useMemo(() => Math.floor(initialDuration / MAX_SECONDS) % (MAX_MINUTES + 1), [initialDuration])
-  const seconds = useMemo(() => initialDuration % MAX_SECONDS, [initialDuration])
+  const minutes = useMemo(() => Math.floor((initialDuration / 1000) / MAX_SECONDS) % (MAX_MINUTES + 1), [initialDuration])
+  const seconds = useMemo(() => (initialDuration / 1000) % MAX_SECONDS, [initialDuration])
   const stateTitle = useMemo(() => {
     if (state === State[State.pomodoro]) {
       return '🍅 Focus Time!'

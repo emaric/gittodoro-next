@@ -11,7 +11,7 @@ type UserSlice = {
 }
 
 export const userSlice = createSlice({
-  name: 'user',
+  name: 'gittodoro',
   initialState: {
     user: undefined,
   },

@@ -57,10 +57,10 @@ export default class SessionAPI {
 
   constructor(
     dataGateway: SessionGatewayInterface,
-    view: SessionViewInterface
+    view?: SessionViewInterface
   ) {
     this.model = new SessionModel(dataGateway)
-    this.controller = new SessionController(view, this.model)
+    this.controller = new SessionController(this.model, view)
   }
 
   async start(duration: Duration, start: Date): Promise<Session> {

@@ -27,9 +27,9 @@ export class NotesAPI {
   private controller: NoteController
   private model: NoteModelInterface
 
-  constructor(dataGateway: NoteGatewayInterface, view: NoteViewInterface) {
+  constructor(dataGateway: NoteGatewayInterface, view?: NoteViewInterface) {
     this.model = new NoteModel(dataGateway)
-    this.controller = new NoteController(view, this.model)
+    this.controller = new NoteController(this.model, view)
   }
 
   async create(content: string, date: Date): Promise<{ note: Note }> {

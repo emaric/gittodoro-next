@@ -13,14 +13,14 @@ export interface RecordViewInterface {
 }
 
 export default class RecordController {
-  private view: RecordViewInterface
+  private view?: RecordViewInterface
   private model: RecordModelInterface
 
   private _createCommand?: CreateRecordCommand
   private _createNthCommand?: CreateNthRecordCommand
   private _createAllCommand?: CreateAllRecordsCommand
 
-  constructor(view: RecordViewInterface, model: RecordModelInterface) {
+  constructor(model: RecordModelInterface, view?: RecordViewInterface) {
     this.view = view
     this.model = model
   }
@@ -30,7 +30,7 @@ export default class RecordController {
       this._createCommand = new CreateRecordCommand(this.model.recordPresenter)
     }
     await this._createCommand.execute({ duration, start, current })
-    this.view.setRecord(this.model.record)
+    this.view?.setRecord(this.model.record)
   }
 
   async createNth(duration: Duration, n: number, start: Date) {
@@ -40,7 +40,7 @@ export default class RecordController {
       )
     }
     await this._createNthCommand.execute({ duration, n, start })
-    this.view.setRecord(this.model.record)
+    this.view?.setRecord(this.model.record)
   }
 
   async createAll(duration: Duration, start: Date, end: Date) {
@@ -50,6 +50,6 @@ export default class RecordController {
       )
     }
     await this._createAllCommand.execute({ duration, start, end })
-    this.view.setRecords(this.model.records)
+    this.view?.setRecords(this.model.records)
   }
 }

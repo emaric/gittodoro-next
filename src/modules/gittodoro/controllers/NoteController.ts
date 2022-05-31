@@ -14,11 +14,11 @@ export interface NoteViewInterface {
 }
 
 export default class NoteController {
-  private view: NoteViewInterface
   private model: NoteModelInterface
+  private view?: NoteViewInterface
   private commandProvider: NoteCommandProvider
 
-  constructor(view: NoteViewInterface, model: NoteModelInterface) {
+  constructor(model: NoteModelInterface, view?: NoteViewInterface) {
     this.view = view
     this.model = model
     this.commandProvider = new NoteCommandProvider(this.model)
@@ -33,7 +33,7 @@ export default class NoteController {
     }[]
   ) {
     await this.commandProvider.createCommand.execute({ notes })
-    this.view.setNotes(this.model.notes)
+    this.view?.setNotes(this.model.notes)
   }
 
   async create(note: {
@@ -45,7 +45,7 @@ export default class NoteController {
     await this.commandProvider.createCommand.execute({ notes: [note] })
     const newNote = this.model.notes[0]
     this.model.note = newNote
-    this.view.setNote(this.model.note)
+    this.view?.setNote(this.model.note)
   }
 
   async readByRange(startInclusive: Date, end: Date) {
@@ -55,13 +55,13 @@ export default class NoteController {
       end,
     }
     await this.commandProvider.readCommand.execute(request)
-    this.view.setNotes(this.model.notes)
+    this.view?.setNotes(this.model.notes)
   }
 
   async update(note: { id: string; content: string; updatedAt: Date }) {
     await this.commandProvider.updateCommand.execute({ notes: [note] })
     this.model.note = this.model.notes[0]
-    this.view.setNote(this.model.note)
+    this.view?.setNote(this.model.note)
   }
 
   async delete(id: string) {
@@ -71,7 +71,7 @@ export default class NoteController {
     }
     await this.commandProvider.deleteCommand.execute(request)
     this.model.note = this.model.notes[0]
-    this.view.setNote(this.model.note)
+    this.view?.setNote(this.model.note)
   }
 
   async deleteAll(ids: string[]) {
@@ -80,6 +80,6 @@ export default class NoteController {
       ids,
     }
     await this.commandProvider.deleteCommand.execute(request)
-    this.view.setNotes(this.model.notes)
+    this.view?.setNotes(this.model.notes)
   }
 }

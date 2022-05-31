@@ -19,13 +19,18 @@ export default class DurationLocalStorageGateway
   implements DurationGatewayInterface
 {
   static DURATIONS_ID = 'gittodoro-durations'
+  static DEFAULT_DURATION_ID = 'gittodoro-default-duration-id'
   static DURATIONS_LAST_ID = 'gittodoro-durations-last-id'
 
   constructor() {
     const { pomodoro, short, long, interval } = defaultDuration
-    this.create(pomodoro, short, long, interval).catch((error) => {
-      console.error(error)
-    })
+    this.create(pomodoro, short, long, interval)
+      .then((duration) => {
+        duration && this.setDefaultDurationID(duration)
+      })
+      .catch((error) => {
+        console.error(error)
+      })
   }
 
   private get durations() {
@@ -45,6 +50,13 @@ export default class DurationLocalStorageGateway
     )
   }
 
+  private setDefaultDurationID(duration: Duration) {
+    localStorage.setItem(
+      DurationLocalStorageGateway.DEFAULT_DURATION_ID,
+      mapToString([duration])
+    )
+  }
+
   private get lastID() {
     const lastIDString = localStorage.getItem(
       DurationLocalStorageGateway.DURATIONS_LAST_ID
@@ -60,13 +72,23 @@ export default class DurationLocalStorageGateway
     localStorage.setItem(DurationLocalStorageGateway.DURATIONS_LAST_ID, id)
   }
 
-  create(pomodoro: number, short: number, long: number, interval: number) {
+  async create(
+    pomodoro: number,
+    short: number,
+    long: number,
+    interval: number
+  ) {
+    const match = await this.findMatch(pomodoro, short, long, interval)
+    if (match) {
+      return Promise.resolve(match)
+    }
+
     const id = String(this.lastID + 1)
     const duration = new Duration(id, pomodoro, short, long, interval)
 
     this.updateDurations(this.durations.concat(duration))
     this.updateLastID(id)
-    return Promise.resolve(duration)
+    return duration
   }
 
   readByIDs(ids: string[]): Promise<Duration[]> {
@@ -84,5 +106,33 @@ export default class DurationLocalStorageGateway
           d.interval == interval
       )
     )
+  }
+
+  getDefaultDuration(): Promise<Duration> {
+    const durationString = localStorage.getItem(
+      DurationLocalStorageGateway.DEFAULT_DURATION_ID
+    )
+    if (durationString) {
+      return Promise.resolve(mapToEntity(durationString)[0])
+    }
+    return Promise.reject(new Error('Failed to get default duration.'))
+  }
+
+  async updateDefaultDuration(
+    pomodoro: number,
+    short: number,
+    long: number,
+    interval: number
+  ): Promise<Duration> {
+    const duration = await this.create(pomodoro, short, long, interval)
+    if (duration) {
+      return Promise.resolve(duration)
+    }
+    return Promise.reject(new Error('Failed to update the default duration.'))
+  }
+
+  resetDefaultDuration(): Promise<Duration> {
+    const { pomodoro, short, long, interval } = defaultDuration
+    return this.updateDefaultDuration(pomodoro, short, long, interval)
   }
 }

@@ -9,7 +9,7 @@ interface RecordTimerProps {
   defaultDuration?: number
 }
 
-export const CurrentRecordTimer = ({ record, defaultDuration = 25 * 60 }: RecordTimerProps) => {
+export const CurrentRecordTimer = ({ record, defaultDuration = 25 * 60 * 1000 }: RecordTimerProps) => {
   const initialDuration = useMemo(() => {
     if (record) {
       return Math.floor(record.remainingTime)
@@ -25,8 +25,7 @@ export const CurrentRecordTimer = ({ record, defaultDuration = 25 * 60 }: Record
       // Expected StartDisplay: 'initialDuration'
       // Expedted EndDisplay: '00:00'
       const adjustedDurationForStartAndEndDisplay = (initialDuration - 2) / initialDuration
-      const inMillis = 1000 * adjustedDurationForStartAndEndDisplay
-      return inMillis
+      return adjustedDurationForStartAndEndDisplay
     }
     return 1000
   }, [initialDuration])

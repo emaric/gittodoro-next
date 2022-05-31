@@ -23,11 +23,11 @@ export interface SessionViewInterface {
 }
 
 export class SessionController {
-  private view: SessionViewInterface
   private model: SessionModelInterface
+  private view?: SessionViewInterface
   private commandProvider: SessionCommandProvider
 
-  constructor(view: SessionViewInterface, model: SessionModelInterface) {
+  constructor(model: SessionModelInterface, view?: SessionViewInterface) {
     this.view = view
     this.model = model
     this.commandProvider = new SessionCommandProvider(this.model)
@@ -40,12 +40,12 @@ export class SessionController {
       duration,
     }
     await this.commandProvider.startCommand.execute(request)
-    this.view.setStarted(this.model.started)
+    this.view?.setStarted(this.model.started)
   }
 
   async stop(date = new Date()) {
     await this.commandProvider.stopCommand.execute({ date })
-    this.view.setStopped(this.model.stopped)
+    this.view?.setStopped(this.model.stopped)
   }
 
   async createWithDuration(sessions: Session[]) {
@@ -54,7 +54,7 @@ export class SessionController {
       sessions,
     }
     await this.commandProvider.createCommand.execute(request)
-    this.view.setCreated(this.model.created)
+    this.view?.setCreated(this.model.created)
   }
 
   async readByRange(startInclusive: Date, end: Date) {
@@ -64,12 +64,12 @@ export class SessionController {
       end,
     }
     await this.commandProvider.readCommand.execute(request)
-    this.view.setReadByRange(this.model.read)
+    this.view?.setReadByRange(this.model.read)
   }
 
   async readFirst() {
     await this.commandProvider.readFirstCommand.execute()
-    this.view.setFirst(this.model.first)
+    this.view?.setFirst(this.model.first)
   }
 
   async deleteByIDs(ids: string[]) {
@@ -78,6 +78,6 @@ export class SessionController {
       ids,
     }
     await this.commandProvider.deleteCommand.execute(request)
-    this.view.setDeleted(this.model.deleted)
+    this.view?.setDeleted(this.model.deleted)
   }
 }

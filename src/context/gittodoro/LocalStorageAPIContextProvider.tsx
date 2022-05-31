@@ -1,13 +1,14 @@
 import { createContext, ReactNode, useContext, useEffect, useState } from "react"
 
-import { SessionLocalStorageGateway } from "@/modules/gittodoro/db/local/SessionLocalStorageGateway"
-import { NoteLocalStorageGateway } from "@/modules/gittodoro/db/local/NoteLocalStorageGateway"
-import SessionsAPI, { SessionLogger } from "@/modules/gittodoro/api/SessionAPI"
-import { NoteLogger, NotesAPI } from "@/modules/gittodoro/api/NotesAPI"
+import SessionsAPI from "@/modules/gittodoro/api/SessionAPI"
+import { NotesAPI } from "@/modules/gittodoro/api/NotesAPI"
+import gatewayProvider from "@/modules/gittodoro/db/local"
+import DurationAPI from "@/modules/gittodoro/api/DurationAPI"
 
 type LocalStorageAPIContextType = {
   localSessionsAPI?: SessionsAPI,
-  localNotesAPI?: NotesAPI
+  localNotesAPI?: NotesAPI,
+  localDurationAPI?: DurationAPI
 }
 
 const LocalStorageAPIContext = createContext<LocalStorageAPIContextType | undefined>(undefined)
@@ -15,17 +16,18 @@ const LocalStorageAPIContext = createContext<LocalStorageAPIContextType | undefi
 export const LocalStorageAPIProvider = (props: { children: ReactNode }) => {
   const [localSessionsAPI, setLocalSessionsAPI] = useState<SessionsAPI | undefined>()
   const [localNotesAPI, setLocalNotesAPI] = useState<NotesAPI | undefined>()
+  const [localDurationAPI, setLocalDurationAPI] = useState<DurationAPI | undefined>()
 
   useEffect(() => {
-    const localSessionsDB = new SessionLocalStorageGateway()
-    setLocalSessionsAPI(new SessionsAPI(localSessionsDB, new SessionLogger('Local Storage')))
+    setLocalSessionsAPI(new SessionsAPI(gatewayProvider.sessionGateway))
 
-    const localNotesDB = new NoteLocalStorageGateway()
-    setLocalNotesAPI(new NotesAPI(localNotesDB, new NoteLogger('Local Storage')))
+    setLocalNotesAPI(new NotesAPI(gatewayProvider.noteGateway))
+
+    setLocalDurationAPI(new DurationAPI(gatewayProvider.durationGateway))
   }, [])
 
   return (
-    <LocalStorageAPIContext.Provider value={{ localSessionsAPI, localNotesAPI }}>
+    <LocalStorageAPIContext.Provider value={{ localSessionsAPI, localNotesAPI, localDurationAPI }}>
       {props.children}
     </LocalStorageAPIContext.Provider>
   )

@@ -39,7 +39,7 @@ const MainNotes = () => {
       <div className={styles.container}>
         {notes?.map((note, i) =>
           <MainNote
-            key={i}
+            key={note.date.toJSON()}
             note={note}
             onChange={handleChange}
             onClickEdit={handleClickEdit}

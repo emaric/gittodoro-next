@@ -11,11 +11,18 @@ import Note from '@emaric/gittodoro-ts/lib/interactor/entities/Note'
 
 export const sessionConverter = {
   toFirestore(session: Session): DocumentData {
+    const { id: durationId, pomodoro, short, long, interval } = session.duration
     return {
-      ...session,
+      id: String(session.id),
       start: Timestamp.fromDate(session.start),
       end: session.end ? Timestamp.fromDate(session.end) : null,
-      duration: JSON.parse(JSON.stringify(session.duration)),
+      duration: {
+        id: durationId,
+        pomodoro,
+        short,
+        long,
+        interval,
+      },
     }
   },
   fromFirestore(
