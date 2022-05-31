@@ -4,17 +4,19 @@ import { Record } from '@/models/Record'
 
 import ClockCountdownTimer from '@/components/clock/ClockCountdownTimer'
 
+const DEFAULT_POMODORO = 25 * 60 * 1000
+
 interface RecordTimerProps {
   record?: Record,
   defaultDuration?: number
 }
 
-export const CurrentRecordTimer = ({ record, defaultDuration = 25 * 60 * 1000 }: RecordTimerProps) => {
+export const CurrentRecordTimer = ({ record, defaultDuration }: RecordTimerProps) => {
   const initialDuration = useMemo(() => {
     if (record) {
-      return Math.floor(record.remainingTime)
+      return Math.floor(record.remainingTime) * 1000
     } else {
-      return defaultDuration
+      return defaultDuration || DEFAULT_POMODORO
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [record])
@@ -25,7 +27,7 @@ export const CurrentRecordTimer = ({ record, defaultDuration = 25 * 60 * 1000 }:
       // Expected StartDisplay: 'initialDuration'
       // Expedted EndDisplay: '00:00'
       const adjustedDurationForStartAndEndDisplay = (initialDuration - 2) / initialDuration
-      return adjustedDurationForStartAndEndDisplay
+      return adjustedDurationForStartAndEndDisplay * 1000
     }
     return 1000
   }, [initialDuration])

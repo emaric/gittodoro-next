@@ -7,7 +7,7 @@ import CurrentRecordRing from "@/components/clock/current-day/CurrentRecordRing"
 import { CurrentRecordTimer } from '@/components/clock/current-day/CurrentRecordTimer'
 
 const SessionsManagerRing = () => {
-  const { session, record, startSession, stopSession } = useSessionsManager()
+  const { defaultDuration, session, record, startSession, stopSession } = useSessionsManager()
 
   const handleClick = useCallback(() => {
     // TODO: show loading
@@ -23,7 +23,7 @@ const SessionsManagerRing = () => {
     <>
       <CurrentRecordRing record={record} />
       <ClockButton onClick={handleClick}>
-        <CurrentRecordTimer record={record} />
+        <CurrentRecordTimer record={record} defaultDuration={defaultDuration?.pomodoro} />
       </ClockButton>
     </>
   )

@@ -65,13 +65,13 @@ export default class SessionAPI {
 
   async start(duration: Duration, start: Date): Promise<Session> {
     await this.controller.start(duration, start)
-    if (this.model.started) return Promise.resolve(this.model.started)
+    if (this.model.started) return this.model.started
     return Promise.reject(new GittodoroError('Failed to start a session.'))
   }
 
   async stop(end: Date): Promise<Session | undefined> {
     await this.controller.stop(end)
-    return Promise.resolve(this.model.stopped)
+    return this.model.stopped
   }
 
   async save(sessions: Session[]): Promise<Session[]> {
@@ -81,7 +81,7 @@ export default class SessionAPI {
 
   async readByRange(startInclusive: Date, end: Date): Promise<Session[]> {
     await this.controller.readByRange(startInclusive, end)
-    return Promise.resolve(this.model.read)
+    return this.model.read
   }
 
   async first(): Promise<Session | undefined> {
