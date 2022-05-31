@@ -14,7 +14,7 @@ interface RecordTimerProps {
 export const CurrentRecordTimer = ({ record, defaultDuration }: RecordTimerProps) => {
   const initialDuration = useMemo(() => {
     if (record) {
-      return Math.floor(record.remainingTime) * 1000
+      return record.remainingTime * 1000
     } else {
       return defaultDuration || DEFAULT_POMODORO
     }
@@ -26,7 +26,7 @@ export const CurrentRecordTimer = ({ record, defaultDuration }: RecordTimerProps
     if (initialDuration) {
       // Expected StartDisplay: 'initialDuration'
       // Expedted EndDisplay: '00:00'
-      const adjustedDurationForStartAndEndDisplay = (initialDuration - 2) / initialDuration
+      const adjustedDurationForStartAndEndDisplay = (initialDuration - 2000) / initialDuration
       return adjustedDurationForStartAndEndDisplay * 1000
     }
     return 1000

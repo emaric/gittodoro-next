@@ -17,12 +17,7 @@ interface Props {
 }
 
 const CurrentRecordRing: FC<Props> = ({ record }) => {
-  const clock = useMemo(() => {
-    if (record) {
-      return new Clock(record.start, record.end)
-    }
-    return undefined
-  }, [record])
+  const [clock, setClock] = useState<Clock | undefined>()
   const ref = useRef<SVGCircleElement>(null)
   const [animation, setAnimation] = useState(Animation.Disabled)
   const [state, setState] = useState("")
@@ -37,15 +32,21 @@ const CurrentRecordRing: FC<Props> = ({ record }) => {
   }, [animation])
 
   useEffect(() => {
-    if (record && clock) {
-      setState(record.state)
+    if (clock) {
       ref.current?.style.setProperty("--duration", clock.duration.toString())
       ref.current?.style.setProperty("--elapsed", clock.elapsed.toString())
       setAnimation(Animation.Reset)
     } else {
       setAnimation(Animation.Disabled)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [clock])
+
+  useEffect(() => {
+    if (record) {
+      setState(record.state)
+      setClock(new Clock(record.start, record.end))
+    }
+
   }, [record])
 
   const circleProps = {

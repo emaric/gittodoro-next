@@ -64,9 +64,9 @@ export const SessionsManagerProvider = (props: { children: ReactNode }) => {
   const startSession = useCallback(async () => {
     const testDuration = {
       id: '-1',
-      pomodoro: 25,
-      short: 5,
-      long: 15,
+      pomodoro: 60 * 1000,
+      short: 5 * 1000,
+      long: 15 * 1000,
       interval: 4
     }
     const duration = defaultDuration || testDuration

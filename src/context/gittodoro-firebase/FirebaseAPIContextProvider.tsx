@@ -1,9 +1,7 @@
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 
 import SessionsAPI from "@/modules/gittodoro/api/SessionAPI";
-import { SessionFirebaseGateway } from "@/modules/gittodoro-firebase/SessionFirebaseGateway";
 import { NotesAPI } from "@/modules/gittodoro/api/NotesAPI";
-import { NoteFirebaseGateway } from "@/modules/gittodoro-firebase/NotesFirebaseGateway";
 import { gatewayProvider } from "@/modules/gittodoro-firebase";
 
 type FirebaseAPIContextType = {
