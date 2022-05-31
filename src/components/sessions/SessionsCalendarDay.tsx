@@ -47,7 +47,13 @@ const SessionsCalendarDay = ({ date, disabled }: Props) => {
   const updateSessions = useCallback(() => {
     if (clock && sessionsAPI) {
       sessionsAPI.readByRange(clock.startDate, clock.endDate).then((_sessions) => {
-        setSessions(_sessions.map(s => new Session(s)))
+        const completedSessions: Session[] = []
+        _sessions.forEach(_session => {
+          if (_session.end) {
+            completedSessions.push(new Session(_session))
+          }
+        })
+        setSessions(completedSessions)
       })
     }
 
