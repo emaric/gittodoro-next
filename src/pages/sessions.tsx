@@ -34,7 +34,7 @@ const SesssionsPage: NextPage = () => {
       }
     }
 
-    setMinDate(DateTime.fromUTC(_minDate))
+    setMinDate(DateTime.fromISO((DateTime.fromUTC(_minDate).toPlainDate().toJSON())))
   }, [readFirstNote, sessionsAPI])
 
   useEffect(() => {
@@ -47,7 +47,10 @@ const SesssionsPage: NextPage = () => {
         <Header />
       </header>
       <main className={styles.main}>
-        <SessionsCalendar selectedDate={DateTime.today()} minDate={minDate} maxDate={DateTime.today()} />
+        <SessionsCalendar
+          selectedDate={selectedDate?.start || DateTime.today()}
+          minDate={minDate}
+          maxDate={DateTime.today()} />
       </main>
     </>
   )

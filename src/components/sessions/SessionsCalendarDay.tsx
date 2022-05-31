@@ -1,4 +1,4 @@
-import { memo, useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useRouter } from 'next/router'
 
 import * as DateTime from '@/modules/temporal/DateTime'
@@ -6,7 +6,6 @@ import * as DateTime from '@/modules/temporal/DateTime'
 import { Clock } from '@/models/Clock'
 import { Session } from '@/models/Session'
 import { Record } from '@/models/Record'
-import { useMainSessions } from '@/context/gittodoro-sessions/MainSessionsContextProvider'
 import { useMainNotes } from '@/context/gittodoro/MainNotesContextProvider'
 import { useClock } from '@/context/clock/ClockContextProvider'
 
@@ -19,6 +18,7 @@ import styles from './Sessions.module.css'
 import ClockSecondsRing from '../clock/ClockSecondsRing'
 import { useGittorodoAPI } from '@/context/GittodoroAPIContextProvider'
 import { mapRecords } from '@/models/mapper'
+
 interface Props {
   date: DateTime.DateTimeType
   disabled: boolean
@@ -106,6 +106,4 @@ const SessionsCalendarDay = ({ date, disabled }: Props) => {
   )
 }
 
-export default memo(SessionsCalendarDay, (prev, next) => {
-  return JSON.stringify(prev) == JSON.stringify(next)
-})
+export default SessionsCalendarDay

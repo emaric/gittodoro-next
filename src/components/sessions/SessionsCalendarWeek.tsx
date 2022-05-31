@@ -1,5 +1,5 @@
 import * as DateTime from '@/modules/temporal/DateTime'
-import { memo, useEffect, useMemo, useState } from 'react'
+import { useMemo } from 'react'
 
 import styles from './Sessions.module.css'
 
@@ -21,12 +21,10 @@ const SessionsCalendarWeek = ({ start, min, max }: Props) => {
   return (
     <div className={styles.week_container}>
       {days.map((day) => <SessionsCalendarDay key={day.toJSON()} date={day} disabled={
-        DateTime.difference(day, max) > 0 || DateTime.difference(min, day) > 0
+        DateTime.difference(day, max) > 0 || DateTime.difference(day, min) < 0
       } />)}
     </div>
   )
 }
 
-export default memo(SessionsCalendarWeek, (prev, next) => {
-  return JSON.stringify(prev) == JSON.stringify(next)
-})
+export default SessionsCalendarWeek
