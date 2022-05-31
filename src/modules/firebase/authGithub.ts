@@ -19,7 +19,6 @@ export const signIn = () => {
     })
     .catch((error) => {
       const credential = GithubAuthProvider.credentialFromError(error)
-      console.log(credential)
       throw error
     })
 }

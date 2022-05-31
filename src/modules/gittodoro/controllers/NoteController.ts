@@ -42,7 +42,9 @@ export default class NoteController {
     updatedAt?: Date
     id?: string
   }) {
-    await this.commandProvider.createCommand.execute({ notes: [note] })
+    await this.commandProvider.createCommand.execute({
+      notes: [note],
+    })
     const newNote = this.model.notes[0]
     this.model.note = newNote
     this.view?.setNote(this.model.note)

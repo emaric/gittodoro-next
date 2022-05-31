@@ -21,7 +21,9 @@ export default class NoteModel implements NoteModelInterface {
         const [note] = response.notes
         if (note && note.id) {
           const { id, content, date, updatedAt } = note
-          return Promise.resolve(new Note({ id, date, content, updatedAt }))
+          const _note = new Note({ id: String(id), date, content, updatedAt })
+          this.note = _note
+          return Promise.resolve(_note)
         }
         return Promise.reject(new GittodoroError('Failed to present note.'))
       },
@@ -29,15 +31,16 @@ export default class NoteModel implements NoteModelInterface {
 
     this.notesPresenter = {
       present: (response: NoteListResponse): Promise<Note[]> => {
-        const notes = response.notes.map((note) => {
+        const notes = Array.from(response.notes).map((note) => {
           if (note && note.id) {
             const { id, content, date, updatedAt } = note
-            return new Note({ id, date, content, updatedAt })
+            return new Note({ id: String(id), date, content, updatedAt })
           }
           throw new GittodoroError(
             'Failed to present notes. ' + JSON.stringify(note)
           )
         })
+        this.notes = notes
         return Promise.resolve(notes)
       },
     }
