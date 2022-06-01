@@ -36,13 +36,13 @@ const CurrentRecordRing: FC<Props> = ({ record }) => {
       ref.current?.style.setProperty("--duration", clock.duration.toString())
       ref.current?.style.setProperty("--elapsed", clock.elapsed.toString())
       setAnimation(Animation.Reset)
-      setAnimation(Animation.Start)
     } else {
       setAnimation(Animation.Disabled)
     }
   }, [clock])
 
   useEffect(() => {
+    setAnimation(Animation.Disabled)
     if (record) {
       setState(record.state)
       setClock(new Clock(record.start, record.end))
@@ -53,8 +53,8 @@ const CurrentRecordRing: FC<Props> = ({ record }) => {
   }, [record])
 
   const circleProps = {
-    animation: animation,
-    state: state
+    animation,
+    state
   }
 
   return (
