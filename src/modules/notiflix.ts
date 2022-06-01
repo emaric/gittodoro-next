@@ -56,3 +56,7 @@ export const showLoading = () => {
 export const removeLoading = () => {
   Notiflix.Loading.remove()
 }
+
+export const showLoadingMessage = (message?: string) => {
+  Notiflix.Loading.standard(message)
+}
