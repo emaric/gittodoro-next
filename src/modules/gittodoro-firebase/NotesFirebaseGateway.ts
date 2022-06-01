@@ -4,12 +4,15 @@ import NoteGatewayInterface from '@/gittodoro/db/NoteGatewayInterface'
 import {
   deleteUserNote,
   getUserNoteData,
+  getUserNoteDocRef,
   retrieveOldestNote,
   retrieveUserNotesByRange,
   setUserNote,
 } from './controllers/notes'
 
 import { createID } from './utils'
+import { writeBatch } from 'firebase/firestore'
+import { db } from '../firebase'
 
 export class NoteFirebaseGateway implements NoteGatewayInterface {
   async create(
@@ -21,11 +24,11 @@ export class NoteFirebaseGateway implements NoteGatewayInterface {
       return new Note(id, date, content, updatedAt)
     })
 
-    await Promise.all(
-      notesWithIDs.map((note) => {
-        return setUserNote(note.id, note)
-      })
-    )
+    const batch = writeBatch(db)
+
+    notesWithIDs.forEach((note) => batch.set(getUserNoteDocRef(note.id), note))
+
+    await batch.commit()
 
     return notesWithIDs
   }
@@ -58,26 +61,33 @@ export class NoteFirebaseGateway implements NoteGatewayInterface {
   ): Promise<Note[]> {
     const ids = notes.map((n) => n.id)
     const origNotes = await this.read(ids)
-    await Promise.all(
-      origNotes.map((note) => {
-        const request = notes.find((n) => n.id == note.id)
-        if (request) {
-          note.content = request.content
-          note.updatedAt = request.updatedAt
-        }
-        return setUserNote(note.id, note)
-      })
-    )
+
+    const batch = writeBatch(db)
+
+    origNotes.forEach((note) => {
+      const request = notes.find((n) => n.id == note.id)
+      if (request) {
+        note.content = request.content
+        note.updatedAt = request.updatedAt
+        batch.update(getUserNoteDocRef(note.id), {
+          content: request.content,
+          updatedAt: request.updatedAt,
+        })
+      }
+    })
+
+    await batch.commit()
     return await this.read(ids)
-    // await setUserNote(String(note.id), note)
-    // const result = await this.read(note.id)
-    // if (result) return result
-    // throw new Error(`Error on 'NotesFirebaseGateway.update(...).'`)
   }
 
   async delete(ids: string[]): Promise<Note[]> {
     const notes = await this.read(ids)
-    await Promise.all(ids.map((id) => deleteUserNote(id)))
+
+    const batch = writeBatch(db)
+
+    ids.forEach((id) => batch.delete(getUserNoteDocRef(id)))
+
+    await batch.commit()
     return notes
   }
 

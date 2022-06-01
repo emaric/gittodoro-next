@@ -23,7 +23,7 @@ const getUserNotesColRef = () => {
   return collection(getUserDocRef(), COLLECTION_NAME)
 }
 
-const getUserNoteDocRef = (id: string) => {
+export const getUserNoteDocRef = (id: string) => {
   return doc(getUserNotesColRef(), id)
 }
 
