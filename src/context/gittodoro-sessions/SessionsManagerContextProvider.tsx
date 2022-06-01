@@ -71,7 +71,7 @@ export const SessionsManagerProvider = (props: { children: ReactNode }) => {
     }
     const duration = defaultDuration || testDuration
     if (sessionsAPI && duration) {
-      const _session = new Session({ id: '-1', start: new Date(), duration: testDuration })
+      const _session = new Session({ id: '-1', start: new Date(), duration })
       setSession(_session)
       await sessionsAPI.start(duration, new Date())
     }
