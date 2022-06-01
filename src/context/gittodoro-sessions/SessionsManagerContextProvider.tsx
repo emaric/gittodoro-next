@@ -30,7 +30,7 @@ export const SessionsManagerProvider = (props: { children: ReactNode }) => {
   const [records, setRecords] = useState<Record[]>([])
 
   useEffect(() => {
-    if (session && session.end == undefined) {
+    if (session) {
       recordAPI?.create(session, new Date()).then(record => {
         record && setRecord(mapRecord(record))
       })
@@ -87,6 +87,15 @@ export const SessionsManagerProvider = (props: { children: ReactNode }) => {
     }
     setSession(undefined)
   }, [sessions, sessionsAPI])
+
+  useEffect(() => {
+    if (recordAPI) {
+      recordAPI.createAllForSessions(sessions).then(records => {
+        setRecords(records.map(r => mapRecord(r)))
+      })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sessions])
 
   return (
     <SessionsManagerContext.Provider value={{ defaultDuration, session, record, startSession, stopSession, sessions, records }}>

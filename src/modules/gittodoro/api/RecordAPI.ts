@@ -50,9 +50,11 @@ export default class RecordAPI {
   async createAllForSessions(sessions: Session[]) {
     let records: Record[] = []
     const results = await Promise.all(
-      sessions.map((session) => {
+      sessions.map(async (session) => {
         if (session.end) {
-          return this.createAll(session, session.end)
+          const _records = await this.createAll(session, session.end)
+          _records[_records.length - 1].end = session.end
+          return _records
         }
         return []
       })
