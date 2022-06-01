@@ -30,7 +30,7 @@ export const SessionsManagerProvider = (props: { children: ReactNode }) => {
   const [records, setRecords] = useState<Record[]>([])
 
   useEffect(() => {
-    if (session) {
+    if (session && session.end == undefined) {
       recordAPI?.create(session, new Date()).then(record => {
         record && setRecord(mapRecord(record))
       })
@@ -41,7 +41,7 @@ export const SessionsManagerProvider = (props: { children: ReactNode }) => {
   }, [session])
 
   useEffect(() => {
-    if (record && session) {
+    if (record && session && session.end == undefined) {
       const tilNextState = 1000 * record.remainingTime
       const waitForNextState = setTimeout(() => {
         record && setRecords(records.concat(record))
@@ -70,12 +70,12 @@ export const SessionsManagerProvider = (props: { children: ReactNode }) => {
       interval: 4
     }
     const duration = defaultDuration || testDuration
-    if (sessionsAPI) {
-      const session = await sessionsAPI.start(duration, new Date())
-      if (session) {
-        setSession(new Session(session))
-      }
+    if (sessionsAPI && duration) {
+      const _session = new Session({ id: '-1', start: new Date(), duration })
+      setSession(_session)
+      await sessionsAPI.start(duration, new Date())
     }
+
   }, [defaultDuration, sessionsAPI])
 
   const stopSession = useCallback(async () => {

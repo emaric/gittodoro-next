@@ -11,7 +11,7 @@ const SessionsManagerRing = () => {
 
   const handleClick = useCallback(() => {
     // TODO: show loading
-    if (session) {
+    if (session && session.end == undefined) {
       stopSession()
     } else {
       startSession()

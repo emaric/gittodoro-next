@@ -5,7 +5,7 @@ import { listenOnAuthStateChanged, signInWithGithub as signIn, signOutFromGithub
 
 import { login, logout, selectUser } from '@/modules/redux/features/userSlice'
 import { useSelector, useDispatch } from '@/modules/redux'
-import { removeLoading, showLoading, showLoadingMessage } from "@/modules/notiflix"
+import { removeLoading, showLoadingMessage } from "@/modules/notiflix"
 
 type GithubAuthContextType = {
   signInWithGithub: () => void
@@ -23,7 +23,6 @@ export const GithubAuthProvider = ({ children }: Props) => {
   const dispatch = useDispatch()
 
   const handleUserChanged = useCallback((user?: User) => {
-    showLoadingMessage()
     if (user?.uid) {
       dispatch(login(user))
     }

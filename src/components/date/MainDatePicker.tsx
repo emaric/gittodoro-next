@@ -21,16 +21,19 @@ const MainDatePicker = (props: { sessionsLink: string }) => {
     return mainDate && mainDate.toPlainDate().toString() == DateTime.today().toPlainDate().toString()
   }, [mainDate])
 
-  const displayPrevTime = useMemo(() => mainDate?.subtract({ days: 1 }).toLocaleString('default', { weekday: 'short', day: 'numeric', month: 'long' }), [mainDate])
-  const displayNextTime = useMemo(() => mainDate?.add({ days: 1 }).toLocaleString('default', { weekday: 'short', day: 'numeric', month: 'long' }), [mainDate])
+  const prevDate = useMemo(() => mainDate?.subtract({ days: 1 }), [mainDate])
+  const nextDate = useMemo(() => mainDate?.add({ days: 1 }), [mainDate])
+
+  const displayPrevTime = useMemo(() => prevDate?.toLocaleString('default', { weekday: 'short', day: 'numeric', month: 'long' }), [prevDate])
+  const displayNextTime = useMemo(() => nextDate?.toLocaleString('default', { weekday: 'short', day: 'numeric', month: 'long' }), [nextDate])
 
   const handleLeft = useCallback(() => {
-    setMainDate(mainDate?.subtract({ days: 1 }))
-  }, [mainDate])
+    setMainDate(prevDate)
+  }, [prevDate])
 
   const handleRight = useCallback(() => {
-    setMainDate(mainDate?.add({ days: 1 }))
-  }, [mainDate])
+    setMainDate(nextDate)
+  }, [nextDate])
 
   useEffect(() => {
     setMainDate(mainClock?.start)

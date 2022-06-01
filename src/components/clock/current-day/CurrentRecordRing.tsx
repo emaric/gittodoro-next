@@ -1,4 +1,4 @@
-import { FC, useEffect, useMemo, useRef, useState } from "react"
+import { FC, useEffect, useRef, useState } from "react"
 
 import { Clock } from "@/models/Clock"
 import { Record } from "@/models/Record"
@@ -36,6 +36,7 @@ const CurrentRecordRing: FC<Props> = ({ record }) => {
       ref.current?.style.setProperty("--duration", clock.duration.toString())
       ref.current?.style.setProperty("--elapsed", clock.elapsed.toString())
       setAnimation(Animation.Reset)
+      setAnimation(Animation.Start)
     } else {
       setAnimation(Animation.Disabled)
     }
