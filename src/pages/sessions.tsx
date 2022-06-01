@@ -5,11 +5,11 @@ import * as DateTime from '@/modules/temporal/DateTime'
 
 import { useMainNotes } from "@/context/gittodoro/MainNotesContextProvider"
 import { useClock } from "@/context/clock/ClockContextProvider"
+import { useGittorodoAPI } from "@/context/GittodoroAPIContextProvider"
 
 import styles from '@/styles/Sessions.module.css'
 import SessionsCalendar from "@/components/sessions/SessionsCalendar"
 import Header from "@/components/auth/Header"
-import { useGittorodoAPI } from "@/context/GittodoroAPIContextProvider"
 
 const SesssionsPage: NextPage = () => {
   const { clock: selectedDate } = useClock()
@@ -33,7 +33,7 @@ const SesssionsPage: NextPage = () => {
         _minDate = firstNote.date
       }
     }
-    console.log(minDate)
+
     setMinDate(DateTime.fromISO((DateTime.fromUTC(_minDate).toPlainDate().toJSON())))
   }, [readFirstNote, sessionsAPI])
 
