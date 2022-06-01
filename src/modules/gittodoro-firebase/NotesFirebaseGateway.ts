@@ -11,8 +11,9 @@ import {
 } from './controllers/notes'
 
 import { createID } from './utils'
-import { writeBatch } from 'firebase/firestore'
+import { Timestamp, writeBatch } from 'firebase/firestore'
 import { db } from '../firebase'
+import { noteConverter } from './controllers/converter'
 
 export class NoteFirebaseGateway implements NoteGatewayInterface {
   async create(
@@ -26,7 +27,9 @@ export class NoteFirebaseGateway implements NoteGatewayInterface {
 
     const batch = writeBatch(db)
 
-    notesWithIDs.forEach((note) => batch.set(getUserNoteDocRef(note.id), note))
+    notesWithIDs.forEach((note) =>
+      batch.set(getUserNoteDocRef(note.id), noteConverter.toFirestore(note))
+    )
 
     await batch.commit()
 
@@ -71,7 +74,7 @@ export class NoteFirebaseGateway implements NoteGatewayInterface {
         note.updatedAt = request.updatedAt
         batch.update(getUserNoteDocRef(note.id), {
           content: request.content,
-          updatedAt: request.updatedAt,
+          updatedAt: Timestamp.fromDate(note.updatedAt),
         })
       }
     })
