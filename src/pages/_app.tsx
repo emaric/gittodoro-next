@@ -9,6 +9,7 @@ import { GithubAuthProvider } from '@/context/GithubAuthContextProvider'
 import { GittodoroAPIFactoryProvider } from '@/context/GittodoroAPIContextProvider'
 import GittodoroContextProvider from '@/context/gittodoro/GittodoroContextProvider'
 import Meta from '@/components/Meta'
+import { DayPageProvider } from '@/context/gittodoro/DayPageContextProvider'
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -20,9 +21,11 @@ function MyApp({ Component, pageProps }: AppProps) {
       <Provider store={store}>
         <GithubAuthProvider>
           <GittodoroAPIFactoryProvider>
-            <GittodoroContextProvider>
-              <Component {...pageProps} />
-            </GittodoroContextProvider>
+            <DayPageProvider>
+              <GittodoroContextProvider>
+                <Component {...pageProps} />
+              </GittodoroContextProvider>
+            </DayPageProvider>
           </GittodoroAPIFactoryProvider>
         </GithubAuthProvider>
       </Provider>

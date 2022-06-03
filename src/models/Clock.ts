@@ -18,6 +18,10 @@ export class Clock {
     this.isShowSecondsRing = DateTime.difference(end, DateTime.now()) > 0
   }
 
+  get id() {
+    return this.start.toJSON()
+  }
+
   get remaining() {
     return DateTime.difference(this.end, DateTime.now())
   }

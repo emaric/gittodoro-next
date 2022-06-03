@@ -6,7 +6,6 @@ import * as DateTime from '@/modules/temporal/DateTime'
 import { Clock } from '@/models/Clock'
 import { Session } from '@/models/Session'
 import { Record } from '@/models/Record'
-import { useMainNotes } from '@/context/gittodoro/MainNotesContextProvider'
 import { useClock } from '@/context/clock/ClockContextProvider'
 
 import ClockBase from '@/components/clock/ClockBase'
@@ -16,8 +15,7 @@ import ClockRecordsRing from '@/components/clock/ClockRecordsRing'
 
 import styles from './Sessions.module.css'
 import ClockSecondsRing from '../clock/ClockSecondsRing'
-import { useGittorodoAPI } from '@/context/GittodoroAPIContextProvider'
-import { mapRecords } from '@/models/mapper'
+import { useDayPage } from '@/context/gittodoro/DayPageContextProvider'
 
 interface Props {
   date: DateTime.DateTimeType
@@ -25,16 +23,14 @@ interface Props {
 }
 
 const SessionsCalendarDay = ({ date, disabled }: Props) => {
-  const { recordAPI, sessionsAPI } = useGittorodoAPI()
+  const { getDayPageData, updateDayPageData } = useDayPage()
   const dateString = date.toPlainDate().toString()
   const router = useRouter()
   const clock = useMemo(() => new Clock(date, date.add({ days: 1 })), [date])
 
   const [sessions, setSessions] = useState<Session[]>([])
-  const [records, setRecords] = useState<Record[] | undefined>()
+  const [records, setRecords] = useState<Record[]>([])
   const [notesCount, setNotesCount] = useState(0)
-
-  const { readNotesByRange } = useMainNotes()
 
   const { setClock: setMainClock } = useClock()
 
@@ -43,50 +39,44 @@ const SessionsCalendarDay = ({ date, disabled }: Props) => {
     router.push('/')
   }, [router, clock, setMainClock])
 
-
-  const updateSessions = useCallback(() => {
-    if (clock && sessionsAPI) {
-      sessionsAPI.readByRange(clock.startDate, clock.endDate).then((_sessions) => {
-        const completedSessions: Session[] = []
-        _sessions.forEach(_session => {
-          if (_session.end) {
-            completedSessions.push(new Session(_session))
-          }
-        })
-        setSessions(completedSessions)
-      })
+  const updateStates = useCallback(() => {
+    const data = getDayPageData(clock.id)
+    if (data) {
+      setSessions(data.sessions)
+      console.log('sessions:', data.sessions.length)
+      setRecords(data.records)
+      console.log(clock.id + '|records:', data.records.length)
+      if (data.records.length > 200) {
+        console.log(data.sessions)
+        console.log(data.sessions.map(s => s.endPlainDateTime && DateTime.difference(s.endPlainDateTime, s.startPlainDateTime)))
+      }
+      setNotesCount(data.notes.length)
+    } else {
+      setSessions([])
+      setRecords([])
+      setNotesCount(0)
     }
-
-  }, [clock, sessionsAPI])
-
-  const updateNotesCount = useCallback(() => {
-    readNotesByRange(clock.startDate, clock.endDate).then((notes) => {
-      setNotesCount(notes.length)
-    })
-  }, [clock, readNotesByRange])
+  }, [clock, getDayPageData])
 
   useEffect(() => {
-    if (clock) {
-      updateSessions()
-      updateNotesCount()
+    updateStates()
+    if (getDayPageData(clock.id) == undefined) {
+      console.log('updating..', clock.id)
+      updateDayPageData(clock.id).then(() => {
+        console.log('done updating..', clock.id)
+        updateStates()
+      }).catch((error) => {
+        console.error('failed to update..', clock.id)
+      })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [clock])
-
-  useEffect(() => {
-    if (sessions.length > 0) {
-      recordAPI.createAllForSessions(sessions).then(_records => {
-        setRecords(mapRecords(_records))
-      })
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sessions])
 
   return (
     <button title={dateString} className={[styles.day_container, disabled && styles.disabled].join(' ')}>
       <ClockBase>
         <ClockSecondsRing clock={clock} />
-        {records && <ClockRecordsRing clock={clock} records={records} />}
+        <ClockRecordsRing clock={clock} records={records} />
         {!disabled && <ClockButton onClick={handleClick} />}
         <ClockLabel value={date.day.toString()} />
         {notesCount &&

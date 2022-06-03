@@ -3,19 +3,12 @@ import { FC, ReactNode, createContext, useContext, useState, useCallback, useEff
 import { Session } from "@/models/Session"
 
 import { useClock } from "../clock/ClockContextProvider"
-import { useGittorodoAPI } from "../GittodoroAPIContextProvider"
 import { Record } from "@/models/Record"
-import { fromUTC } from "@/modules/temporal/DateTime"
+import { useDayPage } from "../gittodoro/DayPageContextProvider"
 
 type SessionContextType = {
   mainSessions: Session[],
   mainRecords: Record[]
-  // session?: Session,
-  // start: () => void,
-  // stop: () => void,
-  // viewByRange: (start: Date, end: Date) => Promise<Session[]>,
-  // viewFirstAndLast: () => Promise<Session[]>,
-  // queryMainSessions: () => Promise<Session[]>
 }
 
 const SessionContext = createContext<SessionContextType | undefined>(undefined)
@@ -25,38 +18,39 @@ interface Props {
 }
 
 export const MainSessionsProvider: FC<Props> = ({ children }) => {
-  const { sessionsAPI, recordAPI } = useGittorodoAPI()
   const { clock: mainClock } = useClock()
+  const { getDayPageData, updateDayPageData } = useDayPage()
   const [mainSessions, setMainSessions] = useState<Session[]>([])
   const [mainRecords, setMainRecords] = useState<Record[]>([])
 
   const updateMainSessions = useCallback(() => {
-    if (mainClock && sessionsAPI) {
-      const sessions = sessionsAPI.readByRange(mainClock.startDate, mainClock.endDate)
-      sessions.then((_sessions) => {
-        const completedSessions: Session[] = []
-        _sessions.forEach((_session) => {
-          if (_session.end) {
-            completedSessions.push(new Session(_session))
-          }
-        })
+    if (mainClock) {
+      const dayPageData = getDayPageData(mainClock.id)
+      if (dayPageData) {
+        setMainRecords(dayPageData.records)
+        setMainSessions(dayPageData.sessions)
+      } else {
         setMainRecords([])
-        setMainSessions(completedSessions)
-      })
+        setMainSessions([])
+      }
     }
     return []
-  }, [mainClock, sessionsAPI])
+  }, [getDayPageData, mainClock])
 
   useEffect(() => {
-    recordAPI.createAllForSessions(mainSessions).then(records => {
-      const mappedRecords = records.map(r => new Record({ state: r.state, start: fromUTC(r.start), end: fromUTC(r.end) }))
-      setMainRecords(mappedRecords)
-    })
-  }, [mainSessions, recordAPI])
+  }, [])
 
   useEffect(() => {
-    updateMainSessions()
-  }, [updateMainSessions])
+    if (mainClock) {
+      updateMainSessions()
+      if (getDayPageData(mainClock.id) == undefined) {
+        updateDayPageData(mainClock.id).then(() => {
+          updateMainSessions()
+        })
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mainClock])
 
   return (
     <SessionContext.Provider value={{ mainSessions, mainRecords }}>

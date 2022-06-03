@@ -1,15 +1,15 @@
 import { useCurrentDayClock } from "@/context/clock/CurrentDayClockContextProvider"
 import { useSessionsManager } from "@/context/gittodoro-sessions/SessionsManagerContextProvider"
+import { useMainSessions } from "@/context/gittodoro-sessions/MainSessionsContextProvider"
 
 import ClockSecondsRing from "@/components/clock/ClockSecondsRing"
 import ClockRecordsRing from "@/components/clock/ClockRecordsRing"
 import ClockActiveRing from "@/components/clock/ClockActiveRing"
-import { useMainRecords } from "@/context/gittodoro-sessions/MainRecordsContextProvider"
 
 const CurrentDayClockRings = () => {
   const { currentDayClock: clock } = useCurrentDayClock()
   const { record, records } = useSessionsManager()
-  const { mainRecords } = useMainRecords()
+  const { mainRecords } = useMainSessions()
 
   return (
     <>
