@@ -10,7 +10,7 @@ export const signOutFromGithub = signOut
 export const listenOnAuthStateChanged = (cb: (user?: User) => void) => {
   return onAuthStateChanged(auth, (user) => {
     if (user) {
-      user.providerData.forEach((profile) => {
+      user.providerData.forEach(async (profile) => {
         const firebaseUser: User = {
           uid: user.uid,
           userData: {
@@ -18,6 +18,7 @@ export const listenOnAuthStateChanged = (cb: (user?: User) => void) => {
             displayName: profile.displayName || '',
             photoURL: profile.photoURL || '',
           },
+          token: await user.getIdToken(),
         }
         cb(firebaseUser)
       })

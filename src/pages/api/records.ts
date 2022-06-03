@@ -1,11 +1,37 @@
-import { gatewayProvider } from '@/modules/gittodoro-firebase'
-import { NotesAPI } from '@/modules/gittodoro/api/NotesAPI'
-import type { NextApiRequest, NextApiResponse } from 'next'
+import sessionConverter from '@/modules/firebase-admin/converters/session'
+import {
+  NextApiRequestWithUid,
+  withAuth,
+} from '@/modules/firebase-admin/middlewares'
+import { UserCollections } from '@/modules/gittodoro-firebase/UserCollections'
+import RecordAPI from '@/modules/gittodoro/api/RecordAPI'
+import type { NextApiResponse } from 'next'
 
-// eslint-disable-next-line import/no-anonymous-default-export
-export default async (req: NextApiRequest, res: NextApiResponse) => {
-  const api = new NotesAPI(gatewayProvider.noteGateway)
-  const test = await api.readFirst()
-  console.log('test', test)
-  res.status(200).json({ name: 'John Doe' })
+const handler = async (req: NextApiRequestWithUid, res: NextApiResponse) => {
+  if (req.uid) {
+    const col = new UserCollections(req.uid)
+    const response = await col.sessions
+      .where('end', '==', null)
+      .orderBy('start', 'desc')
+      .limit(1)
+      .withConverter(sessionConverter)
+      .get()
+
+    let session = undefined
+    response.forEach(async (docSnap) => {
+      session = docSnap.data()
+    })
+
+    if (session) {
+      const api = new RecordAPI()
+      const records = await api.createAll(session, new Date())
+      res.status(200).json({ records })
+      return
+    }
+  }
+
+  res.status(200).json({ uid: req.uid })
+  return
 }
+
+export default withAuth(handler)
