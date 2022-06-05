@@ -43,13 +43,21 @@ export default class RecordController {
     this.view?.setRecord(this.model.record)
   }
 
-  async createAll(duration: Duration, start: Date, end: Date) {
+  async createAll(
+    duration: Duration,
+    start: Date,
+    end: Date
+  ): Promise<Record[]> {
     if (this._createAllCommand == undefined) {
       this._createAllCommand = new CreateAllRecordsCommand(
         this.model.recordsPresenter
       )
     }
-    await this._createAllCommand.execute({ duration, start, end })
-    this.view?.setRecords(this.model.records)
+    const response = await this._createAllCommand.execute({
+      duration,
+      start,
+      end,
+    })
+    return await this.model.recordsPresenter.present(response)
   }
 }

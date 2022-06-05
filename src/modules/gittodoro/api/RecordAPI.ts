@@ -43,9 +43,8 @@ export default class RecordAPI {
 
   async createAll(session: Session, end: Date) {
     const { duration, start } = session
-    await this.controller.createAll(duration, start, end)
-    this.model.records[this.model.records.length - 1].end = end
-    return this.model.records
+    const response = await this.controller.createAll(duration, start, end)
+    return response
   }
 
   async createAllForSessions(sessions: Session[]) {

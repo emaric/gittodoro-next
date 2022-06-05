@@ -5,6 +5,10 @@ import { fromISO } from "@/modules/temporal/DateTime";
 import { Clock } from "@/models/Clock";
 import { useGittorodoAPI } from "../GittodoroAPIContextProvider";
 import { mapNotes, mapRecords, mapSessions } from "@/models/mapper";
+import { useGithubAuth } from "../GithubAuthContextProvider";
+import useSWR from "swr";
+import { Session } from "@/models/Session";
+import { Record } from "@/models/Record";
 
 type DayPageContextType = {
   getDayPageData: (id: string) => DayPageModel | undefined
@@ -15,6 +19,7 @@ const DayPageContext = createContext<DayPageContextType | undefined>(undefined)
 
 export const DayPageProvider = (props: { children: ReactNode }) => {
   const { sessionsAPI, recordAPI, notesAPI } = useGittorodoAPI()
+
 
   const [dayPageMap, setDayPageMap] = useState<Map<string, DayPageModel>>(new Map())
 
