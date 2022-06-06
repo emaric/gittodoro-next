@@ -24,3 +24,7 @@
     background-color: var(--dark-primary);
   }
 }
+
+.todo_color {
+  color: var(--light-red);
+}

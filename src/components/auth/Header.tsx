@@ -8,7 +8,7 @@ const Header = () => {
   return (
     <div className={styles.container}>
       <MainAuth />
-      <Link href="/"><a className={styles.title}>Gittodoro.</a></Link>
+      <Link href="/"><a className={styles.title}>Git<span className={styles.todo_color}>todo</span>ro.</a></Link>
       <span></span>
     </div>
   )
