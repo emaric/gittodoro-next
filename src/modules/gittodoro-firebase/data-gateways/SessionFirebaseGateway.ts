@@ -1,6 +1,6 @@
 import DurationGatewayInterface from '@/modules/gittodoro/db/DurationGatewayInterface'
 import SessionGatewayInterface from '@/modules/gittodoro/db/SessionGatewayInterface'
-import GittodoroError from '@/modules/gittodoro/errors/GittodoroError'
+import GittodoroError from '@/errors/GittodoroError'
 import Session from '@emaric/gittodoro-ts/lib/interactor/entities/Session'
 import {
   getDoc,

@@ -13,7 +13,7 @@ import {
 import Session from '@emaric/gittodoro-ts/lib/interactor/entities/Session'
 import { gatewayProvider } from '.'
 import SessionGatewayInterface from '../gittodoro/db/SessionGatewayInterface'
-import GittodoroError from '../gittodoro/errors/GittodoroError'
+import GittodoroError from '../../errors/GittodoroError'
 
 import { createID } from './utils'
 

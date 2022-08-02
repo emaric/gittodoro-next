@@ -1,6 +1,6 @@
 import { NoteListResponse } from '@emaric/gittodoro-ts/lib/interactor/external-users/notes/io/response.model'
 import NotesPresenterInterface from '@emaric/gittodoro-ts/lib/interactor/external-users/notes/io/NotesPresenterInterface'
-import GittodoroError from '../errors/GittodoroError'
+import GittodoroError from '../../../errors/GittodoroError'
 import { Note } from './Note'
 import NoteModelInterface from './NoteModelInterface'
 import NoteGatewayInterface from '../db/NoteGatewayInterface'

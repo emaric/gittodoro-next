@@ -1,13 +1,21 @@
-import { User } from './models/User'
-import { signIn, signOut } from './authGithub'
-import { onAuthStateChanged } from 'firebase/auth'
-import { auth } from '.'
+import { User } from '@/models/User'
+import {
+  getAuth,
+  onAuthStateChanged,
+  signOut as firebaseSignOut,
+} from 'firebase/auth'
 
-export const signInWithGithub = signIn
+import { signInWithRedirect } from './gitthub'
 
-export const signOutFromGithub = signOut
+export const signIn = signInWithRedirect
+
+export const signOut = async () => {
+  const auth = getAuth()
+  await firebaseSignOut(auth)
+}
 
 export const listenOnAuthStateChanged = (cb: (user?: User) => void) => {
+  const auth = getAuth()
   return onAuthStateChanged(auth, (user) => {
     if (user) {
       user.providerData.forEach(async (profile) => {

@@ -2,7 +2,7 @@ import NoteController, {
   NoteViewInterface,
 } from '../controllers/NoteController'
 import NoteGatewayInterface from '../db/NoteGatewayInterface'
-import GittodoroError from '../errors/GittodoroError'
+import GittodoroError from '../../../errors/GittodoroError'
 import { Note } from '../models/Note'
 import NoteModel from '../models/NoteModel'
 import NoteModelInterface from '../models/NoteModelInterface'

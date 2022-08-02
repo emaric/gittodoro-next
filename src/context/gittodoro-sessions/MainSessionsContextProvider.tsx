@@ -7,7 +7,7 @@ import { Record } from "@/models/Record"
 import { useDayPage } from "../gittodoro/DayPageContextProvider"
 import { useGithubAuth } from "../GithubAuthContextProvider"
 import useSWR from "swr"
-import fetcher from "@/modules/utils/fetcher"
+import fetcher from "@/modules/swr/fetcher"
 import { fromISO } from "@/modules/temporal/DateTime"
 
 type RecordsAPIType = {

@@ -91,6 +91,7 @@ export const SessionsManagerProvider = (props: { children: ReactNode }) => {
   useEffect(() => {
     if (recordAPI) {
       recordAPI.createAllForSessions(sessions).then(records => {
+        console.log(new Date().toJSON() + "  " + JSON.stringify(records))
         setRecords(records.map(r => mapRecord(r)))
       })
     }

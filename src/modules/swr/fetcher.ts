@@ -1,4 +1,4 @@
-import HTTPError from '../errors/HTTPError'
+import HTTPError from '@/errors/HTTPError'
 
 const fetcher = async (url: string, token: string) => {
   const res = await fetch(url, {

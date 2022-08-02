@@ -5,7 +5,7 @@ import { Clock } from '@/models/Clock'
 import { Record } from '@/models/Record'
 import { Session } from '@/models/Session'
 import { fromISO } from '@/modules/temporal/DateTime'
-import fetcher from '@/modules/utils/fetcher'
+import fetcher from '@/modules/swr/fetcher'
 import React from 'react'
 import useSWR from 'swr'
 

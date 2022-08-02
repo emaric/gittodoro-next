@@ -1,3 +1,7 @@
-import { User as UserModel } from '@/modules/firebase/models/User'
+import { UserData } from './UserData'
 
-export type User = UserModel
+export type User = {
+  uid: string
+  userData: UserData
+  token?: string
+}

@@ -1,4 +1,4 @@
-import GittodoroError from '../errors/GittodoroError'
+import GittodoroError from '../../../errors/GittodoroError'
 import { Duration } from '../models/Duration'
 import { Session } from '../models/Session'
 import SessionModel from '../models/SessionModel'

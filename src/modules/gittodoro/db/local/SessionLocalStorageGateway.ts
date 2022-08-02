@@ -2,7 +2,7 @@ import Duration from '@emaric/gittodoro-ts/lib/interactor/entities/Duration'
 import Session from '@emaric/gittodoro-ts/lib/interactor/entities/Session'
 import SessionGatewayInterface from '../SessionGatewayInterface'
 import gatewayProvider from '.'
-import GittodoroError from '../../errors/GittodoroError'
+import GittodoroError from '../../../../errors/GittodoroError'
 
 const mapToEntity = (sessionsString: string): Session[] => {
   const objs = JSON.parse(sessionsString)
